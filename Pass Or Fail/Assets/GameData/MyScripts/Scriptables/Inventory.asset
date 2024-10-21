@@ -1,0 +1,198 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd6b7bb38c66b04fb5e46a9f8ed09be, type: 3}
+  m_Name: Inventory
+  m_EditorClassIdentifier: 
+  buttonPrefab: {fileID: 1863865622665759659, guid: 9c90f746b8aca704585d16eb1a36bf4f, type: 3}
+  characters:
+  - itemId: 0
+    itemName: Female
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: c94316c0c67aadb429433472869c695a, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 0}
+    itemType: 0
+  - itemId: 1
+    itemName: Male
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: 032886db2f72d814bbc8faf28c9e8d58, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 0}
+    itemType: 0
+  commonItems:
+  - itemId: 0
+    itemName: BrownHat
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: ef0a1c7e07002ce49bee42a2a70bd80c, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 3758177341679545393, guid: 7ce52f1e184c0a14aac43daedbfb52ed, type: 3}
+    itemType: 0
+  - itemId: 1
+    itemName: HorseMask
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 007a3e637e4ec3c4d904209704cc88bd, type: 3}
+    itemPrice: 100
+    itemPrefab: {fileID: 4884098239904700056, guid: 37fb183e10b75664b994889d241359d1, type: 3}
+    itemType: 0
+  - itemId: 2
+    itemName: StrawHat
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: c697f64a63fe3ff409e12f86572e4471, type: 3}
+    itemPrice: 150
+    itemPrefab: {fileID: 3474028817954090178, guid: 0a391fed50eac0f4194b717827661da7, type: 3}
+    itemType: 0
+  - itemId: 3
+    itemName: SantaHat
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: f67a7f8508b07ed4fb7fea8ee1ef3e31, type: 3}
+    itemPrice: 180
+    itemPrefab: {fileID: 6399207203674767435, guid: 926d2b1ee81e38945bc45c89643116ab, type: 3}
+    itemType: 0
+  - itemId: 4
+    itemName: ShinobiMask
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 4ea1779aad7bf4d43a49898ce2e387ce, type: 3}
+    itemPrice: 200
+    itemPrefab: {fileID: 2987540579452675291, guid: 130c7416c3f320244b509dfd388a9dfb, type: 3}
+    itemType: 0
+  rareItems:
+  - itemId: 5
+    itemName: MagicianHat
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: 1cad38aa89eb60a4d9254a801abe2422, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 3902255509156778616, guid: 1fd70c26552d0384f9bd5197bca4b857, type: 3}
+    itemType: 1
+  - itemId: 6
+    itemName: KawaiHat
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 97bd581f017ddee4f8913c4068236228, type: 3}
+    itemPrice: 100
+    itemPrefab: {fileID: 919488250120154010, guid: d51d26d04a0e050428f5684f5505748d, type: 3}
+    itemType: 1
+  - itemId: 7
+    itemName: HippoMask
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: ce1f84b86ed495e44827fa9f797d8c4c, type: 3}
+    itemPrice: 150
+    itemPrefab: {fileID: 5795619899810608662, guid: 4ca3b0e103b46484db87147d1e1b42ed, type: 3}
+    itemType: 1
+  - itemId: 8
+    itemName: DevilHeadBand
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 7c54a524a7912ae4e8a35636f55e126c, type: 3}
+    itemPrice: 200
+    itemPrefab: {fileID: 2907684216211869535, guid: b8ddaaf2a638a9646940094c8adbe3fb, type: 3}
+    itemType: 1
+  epicItems:
+  - itemId: 9
+    itemName: ClownHat
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: 2d4efd768b11136488907be81b7f8f2b, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 583038809232108691, guid: 88c918f151ab0424ab6ed96b0c388243, type: 3}
+    itemType: 2
+  - itemId: 10
+    itemName: BunnyMask
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: fbd38529caf41944da7f605cf0539f32, type: 3}
+    itemPrice: 100
+    itemPrefab: {fileID: 816653955572959832, guid: 1f40b189f6600a846a0a4a57d46bdae1, type: 3}
+    itemType: 2
+  - itemId: 11
+    itemName: KidBearHat
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: fe0ad59f2b2486a4a88a44ae3fe83360, type: 3}
+    itemPrice: 150
+    itemPrefab: {fileID: 3939517268666652163, guid: 062ccbb19b49e3142a2619faac77daf8, type: 3}
+    itemType: 2
+  - itemId: 12
+    itemName: AmericanHat
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: b3d6b6f01047d944aa4d670736053327, type: 3}
+    itemPrice: 200
+    itemPrefab: {fileID: 3598009507443654292, guid: 9a9c742c112f6b44c8b0daf2b6e68c02, type: 3}
+    itemType: 2
+  decorationItems:
+  - itemId: 0
+    itemName: Counting
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: 298e47e835e417a46b207ec6ec4b5341, type: 3}
+    itemPrice: 50
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  - itemId: 1
+    itemName: Pot
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 15e6c81a97f07c446b4da8c47aeb4c96, type: 3}
+    itemPrice: 100
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  - itemId: 2
+    itemName: Skeleton
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: abcdd1175d868a944ab41f87068911ce, type: 3}
+    itemPrice: 150
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  - itemId: 3
+    itemName: BookShelf
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 1723615da904c784a98921865a9a3995, type: 3}
+    itemPrice: 200
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  - itemId: 4
+    itemName: ChemistryTable
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: c296460c1437f99459b93ceebf5a5d12, type: 3}
+    itemPrice: 250
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  - itemId: 5
+    itemName: ComputerTable
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 67c927b24f05cf543a16de8b16b82b4d, type: 3}
+    itemPrice: 300
+    itemPrefab: {fileID: 0}
+    itemType: 3
+  upgradeItems:
+  - itemId: 6
+    itemName: Ceiling
+    canUnlockByAd: 1
+    itemIcon: {fileID: 21300000, guid: e1ea4fc5c9405724b853bb6f4ab350fa, type: 3}
+    itemPrice: 0
+    itemPrefab: {fileID: 0}
+    itemType: 4
+  - itemId: 7
+    itemName: Floor
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: cc9289c0e1b18bf4a8d0f40113918ea7, type: 3}
+    itemPrice: 100
+    itemPrefab: {fileID: 0}
+    itemType: 4
+  - itemId: 8
+    itemName: Walls
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: adf3f316f633e41429aa60ce43950d57, type: 3}
+    itemPrice: 150
+    itemPrefab: {fileID: 0}
+    itemType: 4
+  - itemId: 9
+    itemName: Windows
+    canUnlockByAd: 0
+    itemIcon: {fileID: 21300000, guid: 6a9394bbe02a33f45973e1ac5c328851, type: 3}
+    itemPrice: 200
+    itemPrefab: {fileID: 0}
+    itemType: 4
+  buttonSimpleSprite: {fileID: 21300000, guid: 20d32527110f59143ba8d756b94ea0ca, type: 3}
+  buttonAdSprite: {fileID: 21300000, guid: 5147669c10e191e4c8f709dde24984a7, type: 3}

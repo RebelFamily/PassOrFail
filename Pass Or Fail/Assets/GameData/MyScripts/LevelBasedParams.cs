@@ -1,0 +1,203 @@
+using System;
+using UnityEngine;
+using UnityEngine.Events;
+public class LevelBasedParams : MonoBehaviour
+{
+    private bool inProgressFlag = false;
+    private int counter = 0;
+    public enum ActivityType
+    {
+        QuestionAnswer,
+        AttendanceMarking,
+        CheckingCloths,
+        GeneralKnowledge,
+        LibraryDrill,
+        RecessRound,
+        SchoolDance,
+        OralQuiz,
+        UniformChecking,
+        BadgesDistribution
+    }
+    [SerializeField] private EnvironmentManager.Environment environment;
+    [SerializeField] private ActivityType activityType;
+    private QuestionAnswer _questionAnswer;
+    private LibraryDiscipline _libraryDiscipline;
+    private CorridorActivity _corridorActivity;
+    private DanceActivity _danceActivity;
+    private OralQuiz _oralQuiz;
+    private UniformChecking _uniformChecking;
+    private BadgesDistribution _badgesDistribution;
+    private readonly UnityEvent _onPass = new UnityEvent();
+    private readonly UnityEvent _onFail = new UnityEvent();
+
+    private void Start()
+    {
+        SharedUI.Instance.gamePlayUIManager.controls.SetStreakCounterText();
+        switch (activityType)
+        {
+            case ActivityType.QuestionAnswer:
+                inProgressFlag = true;
+                SharedUI.Instance.gamePlayUIManager.controls.EnableQuestionAnswerUI(true);
+                SetQuestionAnswer();
+                if (_questionAnswer.IsSaveTheEgg())
+                {
+                    SharedUI.Instance.gamePlayUIManager.controls.SetProtectionText(_questionAnswer.GetBreakableObjectName());
+                    SharedUI.Instance.gamePlayUIManager.controls.EnableProtectTheEggUI();
+                }
+                _questionAnswer.SetCameraView();
+                break;
+            case ActivityType.AttendanceMarking:
+                break;
+            case ActivityType.CheckingCloths:
+                break;
+            case ActivityType.GeneralKnowledge:
+                break;
+            case ActivityType.LibraryDrill:
+                if (_libraryDiscipline == null)
+                    _libraryDiscipline = GetComponent<LibraryDiscipline>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
+                SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[0]);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.RecessRound:
+                if (_corridorActivity == null)
+                    _corridorActivity = GetComponent<CorridorActivity>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.SchoolDance:
+                if (_danceActivity == null)
+                    _danceActivity = GetComponent<DanceActivity>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
+                SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[2]);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+            break;
+            case ActivityType.OralQuiz:
+                if (_oralQuiz == null)
+                    _oralQuiz = GetComponent<OralQuiz>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.UniformChecking:
+                if (_uniformChecking == null)
+                    _uniformChecking = GetComponent<UniformChecking>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.BadgesDistribution:
+                if (_badgesDistribution == null)
+                    _badgesDistribution = GetComponent<BadgesDistribution>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+    private void SetupTutorial()
+    {
+        if (PlayerPrefsHandler.GetBool(PlayerPrefsHandler.TutorialString)) return;
+        if (!PlayerPrefsHandler.GetBool(PlayerPrefsHandler.TutorialStep0String))
+        {
+            SharedUI.Instance.gamePlayUIManager.controls.SetHandTutorial(_questionAnswer.IsAnswerRight());
+        }
+    }
+    public EnvironmentManager.Environment GetEnvironment()
+    {
+        return environment;
+    }
+    private void SetQuestionAnswer()
+    {
+        if(!PlayerPrefsHandler.GetBool(PlayerPrefsHandler.TutorialString))
+            SharedUI.Instance.gamePlayUIManager.controls.DisableHandTutorial();
+        if (_questionAnswer == null)
+        {
+            _questionAnswer = GetComponent<QuestionAnswer>();
+            _onPass.AddListener(RegisterPassing);
+            _onFail.AddListener(RegisterFailing);
+        }
+        _questionAnswer.SetQuestion();
+        if(!_questionAnswer.IsEarthGlobe())
+            Invoke(nameof(DeactivateInProgressFlag), 0.5f);
+    }
+    private void RegisterPassing()
+    {
+        _questionAnswer.OnPass();
+    }
+    private void RegisterFailing()
+    {
+        _questionAnswer.OnFail();
+    }
+    public void Pass()
+    {
+        if(inProgressFlag) return;
+        inProgressFlag = true;
+        //Debug.Log("Pass has been called");
+        counter++;
+        SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
+        _onPass?.Invoke();
+        if (counter >= 3) return;
+        if(!_questionAnswer.IsStudentClaiming()) 
+            Invoke(nameof(SetQuestionAnswer), 2f);
+    }
+    public void Fail()
+    {
+        if(inProgressFlag) return;
+        inProgressFlag = true;
+        //Debug.Log("Fail has been called");
+        counter++;
+        SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
+        _onFail?.Invoke();
+        if (counter >= 3) return;
+        if(!_questionAnswer.IsStudentClaiming()) 
+            Invoke(nameof(SetQuestionAnswer), 2f);
+    }
+    public void AskQuestionAfterClaim()
+    {
+        if (counter >= 3) return;
+        Invoke(nameof(SetQuestionAnswer), 2f);
+    }
+    public void DeactivateInProgressFlag()
+    {
+        inProgressFlag = false;
+        SetupTutorial();
+    }
+    public void StartActivity()
+    {
+        if(_libraryDiscipline)
+            _libraryDiscipline.StartActivity();
+        else if(_corridorActivity)
+            _corridorActivity.StartActivity();
+        else if(_danceActivity)
+            _danceActivity.StartActivity();
+        else if(_oralQuiz)
+            _oralQuiz.StartActivity();
+        else if(_uniformChecking)
+            _uniformChecking.StartActivity();
+        else if(_badgesDistribution)
+            _badgesDistribution.StartActivity();
+    }
+    public void TeacherGoesBackToNormal(string action)
+    {
+        _corridorActivity.TeacherRotationBackToNormal(action);
+    }
+    public bool[] GetResults()
+    {
+        return _questionAnswer.GetResults();
+    }
+    public int GetGradingValue()
+    {
+        if (_questionAnswer)
+            return _questionAnswer.GetGradingValue();
+        else
+            return 3;
+    }
+    public Sprite[] GetRenders()
+    {
+        return _questionAnswer.GetStudentsRenders();
+    }
+    public void CorrectMistake()
+    {
+        _questionAnswer.CorrectMistake();
+    }
+}

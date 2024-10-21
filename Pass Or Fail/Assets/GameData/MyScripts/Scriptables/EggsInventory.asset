@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7df70cc9e4811440bd655630967f853, type: 3}
+  m_Name: EggsInventory
+  m_EditorClassIdentifier: 
+  eggs:
+  - eggName: SimpleEgg
+    eggObject: {fileID: 6985133532807979409, guid: ced66b01faf542649aefbf1aa74d9ebe, type: 3}
+    isEggAlright: 1
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: FriedEgg
+    eggObject: {fileID: 5133896748506938802, guid: 7837d5f8559233d4b843a0cd12479596, type: 3}
+    isEggAlright: 0
+    positionForFemale: {x: -0.00102, y: 0.001713, z: 0.00085}
+    positionForMale: {x: -0.00068, y: 0.00105, z: 0.00144}
+  - eggName: EggWithBandage
+    eggObject: {fileID: 6017174992511853911, guid: 52e2d2883fe98ea4588e0e797c6bfede, type: 3}
+    isEggAlright: 0
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: BrokenEgg
+    eggObject: {fileID: 4033249707726654608, guid: 0aa36277f8093d940b4bef09bf3afe55, type: 3}
+    isEggAlright: 0
+    positionForFemale: {x: -0.00091, y: -0.00085, z: 0.00093}
+    positionForMale: {x: -0.00102, y: -0.00037, z: 0.00136}
+  - eggName: EasterEgg1
+    eggObject: {fileID: 3149197738458596327, guid: 1d2ca33a53f6fc7429394f350965df21, type: 3}
+    isEggAlright: 1
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: EasterEgg2
+    eggObject: {fileID: 368182799279142413, guid: c483ddea31595d545b93a84b61b7a167, type: 3}
+    isEggAlright: 1
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: EasterEgg3
+    eggObject: {fileID: 7135204920968107396, guid: 30f3663e84f1d11478d97eef218ca0a0, type: 3}
+    isEggAlright: 1
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: EasterEgg4
+    eggObject: {fileID: 8992614833440014469, guid: 7b4dda0c5717985469d3d5a0177077ec, type: 3}
+    isEggAlright: 1
+    positionForFemale: {x: 0.00048, y: -0.00009, z: 0.00095}
+    positionForMale: {x: 0.00051, y: 0.00068, z: 0.00134}
+  - eggName: DinoEgg
+    eggObject: {fileID: 1728058933380824754, guid: 8bb3be32645d9d1448de6393cfef6a80, type: 3}
+    isEggAlright: 0
+    positionForFemale: {x: 0.00005, y: 0.00018, z: 0.00122}
+    positionForMale: {x: 0.00043, y: 0.00071, z: 0.00142}
