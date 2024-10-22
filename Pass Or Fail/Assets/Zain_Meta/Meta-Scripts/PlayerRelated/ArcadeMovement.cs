@@ -1,3 +1,4 @@
+using CnControls;
 using UnityEngine;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
@@ -53,5 +54,6 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
          _input = new Vector3(x, 0f, z);
          playerAnimator.SetAnimations(_input.magnitude);
       }
+      public bool IsMoving() => _input.magnitude > 0f;
    }
 }
