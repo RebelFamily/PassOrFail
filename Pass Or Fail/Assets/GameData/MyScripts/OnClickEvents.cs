@@ -23,11 +23,6 @@ public class OnClickEvents : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 				studentsCustomization.SelectCategory(buttonName);
 				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.CharactersCustomization);
 				break;
-			case PlayerPrefsHandler.ClassRoom:
-				var classRoomCustomization = SharedUI.Instance.metaUIManager.GetMenu(PlayerPrefsHandler.CharactersCustomization).GetComponent<Customization>();
-				classRoomCustomization.SelectCategory(buttonName);
-				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.CharactersCustomization);
-				break;
 			case PlayerPrefsHandler.NextComplete:
 				GamePlayManager.Instance.SendProgressionEvent();
 				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
@@ -73,6 +68,9 @@ public class OnClickEvents : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 				if(PlayerPrefsHandler.currency < 30) return;
 				CurrencyCounter.Instance.DeductCurrency(30);
 				GamePlayManager.Instance.currentLevel.CorrectMistake();
+				break;
+			case PlayerPrefsHandler.CloseRemoveAds:
+				SharedUI.Instance.CloseSubMenu();
 				break;
 		}
 	}

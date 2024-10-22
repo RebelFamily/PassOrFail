@@ -23,6 +23,8 @@ public class Callbacks : MonoBehaviour {
     public static event RewardSchoolBuilding OnRewardSchoolBuilding;
     public delegate void RewardMistakeCorrection();
     public static event RewardMistakeCorrection OnRewardMistakeCorrection;
+    public delegate void BuyInAppProduct(InAppProduct.InAppProductType productType);
+    public static event BuyInAppProduct OnInAppProductPurchased;
     private const string SdkName = "MaxAdmob";
     public static RewardType rewardType;
     private void Start () 
@@ -104,5 +106,9 @@ public class Callbacks : MonoBehaviour {
         RewardSpray,
         RewardSchoolBuilding,
         MistakeCorrection
+    }
+    public static void OnInAppProductPurchasing(InAppProduct.InAppProductType productType)
+    {
+        OnInAppProductPurchased?.Invoke(productType);
     }
 }

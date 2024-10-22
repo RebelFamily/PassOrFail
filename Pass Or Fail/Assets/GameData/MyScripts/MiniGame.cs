@@ -11,6 +11,7 @@ public class MiniGame : MonoBehaviour
         _iMiniGame = miniGame.GetComponent<IMiniGame>();
         _miniGameInput = miniGame.GetComponent<IMiniGameInput>();
         _iMiniGame.StartMiniGame();
+        SharedUI.Instance.HideAll();
     }
     public EnvironmentManager.Environment GetEnvironment()
     {

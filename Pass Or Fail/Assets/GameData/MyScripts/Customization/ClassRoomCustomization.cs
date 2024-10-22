@@ -28,22 +28,6 @@ public class ClassRoomCustomization : MonoBehaviour
     {
         _inventory = GamePlayManager.Instance ? GamePlayManager.Instance.environmentManager.GetInventory() : SharedUI.Instance.metaUIManager.
             GetMenu(PlayerPrefsHandler.CharactersCustomization).GetComponent<Customization>().GetInventory();
-        var items = _inventory.GetItems(Inventory.CustomizationType.ClassRoom, Inventory.ItemType.Decorate);
-        foreach (var t in items)
-        {
-            if (!PlayerPrefsHandler.IsClassPropLocked(t.itemId))
-            {
-                ApplyProp(t);
-            }
-        }
-        items = _inventory.GetItems(Inventory.CustomizationType.ClassRoom, Inventory.ItemType.Upgrade);
-        foreach (var t in items)
-        {
-            if (!PlayerPrefsHandler.IsClassPropLocked(t.itemId))
-            {
-                ApplyProp(t);
-            }
-        }
     }
     public void ApplyProp(Inventory.Item prop)
     {

@@ -115,6 +115,7 @@ public class AppOpenAdCaller : MonoBehaviour
 
     public void ShowAppOpenAd()
     {
+        if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
         if (!IsAppOpenAdAvailable)
         {
             RequestAndLoadAppOpenAd();

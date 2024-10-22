@@ -7,8 +7,7 @@ public class Inventory : ScriptableObject
     public enum CustomizationType
     {
         Teachers,
-        Students,
-        ClassRoom
+        Students
     }
     public enum ItemType
     {
@@ -50,16 +49,6 @@ public class Inventory : ScriptableObject
                         return rareItems;
                     case ItemType.Epic:
                         return epicItems;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(itemsType), itemsType, null);
-                }
-            case CustomizationType.ClassRoom:
-                switch (itemsType)
-                {
-                    case ItemType.Decorate:
-                        return decorationItems;
-                    case ItemType.Upgrade:
-                        return upgradeItems;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(itemsType), itemsType, null);
                 }
