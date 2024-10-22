@@ -20,13 +20,13 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string Reward = "Reward";
     public const string CurrencyCounter = "CurrencyCounter";
     public const string CharactersCustomization = "CharactersCustomization";
+    public const string RemoveAds = "RemoveAds";
     #endregion
     
     #region Buttons
     public const string Play = "Play";
     public const string Teachers = "Teachers";
     public const string Students = "Students";
-    public const string ClassRoom = "ClassRoom";
     public const string NextComplete = "NextComplete";
     public const string Home = "Home";
     public const string Replay = "Replay";
@@ -36,6 +36,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string HideSubMenu = "HideSubMenu";
     public const string AdToCorrectMistake = "AdToCorrectMistake";
     public const string PayToCorrectMistake = "PayToCorrectMistake";
+    public const string CloseRemoveAds = "CloseRemoveAds";
     #endregion
     
     #region Settings
@@ -77,7 +78,6 @@ public class PlayerPrefsHandler : MonoBehaviour
     private const string SchoolPlayGroundRank = "SchoolPlayGroundRank";
     private const string SchoolArenaRank = "SchoolArenaRank";
     
-    
     private const string MetaString = "MetaString";
     private const string School = "School";
     private const string SchoolNo = "SchoolNo";
@@ -87,9 +87,12 @@ public class PlayerPrefsHandler : MonoBehaviour
     public static readonly string[] ActivitiesNames = {"Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Uniform Checking", "Badges Distribution"};
     private static readonly int[] LevelNumbersForActivities = {3, 6, 9, 12, 15, 18, 21, 24};
     private static readonly int[] LevelNumbersForMiniGames = {2, 5, 7, 10, 13, 16, 19, 22, 25};
+    
+    public static int ClassDecorationsIndex = 0;
 
-    public static bool IsFreeSpinAvailable = true;
+    public static bool IsFreeSpinAvailable = true, IsGameLaunch = true;
     public const string FirstAd = "FirstAd";
+    public const string RateUsString = "RateUs", RemoveAdsFirstShownString = "RemoveAdsFirstShown";
 
     #region Firebase
     public enum AdType

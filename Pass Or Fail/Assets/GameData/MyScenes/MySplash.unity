@@ -198,6 +198,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11927752}
   m_CullTransparentMesh: 1
+--- !u!1 &22033190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 22033191}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &22033191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22033190}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -377.1134, y: 1473.7723, z: -20.55804}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &58366750
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,17 +1253,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &792096167 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2101359197534024934, guid: 4a58eac3db3502240a588dfd752cb2c9, type: 3}
+  m_PrefabInstance: {fileID: 1743097690}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &814109260 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2101359197758004870, guid: 4a58eac3db3502240a588dfd752cb2c9, type: 3}
   m_PrefabInstance: {fileID: 1743097690}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 792096167}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 716f7718664bafd449cadad6d7a9ec90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &814109265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792096167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58528fc8fc17ad9458ae490d4d4275c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purchaseIDController:
+  - purchaseableType: 1
+    purchaseID: gtsy_pf_removeads
+    itemType: 0
+    price: $0.99
+    localPrice: $0.99
 --- !u!1 &818155893
 GameObject:
   m_ObjectHideFlags: 0
@@ -3956,7 +4010,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2101359197534024934, guid: 4a58eac3db3502240a588dfd752cb2c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 814109265}
   m_SourcePrefab: {fileID: 100100000, guid: 4a58eac3db3502240a588dfd752cb2c9, type: 3}
 --- !u!1 &1785640011
 GameObject:
@@ -7818,3 +7875,4 @@ SceneRoots:
   - {fileID: 1743097690}
   - {fileID: 1125717384}
   - {fileID: 1178845071}
+  - {fileID: 22033191}

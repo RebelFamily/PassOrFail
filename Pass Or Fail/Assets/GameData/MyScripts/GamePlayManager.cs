@@ -36,6 +36,7 @@ public class GamePlayManager : MonoBehaviour
     private void Start()
     {
         SoundController.Instance.PlayGamePlayBackgroundMusic();
+        ShowRemoveAds();
         CurrentLevelSettings();
     }
     public bool IsGameReadyToPlay()
@@ -70,6 +71,27 @@ public class GamePlayManager : MonoBehaviour
             default:
                 gameCompleteFlag = true;
                 break;
+        }
+    }
+    private void ShowRemoveAds()
+    {
+        if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
+        if (PlayerPrefsHandler.LevelCounter > 2)
+        {
+            if (PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAdsFirstShownString))
+            {
+                if (PlayerPrefsHandler.IsGameLaunch)
+                {
+                    PlayerPrefsHandler.IsGameLaunch = false;
+                    SharedUI.Instance.SubMenu(PlayerPrefsHandler.RemoveAds);
+                }
+            }
+            else
+            {
+                PlayerPrefsHandler.IsGameLaunch = false;
+                PlayerPrefsHandler.SetBool(PlayerPrefsHandler.RemoveAdsFirstShownString, true);
+                SharedUI.Instance.SubMenu(PlayerPrefsHandler.RemoveAds);
+            }
         }
     }
     private void CurrentLevelSettings()
