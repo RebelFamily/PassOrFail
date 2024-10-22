@@ -31,7 +31,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 DOTween.Kill(targetTransform);
                 targetSprite.color = collisionColor;
                 targetTransform.DOScale(_actualSize, 0).SetEase(Ease.Linear);
-                targetTransform.DOScale(changeInSize, .25f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+                targetTransform.DOScale(changeInSize, .25f);
                 _receptionProfile.StartServing();
               //  EventsManager.PlayerInTrigger(true);
                 StartCoroutine(nameof(Delay_CO), player);
