@@ -7,5 +7,7 @@ namespace PassOrFail.MiniGames
             None,
             Maskable
         }
+        
+        
     }
 }
