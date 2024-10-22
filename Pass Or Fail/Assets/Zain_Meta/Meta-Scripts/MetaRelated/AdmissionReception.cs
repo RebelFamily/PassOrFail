@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zain_Meta.Meta_Scripts.Components;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
@@ -8,6 +9,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private CashGenerationSystem myCashGeneration;
         [SerializeField] private bool hasReceptionist;
         [SerializeField] private Collider collisionTrigger;
+        [SerializeField] private Receptionist receptionist;
         [SerializeField] private Image receptionServingFiller;
         [SerializeField] private float servingDelay;
         [SerializeField] private ReceptionPoint[] queuePoints;
@@ -37,6 +39,23 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 return;
             }
 
+            ServingTimer();
+        }
+
+        private void ServeByHelper()
+        {
+            if (!queuePoints[0].IsOccupied())
+            {
+                receptionServingFiller.fillAmount = 0;
+                receptionist.BackToIdle();
+                return;
+            }
+            receptionist.StartWorking();
+            ServingTimer();
+        }
+
+        private void ServingTimer()
+        {
             if (_curTimerToServe < .1f)
             {
                 _curTimerToServe = servingDelay;
@@ -49,10 +68,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
             var normalValue = Mathf.InverseLerp(servingDelay, 0, _curTimerToServe);
             receptionServingFiller.fillAmount = normalValue;
-        }
-
-        private void ServeByHelper()
-        {
         }
 
         public void StartServing()
@@ -78,6 +93,12 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
             // check for if all the classes are filled and there is no space left
             return true;
+        }
+
+        public void SetReceptionist(bool val)
+        {
+            hasReceptionist = val;
+            collisionTrigger.enabled = !hasReceptionist;
         }
     }
 }

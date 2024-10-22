@@ -4,5 +4,6 @@
     {
         public void UnlockWithAnimation();
         public void UnlockWithoutAnimation();
+        public void KeepItLocked();
     }
 }

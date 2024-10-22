@@ -7,19 +7,18 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
     public class TriggerHandler : MonoBehaviour
     {
-         [SerializeField] private SpriteRenderer targetSprite;
         [SerializeField] private Transform targetTransform, playerDriftPos, moveOutPos;
         [SerializeField] private float changeInSize;
-        [SerializeField] private Color collisionColor, normalColor;
+
         private IReception _receptionProfile;
-      //  private PlayerMovement _player;
+
+        //  private PlayerMovement _player;
         private Vector3 _actualSize;
         private bool _hasTriggered;
         private readonly YieldInstruction _delay = new WaitForSeconds(.5f);
 
         private void Start()
         {
-            targetSprite.color = normalColor;
             _actualSize = targetTransform.localScale;
             _receptionProfile = GetComponent<IReception>();
         }
@@ -29,11 +28,11 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             if (other.TryGetComponent(out ArcadeMovement player))
             {
                 DOTween.Kill(targetTransform);
-                targetSprite.color = collisionColor;
+
                 targetTransform.DOScale(_actualSize, 0).SetEase(Ease.Linear);
                 targetTransform.DOScale(changeInSize, .25f);
                 _receptionProfile.StartServing();
-              //  EventsManager.PlayerInTrigger(true);
+                //  EventsManager.PlayerInTrigger(true);
                 StartCoroutine(nameof(Delay_CO), player);
             }
         }
@@ -44,12 +43,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             {
                 DOTween.Kill(targetTransform);
                 StopCoroutine(nameof(Delay_CO));
-                targetSprite.color = normalColor;
                 targetTransform.DOScale(_actualSize, 0.1f).SetEase(Ease.Linear);
                 _receptionProfile.StopServing();
                 _hasTriggered = false;
-              //  EventsManager.PlayerInTrigger(false);
-              
+                //  EventsManager.PlayerInTrigger(false);
             }
         }
 

@@ -4,9 +4,7 @@ namespace Zain_Meta.Meta_Scripts.DataRelated
 {
     public class DataAdjuster : MonoBehaviour
     {
-        public SaveClass[] allSaveClasses;
-
-
+        [SerializeField] private SaveClass[] allSaveClasses;
         private void OnDisable()
         {
             ResetAllData();

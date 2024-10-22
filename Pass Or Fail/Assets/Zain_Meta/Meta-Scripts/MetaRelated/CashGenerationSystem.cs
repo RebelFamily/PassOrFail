@@ -2,7 +2,6 @@
 using DG.Tweening;
 using Lean.Pool;
 using UnityEngine;
-using UnityEngine.Events;
 using Zain_Meta.Meta_Scripts.DataRelated;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.PlayerRelated;
@@ -12,16 +11,15 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
     public class CashGenerationSystem : MonoBehaviour
     {
         [SerializeField] private Utility utility;
-        [SerializeField] private int prefsId;
+        [SerializeField] private ItemsName itemName;
         [SerializeField] private bool keepPersistent;
         [SerializeField] private int amountToGive;
         public bool useForTutorial, useForVipShowing;
-        public List<Transform> cashMade = new List<Transform>();
+        public List<Transform> cashMade = new();
         public int curCashAmount;
         [SerializeField] private bool useVertical;
         [SerializeField] private CashOffsetData offsetData;
         [SerializeField] private Transform cashStackPos;
-        [SerializeField] private UnityEvent pickedCash;
         private float curXPos, curYPos, curZPos;
         private float yOffset, xOffset, zOffset;
         private float maxXVal, maxZVal;
@@ -42,8 +40,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void LoadData()
         {
             if (!keepPersistent) return;
-            var previousCashCount = PlayerPrefs.GetInt("cash" + prefsId, 0);
-            curCashAmount = PlayerPrefs.GetInt("cashAmount" + prefsId, 0);
+            var previousCashCount = PlayerPrefs.GetInt("cash" + itemName, 0);
+            curCashAmount = PlayerPrefs.GetInt("cashAmount" + itemName, 0);
             for (var i = 0; i < previousCashCount; i++)
             {
                 var cash = utility.SpawnCashAt(transform);
@@ -77,8 +75,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         private void SaveData()
         {
-            PlayerPrefs.SetInt("cash" + prefsId, cashMade.Count);
-            PlayerPrefs.SetInt("cashAmount" + prefsId, curCashAmount);
+            PlayerPrefs.SetInt("cash" + itemName, cashMade.Count);
+            PlayerPrefs.SetInt("cashAmount" + itemName, curCashAmount);
         }
 
         public void AddCash(int amount, Transform spawningPos)

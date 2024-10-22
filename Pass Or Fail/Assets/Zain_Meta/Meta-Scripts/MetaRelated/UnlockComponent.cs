@@ -12,7 +12,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
     public class UnlockComponent : MonoBehaviour, IPurchase
     {
-        [SerializeField] private string fileName;
+        [SerializeField] private ItemsName fileName;
         [SerializeField] private UnlockData unlockData;
         [SerializeField] private Utility utility;
         [SerializeField] private int itemPrice;
@@ -22,7 +22,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private float sizeChange, originalSize;
         [SerializeField] private Text priceText;
         private IUnlocker _unlockingItem;
-        public GameObject associatedItem;
         private bool _isPlayerTriggering, _isUnlocked;
         private readonly YieldInstruction _delayLong = new WaitForSeconds(1f);
         private CashManager _cashManager;
@@ -33,11 +32,11 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         private void Awake()
         {
-            associatedItem.SetActive(false);
             fillerCanvas.SetActive(true);
             unlockData.remainingPrice = unlockData.price;
             _curRemainingPrice = unlockData.price;
 
+            _unlockingItem = GetComponent<IUnlocker>();
             //loading...
             _fileString = "GameData/" + fileName + ".es3";
             ES3.CacheFile(_fileString);
@@ -58,17 +57,12 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             _isUnlocked = true;
             fillerCanvas.SetActive(false);
             unlockCol.enabled = false;
-            associatedItem.SetActive(true);
-            DOTween.Kill(associatedItem);
-            associatedItem.transform.DOScaleX(1, 0).SetEase(Ease.Linear);
-            associatedItem.transform.DOScaleZ(1, 0).SetEase(Ease.Linear);
-            associatedItem.transform.DOScaleY(1, 0.75f).SetEase(Ease.OutElastic);
+            _unlockingItem?.UnlockWithAnimation();
             //EventsManager.ItemUnlockedEvent(this);
             SaveTheData();
             gameObject.SetActive(false);
         }
 
-        // ReSharper disable Unity.PerformanceAnalysis
         private IEnumerator StartTakingCashFromPlayer(PlayerCashSystem player)
         {
             if (!_cashManager) _cashManager = CashManager.Instance;
@@ -152,8 +146,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             {
                 unlockCol.enabled = false;
                 fillerCanvas.SetActive(false);
-                associatedItem.SetActive(true);
-                associatedItem.transform.localScale = Vector3.one;
+
+                _unlockingItem?.UnlockWithoutAnimation();
             }
             else
             {
@@ -161,8 +155,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
                 priceFiller.fillAmount = normalValue;
                 _curRemainingPrice.SetFloatingPoint(priceText);
-                associatedItem.transform.localScale = Vector3.zero;
-                associatedItem.SetActive(false);
+
+                _unlockingItem?.KeepItLocked();
             }
         }
 
