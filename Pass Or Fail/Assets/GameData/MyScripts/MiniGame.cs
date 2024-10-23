@@ -36,7 +36,8 @@ public class MiniGame : MonoBehaviour
         PinBoardSorting = 2,
         GeometrySorting = 3,
         BooksSorting = 4,
-        BookStickers = 5
+        BookStickers = 5,
+        PenFilling = 6
     }
 }
 public interface IMiniGame

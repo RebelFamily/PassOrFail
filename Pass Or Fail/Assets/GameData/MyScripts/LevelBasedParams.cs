@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.Events;
 public class LevelBasedParams : MonoBehaviour
 {
-    private bool inProgressFlag = false;
-    private int counter = 0;
+    private bool _inProgressFlag = false;
+    private int _counter = 0;
     public enum ActivityType
     {
         QuestionAnswer,
@@ -16,7 +16,8 @@ public class LevelBasedParams : MonoBehaviour
         SchoolDance,
         OralQuiz,
         UniformChecking,
-        BadgesDistribution
+        BadgesDistribution,
+        ExerciseActivity
     }
     [SerializeField] private EnvironmentManager.Environment environment;
     [SerializeField] private ActivityType activityType;
@@ -27,6 +28,7 @@ public class LevelBasedParams : MonoBehaviour
     private OralQuiz _oralQuiz;
     private UniformChecking _uniformChecking;
     private BadgesDistribution _badgesDistribution;
+    private ExerciseActivity _exerciseActivity;
     private readonly UnityEvent _onPass = new UnityEvent();
     private readonly UnityEvent _onFail = new UnityEvent();
 
@@ -36,7 +38,7 @@ public class LevelBasedParams : MonoBehaviour
         switch (activityType)
         {
             case ActivityType.QuestionAnswer:
-                inProgressFlag = true;
+                _inProgressFlag = true;
                 SharedUI.Instance.gamePlayUIManager.controls.EnableQuestionAnswerUI(true);
                 SetQuestionAnswer();
                 if (_questionAnswer.IsSaveTheEgg())
@@ -90,6 +92,12 @@ public class LevelBasedParams : MonoBehaviour
                 SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
+            case ActivityType.ExerciseActivity:
+                if (_exerciseActivity == null)
+                    _exerciseActivity = GetComponent<ExerciseActivity>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -130,36 +138,36 @@ public class LevelBasedParams : MonoBehaviour
     }
     public void Pass()
     {
-        if(inProgressFlag) return;
-        inProgressFlag = true;
+        if(_inProgressFlag) return;
+        _inProgressFlag = true;
         //Debug.Log("Pass has been called");
-        counter++;
+        _counter++;
         SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
         _onPass?.Invoke();
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         if(!_questionAnswer.IsStudentClaiming()) 
             Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void Fail()
     {
-        if(inProgressFlag) return;
-        inProgressFlag = true;
+        if(_inProgressFlag) return;
+        _inProgressFlag = true;
         //Debug.Log("Fail has been called");
-        counter++;
+        _counter++;
         SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
         _onFail?.Invoke();
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         if(!_questionAnswer.IsStudentClaiming()) 
             Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void AskQuestionAfterClaim()
     {
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void DeactivateInProgressFlag()
     {
-        inProgressFlag = false;
+        _inProgressFlag = false;
         SetupTutorial();
     }
     public void StartActivity()
@@ -176,6 +184,8 @@ public class LevelBasedParams : MonoBehaviour
             _uniformChecking.StartActivity();
         else if(_badgesDistribution)
             _badgesDistribution.StartActivity();
+        else if(_exerciseActivity)
+            _exerciseActivity.StartActivity();
     }
     public void TeacherGoesBackToNormal(string action)
     {
