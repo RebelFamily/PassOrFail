@@ -1,10 +1,12 @@
 using DG.Tweening;
+using PassOrFail.MiniGames;
 using UnityEngine;
 public class Student : MonoBehaviour
 {
     [SerializeField] private RuntimeAnimatorController animatorController;
     [SerializeField] private Animator animator;
     [SerializeField] private Expressions expressions;
+    [SerializeField] private bool isToNotUseStudentRenders;
     private static readonly int AnimationNo = Animator.StringToHash("AnimationNo");
     private static readonly int ActionNo = Animator.StringToHash("ActionNo");
     private Vector3 _targetPosition, _targetRotation;
@@ -54,28 +56,35 @@ public class Student : MonoBehaviour
                 break;
             case Expressions.ExpressionType.Happy:
                 PlayAction(Random.Range(3, 6), true, Random.Range(0, 2));
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Happy));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Happy));
                 break;
             case Expressions.ExpressionType.Sad:
                 PlayAction(Random.Range(0, 3), false, Random.Range(0, 2));
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Sad));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Sad));
                 break;
             case Expressions.ExpressionType.Excited:
                 PlayAction(Random.Range(3, 6), true, Random.Range(0, 2));
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Excited));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Excited));
                 break;
             case Expressions.ExpressionType.Angry0:
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Angry0));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Angry0));
                 break;
             case Expressions.ExpressionType.Angry1:
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Angry1));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Angry1));
                 break;
             case Expressions.ExpressionType.Frustrated:
                 PlayAction(Random.Range(0, 3), false, Random.Range(0, 2));
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Frustrated));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Frustrated));
                 break;
             case Expressions.ExpressionType.Surprised:
-                GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Surprised));
+                if(!isToNotUseStudentRenders) 
+                    GetComponentInParent<StudentsHandler>().AddStudentRender(expressions.GetExpressionRender(Expressions.ExpressionType.Surprised));
                 break;
             default:
                 break;
@@ -93,6 +102,7 @@ public class Student : MonoBehaviour
         transform.DOMove(_targetPosition, _movementDuration).OnComplete(() =>
         {
             PlayAnimation(0);
+            EventManager.InvokeStudentReachedDestination(transform);
         });
     }
     private void PlayAnimation(int animationNo, bool avatarMasking = false)

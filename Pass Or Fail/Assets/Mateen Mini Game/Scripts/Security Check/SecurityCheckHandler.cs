@@ -1,122 +1,110 @@
+using System;
 using UnityEngine;
 
-[System.Serializable]
-public class BagData
+namespace PassOrFail.MiniGames
 {
-    public SecurityCheckHandler.PropType propType;
-    public Sprite propSprite;
-    public Vector3 propSmallScale;
-    public Vector3 propFullScale;
-}
-public class SecurityCheckHandler : MonoBehaviour
-{
-    [SerializeField] private StudentsHandler studentsHandler;
-    [SerializeField] private BagData[] bags;
-    [SerializeField] private GameObject canvas;
-    private int _bagIndex = 0;
-
-    /*private void Start()
+    [System.Serializable]
+    public class BagData
     {
-        SetupUniforms();
-    }*/
-
-    public void StartActivity()
-    {
-        canvas.SetActive(true);
+        public SecurityCheckHandler.PropType propType;
+        public Sprite propSprite;
+        public Vector3 propSmallScale;
+        public Vector3 propFullScale;
+        public Vector3 smallScalePosition;
+        public Vector3 largeScalePosition;
     }
 
-    private void EndActivity()
+    public class SecurityCheckHandler : MonoBehaviour
     {
-        canvas.SetActive(false);
-        //GamePlayManager.Instance.LevelComplete(1f);
-    }
+        [SerializeField] private MiniGameStudentHandler studentsHandler;
+        [SerializeField] private StudentBag[] bags;
+        [SerializeField] private GameObject canvas;
+        private int _bagIndex = 0;
 
-    /*private void SetupUniforms()
-    {
-        var students = studentsHandler.GetStudents();
-        var totalUniforms = uniforms.Length;
-        foreach (var t in students)
+        private void OnEnable()
         {
-            var r = UnityEngine.Random.Range(0, totalUniforms);
-            while (uniforms[r].isAssigned)
+            EventManager.OnStudentReachedDestination += EnableCanvas;
+            EventManager.OnStudentChecked += DisableCanvas;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.OnStudentReachedDestination += EnableCanvas;
+            EventManager.OnStudentChecked += DisableCanvas;
+        }
+
+        private void EnableCanvas(Transform student)
+        {
+            if(_bagIndex >= bags.Length) return;
+            if(student != bags[_bagIndex].transform) return;
+            canvas.SetActive(true);
+        }
+
+        private void DisableCanvas()
+        {
+            _bagIndex++;
+            canvas.SetActive(false);
+            CheckGameComplete();
+        }
+
+        public void AllowToPass()
+        {
+            canvas.SetActive(false);
+            studentsHandler.ExitStudent(Expressions.ExpressionType.Happy,isAllowed: true);
+            if (bags[_bagIndex].bagData.propType == PropType.Allowed)
             {
-                r = UnityEngine.Random.Range(0, totalUniforms);
+                /*SoundController.Instance.PlayCorrectGradingSound();
+                SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Perfects);
+                Invoke(nameof(ShowGoodEffect), 0.5f);*/
+            }
+            else
+            {
+                /*SoundController.Instance.PlayWrongGradingSound();
+                SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Warnings);
+                Invoke(nameof(ShowBadEffect), 0.5f);*/
             }
 
-            if (uniforms[r].IsCleaned())
+            EventManager.InvokeStudentChecked();
+        }
+
+        public void DontAllowToPass()
+        {
+            studentsHandler.ExitStudent(Expressions.ExpressionType.Sad,isAllowed: false);
+            if (bags[_bagIndex].bagData.propType == PropType.Allowed)
             {
-                uniforms[r].isAssigned = true;
-                continue;
+                SoundController.Instance.PlayWrongGradingSound();
+                SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Warnings);
+                Invoke(nameof(ShowBadEffect), 0.5f);
             }
-
-            uniforms[r].isAssigned = true;
-            var dirtPoint = t.GetAnimator().GetBoneTransform(uniforms[r].boneToPlaceDirt);
-            Instantiate(uniforms[r].dustProp, dirtPoint);
+            else
+            {
+                SoundController.Instance.PlayCorrectGradingSound();
+                SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Perfects);
+                Invoke(nameof(ShowGoodEffect), 0.5f);
+            }
+            EventManager.InvokeStudentChecked();
         }
-    }*/
 
-    public void OnPass()
-    {
-        canvas.SetActive(false);
-        studentsHandler.ExitStudent(Expressions.ExpressionType.Happy);
-        if (bags[_bagIndex].propType == PropType.Allowed)
+        private void CheckGameComplete()
         {
-            SoundController.Instance.PlayCorrectGradingSound();
-            SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Perfects);
-            Invoke(nameof(ShowGoodEffect), 0.5f);
+            if(_bagIndex >= 3)
+                Debug.Log("Game Complete");
         }
-        else
+        private void ShowGoodEffect()
         {
-            SoundController.Instance.PlayWrongGradingSound();
-            SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Warnings);
-            Invoke(nameof(ShowBadEffect), 0.5f);
+            SharedUI.Instance.gamePlayUIManager.controls.ShowBlinkAlert(PlayerPrefsHandler.Good);
         }
 
-        Invoke(nameof(IsActivityEnds), 2f);
-    }
-
-    public void OnFail()
-    {
-        canvas.SetActive(false);
-        studentsHandler.ExitStudent(Expressions.ExpressionType.Sad);
-        if (bags[_bagIndex].propType == PropType.Allowed)
+        private void ShowBadEffect()
         {
-            SoundController.Instance.PlayWrongGradingSound();
-            SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Warnings);
-            Invoke(nameof(ShowBadEffect), 0.5f);
+            SharedUI.Instance.gamePlayUIManager.controls.ShowBlinkAlert(PlayerPrefsHandler.Bad);
         }
-        else
+
+        public enum PropType
         {
-            SoundController.Instance.PlayCorrectGradingSound();
-            SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Perfects);
-            Invoke(nameof(ShowGoodEffect), 0.5f);
+            None,
+            Allowed,
+            NotAllowed
         }
-
-        Invoke(nameof(IsActivityEnds), 2f);
-    }
-
-    private void IsActivityEnds()
-    {
-        _bagIndex++;
-        canvas.SetActive(true);
-        if (_bagIndex >= 3)
-            EndActivity();
-    }
-
-    private void ShowGoodEffect()
-    {
-        SharedUI.Instance.gamePlayUIManager.controls.ShowBlinkAlert(PlayerPrefsHandler.Good);
-    }
-
-    private void ShowBadEffect()
-    {
-        SharedUI.Instance.gamePlayUIManager.controls.ShowBlinkAlert(PlayerPrefsHandler.Bad);
-    }
-
-    public enum PropType
-    {
-        None,
-        Allowed,
-        NotAllowed
     }
 }
