@@ -2,6 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.PlayerRelated;
+using Zain_Meta.Meta_Scripts.Triggers;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated
 {

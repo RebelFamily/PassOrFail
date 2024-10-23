@@ -1,59 +1,113 @@
-using CnControls;
+using DG.Tweening;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
 {
-   [RequireComponent(typeof(PlayerAnimator))]
-   public class ArcadeMovement : MonoBehaviour
-   {
-      [SerializeField] private CharacterController controller;
-      [SerializeField] private PlayerAnimator playerAnimator;
-      [SerializeField] private float moveSpeed;
-      [SerializeField] private float turnSpeed;
+    [RequireComponent(typeof(PlayerAnimator))]
+    public class ArcadeMovement : MonoBehaviour
+    {
+        [SerializeField] private CharacterController controller;
+        [SerializeField] private PlayerAnimator playerAnimator;
+        [SerializeField] private float moveSpeed;
+        [SerializeField] private float turnSpeed;
 
-      private Vector3 _input;
-      private bool _stop;
-   
-      private void SetMovement()
-      {
-         GatherInputs();
-         Look();
-      }
+        private float _curMoveSpeed, _curRotSpeed;
+        private Vector3 _input;
+        private bool _stop;
 
-      private void Update()
-      {
-         if (_stop || controller.enabled == false) return;
-         SetMovement();
-         Move();
-      }
+        private void OnEnable()
+        {
+            EventsManager.OnTriggerTeaching += SnapToThisPos;
+        }
+
+        private void OnDisable()
+        {
+            EventsManager.OnTriggerTeaching -= SnapToThisPos;
+        }
+
+        private void SnapToThisPos(bool startTeaching, Vector3 teachingPos, Vector3 rotation)
+        {
+            if (!startTeaching)
+            {
+                ResumeMovement();
+                return;
+            }
+
+            StopMovement();
+            transform.DOMove(teachingPos, .15f);
+            transform.DORotate(rotation, .15f).OnComplete(() => { playerAnimator.PlayTeachingAnim(); });
+        }
+
+        private void Start()
+        {
+            _curMoveSpeed = moveSpeed;
+            _curRotSpeed = turnSpeed;
+        }
 
 
-      private void Look()
-      {
-         if (_input == Vector3.zero) return;
-         var rot = Quaternion.LookRotation(_input, Vector3.up);
-         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, turnSpeed * Time.deltaTime);
-      }
+        private void SetMovement()
+        {
+            GatherInputs();
+            Look();
+        }
 
-      private void Move()
-      {
-         if (controller.enabled)
-            controller.Move(transform.forward * (_input.magnitude * moveSpeed * Time.deltaTime));
-         var transform1 = transform;
-         var transformLocalPosition = transform1.localPosition;
-         transformLocalPosition.y = 0;
-         transform1.localPosition = transformLocalPosition;
-      }
+        private void Update()
+        {
+            if (_stop || controller.enabled == false) return;
+            SetMovement();
+            Move();
+        }
 
 
-      private void GatherInputs()
-      {
-         //if (!joystick) return;
-         var x = Input.GetAxis("Horizontal");
-         var z =  Input.GetAxis("Vertical");
-         _input = new Vector3(x, 0f, z);
-         playerAnimator.SetAnimations(_input.magnitude);
-      }
-      public bool IsMoving() => _input.magnitude > 0f;
-   }
+        private void Look()
+        {
+            if (_input == Vector3.zero) return;
+            var rot = Quaternion.LookRotation(_input, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, _curRotSpeed * Time.deltaTime);
+        }
+
+        private void Move()
+        {
+            if (controller.enabled)
+                controller.Move(transform.forward * (_input.magnitude * _curMoveSpeed * Time.deltaTime));
+            var transform1 = transform;
+            var transformLocalPosition = transform1.localPosition;
+            transformLocalPosition.y = 0;
+            transform1.localPosition = transformLocalPosition;
+        }
+
+
+        private void GatherInputs()
+        {
+            //if (!joystick) return;
+            if (_stop)
+            {
+                _input = Vector3.zero;
+                playerAnimator.SetAnimations(_input.magnitude);
+            }
+
+            var x = Input.GetAxis("Horizontal");
+            var z = Input.GetAxis("Vertical");
+            _input = new Vector3(x, 0f, z);
+            playerAnimator.SetAnimations(_input.magnitude);
+        }
+
+        public bool IsMoving() => _input.magnitude > 0f;
+
+        private void StopMovement()
+        {
+            _curRotSpeed = _curMoveSpeed = 0;
+            // controller.enabled = false;
+            _input = Vector3.zero;
+            playerAnimator.SetAnimations(0);
+        }
+
+        private void ResumeMovement()
+        {
+            //controller.enabled = true;
+            _curMoveSpeed = moveSpeed;
+            _curRotSpeed = turnSpeed;
+        }
+    }
 }

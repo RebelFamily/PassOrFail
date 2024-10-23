@@ -8,8 +8,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         [SerializeField] private Transform sittingPoint;
         [SerializeField] private bool isOccupied;
 
-        private bool _isMarked;
         public bool IsSeatOccupied() => isOccupied;
-        public bool MarkForSitting() => _isMarked;
+        public void MarkForSitting() => isOccupied = true;
     }
 }

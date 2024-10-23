@@ -2,11 +2,17 @@
 
 namespace Zain_Meta.Meta_Scripts.Components
 {
+    [SelectionBase]
     public class ClassroomProfile : MonoBehaviour
     {
         [SerializeField] private SeatProfile[] classroomSeats;
+        [SerializeField] private GameObject teachingTriggerArea;
 
-      
+
+        private void Update()
+        {
+            teachingTriggerArea.SetActive(CheckIfSeatAreAvailable() == -1);
+        }
 
         public int CheckIfSeatAreAvailable()
         {
