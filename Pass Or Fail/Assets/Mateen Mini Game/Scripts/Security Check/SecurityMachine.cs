@@ -28,8 +28,10 @@ namespace PassOrFail.MiniGames
 
         private void DisplayDataOnMachine(Transform student)
         {
+            //Debug.Log("BagIndex : isLimitReached: "+_isLimitReached + " student: "+student + " :: "+bagsData[_currentBagIndex].transform);
             if(_isLimitReached) return;
             if(student != bagsData[_currentBagIndex].transform) return;
+            //Debug.Log("BagIndex : isLimitReached: "+_isLimitReached + " what the fuck ");
             //Debug.Log("Hiding what");
             scanParticles.SetActive(true);
             maskTransform.localPosition = maskVisiblePosition;
@@ -42,7 +44,7 @@ namespace PassOrFail.MiniGames
             maskTransform.DOLocalMove(maskHidePosition, 1.5f).OnComplete((() =>
             {
                 scanParticles.SetActive(false);
-                Invoke(nameof(EnlargeMainProp), .2f);
+                Invoke(nameof(EnlargeMainProp), .1f);
             }));
         }
 
@@ -59,8 +61,11 @@ namespace PassOrFail.MiniGames
             //Debug.Log("Hiding data");
             maskTransform.localPosition = maskVisiblePosition;
             _currentBagIndex += 1;
-            if (_currentBagIndex >= bagsData.Length - 1)
+            if (_currentBagIndex >= bagsData.Length)
+            {
                 _isLimitReached = true;
+                Debug.Log("BagIndex : isLimitReached: "+_isLimitReached);
+            }
         }
     }
 }

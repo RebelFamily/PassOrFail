@@ -37,6 +37,12 @@ namespace PassOrFail.MiniGames
         {
             if(_bagIndex >= bags.Length) return;
             if(student != bags[_bagIndex].transform) return;
+            Debug.Log("BagIndex : "+_bagIndex+" lenght: "+bags.Length +" :: " +student + " :: "+bags[_bagIndex].transform);
+            Invoke(nameof(ActivateCanvas),1.3f);
+        }
+
+        private void ActivateCanvas()
+        {
             canvas.SetActive(true);
         }
 
@@ -72,15 +78,15 @@ namespace PassOrFail.MiniGames
             studentsHandler.ExitStudent(Expressions.ExpressionType.Sad,isAllowed: false);
             if (bags[_bagIndex].bagData.propType == PropType.Allowed)
             {
-                SoundController.Instance.PlayWrongGradingSound();
+                /*SoundController.Instance.PlayWrongGradingSound();
                 SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Warnings);
-                Invoke(nameof(ShowBadEffect), 0.5f);
+                Invoke(nameof(ShowBadEffect), 0.5f);*/
             }
             else
             {
-                SoundController.Instance.PlayCorrectGradingSound();
+                /*SoundController.Instance.PlayCorrectGradingSound();
                 SharedUI.Instance.gamePlayUIManager.controls.ShowPerfects(PlayerPrefsHandler.Perfects);
-                Invoke(nameof(ShowGoodEffect), 0.5f);
+                Invoke(nameof(ShowGoodEffect), 0.5f);*/
             }
             EventManager.InvokeStudentChecked();
         }

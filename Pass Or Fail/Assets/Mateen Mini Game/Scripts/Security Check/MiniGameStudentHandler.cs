@@ -23,7 +23,7 @@ namespace PassOrFail.MiniGames
             if (students.Count == 0)
             {
                 //Debug.Log("Complete");
-                GamePlayManager.Instance.LevelComplete(3f);
+                //GamePlayManager.Instance.LevelComplete(3f);
             }
             else
             {
