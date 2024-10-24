@@ -99,7 +99,7 @@ public class Student : MonoBehaviour
     {
         transform.DORotate(_targetRotation, 0.5f);
         PlayAnimation(1, avatarMasking);
-        transform.DOMove(_targetPosition, _movementDuration).OnComplete(() =>
+        transform.DOMove(_targetPosition, _movementDuration).SetEase(Ease.Linear).OnComplete(() =>
         {
             PlayAnimation(0);
             EventManager.InvokeStudentReachedDestination(transform);

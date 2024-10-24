@@ -11,6 +11,7 @@ namespace PassOrFail.MiniGames
 
         private void Start()
         {
+            Debug.Log("Start MiniGameStudentHandler");
             students[0].ShowEmotion(studentPositions[0].position, studentPositions[0].eulerAngles, 2f);
         }
 

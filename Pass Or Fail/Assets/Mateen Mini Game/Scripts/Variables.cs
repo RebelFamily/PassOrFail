@@ -8,6 +8,11 @@ namespace PassOrFail.MiniGames
             Maskable
         }
         
-        
+        public enum  ColorsName
+        {
+            None,
+            Cyan,
+            Magenta
+        }
     }
 }
