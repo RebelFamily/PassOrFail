@@ -45,14 +45,6 @@ public class OralQuizStudent : MonoBehaviour
     }
     private IEnumerator Telling()
     {
-        //ShowEmotion(Expressions.ExpressionType.Happy);
-        /*expressions.ShowRandomExpression();
-        yield return _expressionDelay;
-        expressions.ShowRandomExpression();
-        yield return _expressionDelay;
-        expressions.ShowRandomExpression();
-        yield return _expressionDelay;
-        expressions.ShowRandomExpression();*/
         yield return _expressionDelay;
         SitDown();
     }

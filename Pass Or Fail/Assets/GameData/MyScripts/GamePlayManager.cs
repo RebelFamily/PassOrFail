@@ -151,6 +151,7 @@ public class GamePlayManager : MonoBehaviour
         SendAppMetricaProgressionEvent(GAProgressionStatus.Complete);
         if (_gamePlayState == GamePlayState.MiniGame)
         {
+            SetNextMiniGame();
             SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
             return;
         }
@@ -200,6 +201,12 @@ public class GamePlayManager : MonoBehaviour
             if (PlayerPrefsHandler.CurrentLevelNo >= PlayerPrefsHandler.TotalLevels)
                 PlayerPrefsHandler.CurrentLevelNo = 0;
         }
+    }
+    private void SetNextMiniGame()
+    {
+        PlayerPrefsHandler.CurrentMiniGameNo++;
+        if (PlayerPrefsHandler.CurrentMiniGameNo >= PlayerPrefsHandler.TotalMiniGames)
+            PlayerPrefsHandler.CurrentMiniGameNo = 0;
     }
     public static void ShowLevelCompleteAd()
     {

@@ -7,8 +7,6 @@ using Random = UnityEngine.Random;
 public class OralQuiz : MonoBehaviour
 {
     private readonly Vector3 _playingPos = new(0f, 1.722f, 0f);
-    private readonly Vector3 _endingPos = new(0.112f, 1.384f, 0.130f);
-    private readonly Vector3 _endingRot = new(17.336f, 0f, 0f);
     private readonly Vector3 _playingRot = new(17.336f, 0f, 0f);
     [SerializeField] private Transform cameraPivot;
     [SerializeField] private List<OralQuizStudent> oralQuizStudents;
@@ -178,7 +176,7 @@ public class OralQuiz : MonoBehaviour
         quizCanvas.SetActive(false);
         GamePlayManager.Instance.LevelComplete(1f);
     }
-    public void ShowPerfects(string type)
+    private void ShowPerfects(string type)
     {
         switch (type)
         {

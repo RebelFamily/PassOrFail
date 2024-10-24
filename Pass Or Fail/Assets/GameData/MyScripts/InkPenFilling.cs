@@ -1,6 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
-public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput, IMiniGameUI
+public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput
 {
     private int _penIndex = 0;
     [SerializeField] private Pen[] pens;
@@ -19,7 +19,7 @@ public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput, IMiniGame
     {
         GamePlayManager.Instance.LevelComplete(0.5f);
     }
-    public void EnableCanvas(bool flag)
+    private void EnableCanvas(bool flag)
     {
         canvas.SetActive(flag);
     }
