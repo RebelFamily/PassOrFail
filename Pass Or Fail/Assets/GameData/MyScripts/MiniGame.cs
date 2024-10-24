@@ -50,7 +50,3 @@ public interface IMiniGameInput
     void MiniGameMouseDown ();
     void MiniGameMouseUp();
 }
-public interface IMiniGameUI
-{
-    void EnableCanvas(bool flag);
-}

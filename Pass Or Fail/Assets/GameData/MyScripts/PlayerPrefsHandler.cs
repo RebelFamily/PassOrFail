@@ -61,7 +61,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string TutorialStep2String = "TutorialStep2";
     #endregion
 
-    public const int TotalLevels = 28, TotalActivities = 6;
+    public const int TotalLevels = 28, TotalActivities = 8, TotalMiniGames = 3;
     private const string CurrentLevelString = "currentLevel";
     private const string LevelCounterString = "levelCounter";
     private const string CurrentActivityString = "currentActivity";
@@ -84,7 +84,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     private const string SchoolBuildingFiller = "SchoolBuildingFiller";
     private const string SchoolBuildingCost = "SchoolBuildingPrice";
 
-    public static readonly string[] ActivitiesNames = {"Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Uniform Checking", "Badges Distribution", "Exercise Activity"};
+    public static readonly string[] ActivitiesNames = {"Attendance Marking", "Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Uniform Checking", "Badges Distribution", "Exercise Activity"};
     private static readonly int[] LevelNumbersForActivities = {3, 6, 9, 12, 15, 18, 21, 24};
     private static readonly int[] LevelNumbersForMiniGames = {2, 5, 7, 10, 13, 16, 19, 22, 25};
     

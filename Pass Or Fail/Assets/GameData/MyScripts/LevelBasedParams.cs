@@ -9,8 +9,6 @@ public class LevelBasedParams : MonoBehaviour
     {
         QuestionAnswer,
         AttendanceMarking,
-        CheckingCloths,
-        GeneralKnowledge,
         LibraryDrill,
         RecessRound,
         SchoolDance,
@@ -29,6 +27,7 @@ public class LevelBasedParams : MonoBehaviour
     private UniformChecking _uniformChecking;
     private BadgesDistribution _badgesDistribution;
     private ExerciseActivity _exerciseActivity;
+    private AttendanceMarking _attendanceMarking;
     private readonly UnityEvent _onPass = new UnityEvent();
     private readonly UnityEvent _onFail = new UnityEvent();
 
@@ -49,10 +48,10 @@ public class LevelBasedParams : MonoBehaviour
                 _questionAnswer.SetCameraView();
                 break;
             case ActivityType.AttendanceMarking:
-                break;
-            case ActivityType.CheckingCloths:
-                break;
-            case ActivityType.GeneralKnowledge:
+                if (_attendanceMarking == null)
+                    _attendanceMarking = GetComponent<AttendanceMarking>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
             case ActivityType.LibraryDrill:
                 if (_libraryDiscipline == null)
@@ -186,6 +185,8 @@ public class LevelBasedParams : MonoBehaviour
             _badgesDistribution.StartActivity();
         else if(_exerciseActivity)
             _exerciseActivity.StartActivity();
+        else if(_attendanceMarking)
+            _attendanceMarking.StartActivity();
     }
     public void TeacherGoesBackToNormal(string action)
     {

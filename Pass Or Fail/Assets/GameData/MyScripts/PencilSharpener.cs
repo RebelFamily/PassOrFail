@@ -1,6 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
-public class PencilSharpener : MonoBehaviour, IMiniGame, IMiniGameInput, IMiniGameUI
+public class PencilSharpener : MonoBehaviour, IMiniGame, IMiniGameInput
 {
     private int _pencilIndex = 0;
     [SerializeField] private Pencil[] pencils;
@@ -21,7 +21,7 @@ public class PencilSharpener : MonoBehaviour, IMiniGame, IMiniGameInput, IMiniGa
         //Debug.Log("Ending Pencil Sharpener Mini Game");
         GamePlayManager.Instance.LevelComplete(0.5f);
     }
-    public void EnableCanvas(bool flag)
+    private void EnableCanvas(bool flag)
     {
         canvas.SetActive(flag);
     }
