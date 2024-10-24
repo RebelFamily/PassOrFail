@@ -2,8 +2,8 @@
 {
     public interface IState
     {
-        public void EnterState(StudentStateManager stateManager);
-        public void ExitState(StudentStateManager stateManager);
+        public void EnterState(StudentStateManager student);
         public void UpdateState(StudentStateManager stateManager);
+        public void ExitState(StudentStateManager stateManager);
     }
 }

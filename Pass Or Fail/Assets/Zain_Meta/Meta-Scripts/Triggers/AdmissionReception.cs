@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.Components;
+using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
 
 namespace Zain_Meta.Meta_Scripts.Triggers
@@ -14,12 +15,14 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         [SerializeField] private Image receptionServingFiller;
         [SerializeField] private float servingDelay;
         [SerializeField] private ReceptionPoint[] queuePoints;
+        private ClassroomProfilesManager _classesManager;
         private bool _isPlayerTriggering;
         private float _curTimerToServe;
 
         private void Start()
         {
             collisionTrigger.enabled = !hasReceptionist;
+            _classesManager = ClassroomProfilesManager.Instance;
         }
 
 
@@ -34,6 +37,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private void ServeByPlayer()
         {
+            if (!_isPlayerTriggering) return;
             if (!CanStudentBeAdmitted())
             {
                 receptionServingFiller.fillAmount = 0;
@@ -45,7 +49,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private void ServeByHelper()
         {
-            if (!queuePoints[0].IsOccupied())
+            if (!CanStudentBeAdmitted())
             {
                 receptionServingFiller.fillAmount = 0;
                 receptionist.BackToIdle();
@@ -62,6 +66,9 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             {
                 _curTimerToServe = servingDelay;
                 myCashGeneration.AddCash(1, queuePoints[0].transform);
+                queuePoints[0].GetStudentAtThisPoint().AdmitMePlease();
+                queuePoints[0].FreeTheSpot();
+                RearrangeAllStudentsInTheQueue();
             }
             else
             {
@@ -89,12 +96,30 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private bool CanStudentBeAdmitted()
         {
-            if (!_isPlayerTriggering) return false;
-
             if (!queuePoints[0].IsOccupied()) return false;
+            var firstInLine = queuePoints[0].GetStudentAtThisPoint();
+            if (!firstInLine.CanBeServed()) return false;
+            
+            if (!_classesManager.CheckIfAnyClassIsFree()) return false;
 
-            // check for if all the classes are filled and there is no space left
             return true;
+        }
+
+        private void RearrangeAllStudentsInTheQueue()
+        {
+            var waitingPointIndex = 0;
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < queuePoints.Length; i++)
+            {
+                var student = queuePoints[i].GetStudentAtThisPoint();
+                if (student)
+                {
+                    queuePoints[i].FreeTheSpot();
+                    queuePoints[i - 1].OccupyThis(student);
+                    student.MoveAheadInTheLine(queuePoints[waitingPointIndex++].GetQueuePoint());
+                }
+            }
         }
 
         public void SetReceptionist(bool val)

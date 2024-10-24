@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Zain_Meta.Meta_Scripts.AI;
+using Zain_Meta.Meta_Scripts.Managers;
+using Zain_Meta.Meta_Scripts.Triggers;
 
 namespace Zain_Meta.Meta_Scripts.Components
 {
@@ -6,28 +10,94 @@ namespace Zain_Meta.Meta_Scripts.Components
     public class ClassroomProfile : MonoBehaviour
     {
         [SerializeField] private SeatProfile[] classroomSeats;
-        [SerializeField] private GameObject teachingTriggerArea;
+        [SerializeField] private TeachingArea teachingTriggerArea;
 
+        private bool _isOpen, _isFull;
 
-        private void Update()
+        private ClassroomProfilesManager _classroomProfilesManager;
+
+        private void Start()
         {
-            teachingTriggerArea.SetActive(CheckIfSeatAreAvailable() == -1);
+            teachingTriggerArea.HideTeachingArea();
         }
 
-        public int CheckIfSeatAreAvailable()
+        private void OnEnable()
         {
+            EventsManager.OnStudentSatInClass += CheckForClassStrength;
+            EventsManager.OnTeacherStartTeaching += TeachAllStudentsOfThisClass;
+        }
+
+        private void OnDisable()
+        {
+            EventsManager.OnStudentSatInClass -= CheckForClassStrength;
+            EventsManager.OnTeacherStartTeaching -= TeachAllStudentsOfThisClass;
+        }
+
+        private void TeachAllStudentsOfThisClass(ClassroomProfile classroom)
+        {
+            if (classroom != this) return;
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < classroomSeats.Length; i++)
+            {
+                classroomSeats[i].GiveHomeworkToThisKid();
+            }
+        }
+
+        private void CheckForClassStrength()
+        {
+            if (!_isOpen) return;
+
+            _isFull = IsClassFull();
+            if (_isFull)
+                teachingTriggerArea.HideTeachingArea();
+            else
+                teachingTriggerArea.ShowTeachingArea();
+        }
+
+
+        public Transform GetAvailableSeat(StudentStateManager student)
+        {
+            if (!_isOpen) return null;
+
+            if (_isFull) return null;
             for (var i = 0; i < classroomSeats.Length; i++)
             {
                 if (!classroomSeats[i].IsSeatOccupied())
                 {
-                    classroomSeats[i].MarkForSitting();
-                    return i;
+                    classroomSeats[i].MarkForSitting(student);
+                    return classroomSeats[i].GetSeatingPoint();
                 }
             }
-            return -1;
-            
+
+            return null;
         }
 
-        public SeatProfile GetSeatAt(int index) => classroomSeats[index];
+        public bool AnySeatsAvailable()
+        {
+            if (!_isOpen) return false;
+
+            for (var i = 0; i < classroomSeats.Length; i++)
+            {
+                if (!classroomSeats[i].IsSeatOccupied())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsClassFull()
+        {
+            return !AnySeatsAvailable();
+        }
+
+        public void OpenTheClass()
+        {
+            _isOpen = true;
+            _classroomProfilesManager = ClassroomProfilesManager.Instance;
+            _classroomProfilesManager.AddClasses(this);
+        }
     }
 }

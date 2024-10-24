@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Components;
 
 namespace Zain_Meta.Meta_Scripts.Managers
 {
@@ -7,7 +8,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
     {
         public static event Action<bool,bool> OnEnteredClassroom;
         public static event Action<bool,Vector3,Vector3> OnTriggerTeaching;
+        public static event Action<ClassroomProfile> OnTeacherStartTeaching;
         public static event Action OnClassroomUpgraded;
+        public static event Action OnStudentSatInClass;
+        
 
         public static void EnteredClassroomEvent(bool isLeftClassroom,bool hasEntered)
         {
@@ -22,6 +26,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static void ClassroomUpgradedEvent()
         {
             OnClassroomUpgraded?.Invoke();
+        }
+
+        public static void StudentSatInClassEvent()
+        {
+            OnStudentSatInClass?.Invoke();
+        }
+
+        public static void TeacherStartTeachingEvent(ClassroomProfile obj)
+        {
+            OnTeacherStartTeaching?.Invoke(obj);
         }
     }
 }

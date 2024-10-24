@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.Triggers
@@ -15,69 +16,27 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         [SerializeField] private Transform snappingPoint;
         [SerializeField] private GameObject triggerVisuals;
         [SerializeField] private Image receptionServingFiller;
+        [SerializeField] private ClassroomProfile myClass;
         private bool _isPlayerTriggering;
 
-        private void Start()
+        private void Awake()
         {
             collisionTrigger.enabled = !classHasATeacher;
             triggerVisuals.SetActive(!classHasATeacher);
         }
-
-
-        /*
-        private void Update()
-        {
-            if (classHasATeacher)
-                ServeByHelper();
-        }
-        */
-
-
-        /*private void ServeByPlayer()
-        {
-            if (!CanStudentBeAdmitted())
-            {
-                receptionServingFiller.fillAmount = 0;
-                return;
-            }
-
-            ServingTimer();
-        }*/
-
-        private void ServeByHelper()
-        {
-            /*if (!queuePoints[0].IsOccupied())
-            {
-                receptionServingFiller.fillAmount = 0;
-                receptionist.BackToIdle();
-                return;
-            }*/
-
-            ServingTimer();
-        }
-
-        private void ServingTimer()
-        {
-            /*if (_curTimerToServe < .1f)
-            {
-                _curTimerToServe = servingDelay;
-            }
-            else
-            {
-                _curTimerToServe -= Time.deltaTime;
-            }
-
-            var normalValue = Mathf.InverseLerp(servingDelay, 0, _curTimerToServe);
-            receptionServingFiller.fillAmount = normalValue;*/
-        }
-
+        
         public void StartServing()
         {
             if (classHasATeacher) return;
             _isPlayerTriggering = true; //later used in AI detection
             EventsManager.TriggerTeachingEvent(true,
                 snappingPoint.position, snappingPoint.localEulerAngles);
-            DOVirtual.DelayedCall(2.4f, StopServing);
+            
+            DOVirtual.DelayedCall(2.4f,()=>
+            {
+                EventsManager.TeacherStartTeachingEvent(myClass);
+                StopServing();
+            });
         }
 
         public void StopServing()
@@ -89,20 +48,17 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                 snappingPoint.position, snappingPoint.localEulerAngles);
         }
 
-        private bool CanStudentBeAdmitted()
+        public void HideTeachingArea()
         {
-            if (!_isPlayerTriggering) return false;
-
-
-            // check for if all the classes are filled and there is no space left
-            return true;
+            collisionTrigger.enabled = false;
+            triggerVisuals.SetActive(false);
         }
 
-        public void SetReceptionist(bool val)
+        public void ShowTeachingArea()
         {
-            classHasATeacher = val;
-            collisionTrigger.enabled = !classHasATeacher;
-            triggerVisuals.SetActive(!classHasATeacher);
+            collisionTrigger.enabled = true;
+            triggerVisuals.SetActive(true);
         }
+        
     }
 }

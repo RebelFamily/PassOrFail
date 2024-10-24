@@ -1,10 +1,12 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Components;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
 {
     public class ClassRoomUnlocker : MonoBehaviour,IUnlocker
     {
+        [SerializeField] private ClassroomProfile classroomProfile;
         [SerializeField] private Transform roofPivot;
         [SerializeField] private Transform interiorPropsPivot;
         [SerializeField] private GameObject doorObj;
@@ -29,6 +31,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
                 interiorPropsPivot.DOScaleY(1, .25f);
                 doorObj.SetActive(false);
                 roofPivot.gameObject.SetActive(false);
+                classroomProfile.OpenTheClass();
             });
         }
 
@@ -37,6 +40,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             roofPivot.gameObject.SetActive(false);
             interiorPropsPivot.localScale = Vector3.one;
             doorObj.SetActive(false);
+            classroomProfile.OpenTheClass();
         }
 
         
