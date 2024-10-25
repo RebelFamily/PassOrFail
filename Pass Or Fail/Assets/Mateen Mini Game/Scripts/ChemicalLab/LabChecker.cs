@@ -9,6 +9,8 @@ public class LabChecker : MonoBehaviour
     [SerializeField] private Transform landPlacePosition, landRestPosition, studentReadyPosition;
     [SerializeField] private GameObject liquid;
     [SerializeReference] private Material cyanMaterial, magentaMaterial;
+    [SerializeField] private SpriteRenderer goalToAchieve;
+    [SerializeField] private GameObject goodEffect, badEffect;
     private Variables.ColorsName _lastSpawnColor = Variables.ColorsName.None;
     private BoxCollider _boxCollider;
     private GameObject _spawnedModel;
@@ -53,6 +55,7 @@ public class LabChecker : MonoBehaviour
         studentLabData[_currentStudentIndex].transform.DOMove(studentReadyPosition.position, .5f);
         studentLabData[_currentStudentIndex].transform.DORotate(studentReadyPosition.eulerAngles, .5f);
         studentLabData[_currentStudentIndex].labData.landDisablePart.transform.DOMove(landRestPosition.position, .5f);
+        goalToAchieve.sprite = studentLabData[_currentStudentIndex].labData.targetToAchieve;
     }
 
     private void CloseLandModel()
@@ -65,12 +68,45 @@ public class LabChecker : MonoBehaviour
             .OnComplete((
                 () =>
                 {
-                    studentLabData[_currentStudentIndex].labData.landModel.transform.parent =
-                        studentLabData[_currentStudentIndex].labData.landModelParent;
-                    miniGameStudentHandler.ExitStudent(emotion: Expressions.ExpressionType.Normal,true);
+                    var model = studentLabData[_currentStudentIndex].labData.landModel.transform;
+                    model.DOShakePosition(1, .07f).OnComplete(((() =>
+                    {
+                        ShowResultEffect();
+                        Invoke(nameof(MergeModelWithStudent),2f);
+                        
+                    })));
+                   
                 }));
+       
     }
 
+    private void ShowResultEffect()
+    {
+        switch (_accuracy)
+        {
+            case > 80:
+                goodEffect.SetActive(true);
+                break;
+            case > 65 and <= 80:
+                badEffect.SetActive(true);
+                break;
+        }
+    }
+
+    private void MergeModelWithStudent()
+    {
+        goodEffect.SetActive(false);
+        badEffect.SetActive(false);
+        var model = studentLabData[_currentStudentIndex].labData.landModel.transform;
+        model.parent = studentLabData[_currentStudentIndex].labData.landModelParent;
+        model.DOMove(studentLabData[_currentStudentIndex].labData.landModelFinalPosition.position, .5f);
+        model.DORotate(studentLabData[_currentStudentIndex].labData.landModelFinalPosition.eulerAngles, .5f).OnComplete((
+            () =>
+            {
+                miniGameStudentHandler.ExitStudent(emotion: Expressions.ExpressionType.Normal,true);
+                goalToAchieve.sprite = null;
+            }));
+    }
     private void SetRequirements(Variables.ColorsName colorsName, bool isJobFinished)
     {
         _targetSlotColor = colorsName;

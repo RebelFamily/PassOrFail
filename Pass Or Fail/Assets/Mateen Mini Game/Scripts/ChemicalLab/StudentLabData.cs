@@ -9,7 +9,7 @@ namespace PassOrFail.MiniGames
         public GameObject landDisablePart;
         public AcidData[] acidData;
         public BoxCollider stopCollider;
-        public Vector3 landModelPosition;
+        public Transform landModelFinalPosition;
         public Transform landModelParent;
         public Transform initialLiquidPosition;
         public Transform liquidParent;
