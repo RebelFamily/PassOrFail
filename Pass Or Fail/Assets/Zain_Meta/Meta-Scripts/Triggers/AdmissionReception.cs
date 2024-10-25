@@ -23,6 +23,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {
             collisionTrigger.enabled = !hasReceptionist;
             _classesManager = ClassroomProfilesManager.Instance;
+            _curTimerToServe = servingDelay;
         }
 
 
@@ -66,9 +67,11 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             {
                 _curTimerToServe = servingDelay;
                 myCashGeneration.AddCash(1, queuePoints[0].transform);
-                queuePoints[0].GetStudentAtThisPoint().AdmitMePlease();
+                var firstInLine = queuePoints[0].GetStudentAtThisPoint();
+                firstInLine.GetRequirements().AssignMeClasses();
                 queuePoints[0].FreeTheSpot();
                 RearrangeAllStudentsInTheQueue();
+                firstInLine.AdmitMePlease();
             }
             else
             {
@@ -99,7 +102,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             if (!queuePoints[0].IsOccupied()) return false;
             var firstInLine = queuePoints[0].GetStudentAtThisPoint();
             if (!firstInLine.CanBeServed()) return false;
-            
+
             if (!_classesManager.CheckIfAnyClassIsFree()) return false;
 
             return true;
@@ -116,7 +119,8 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                 if (student)
                 {
                     queuePoints[i].FreeTheSpot();
-                    queuePoints[i - 1].OccupyThis(student);
+                    if (i - 1 >= 0)
+                        queuePoints[i - 1].OccupyThis(student);
                     student.MoveAheadInTheLine(queuePoints[waitingPointIndex++].GetQueuePoint());
                 }
             }

@@ -40,7 +40,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             roofPivot.gameObject.SetActive(false);
             interiorPropsPivot.localScale = Vector3.one;
             doorObj.SetActive(false);
-            classroomProfile.OpenTheClass();
+            DOVirtual.DelayedCall(.1f, () =>
+            {
+                classroomProfile.OpenTheClass();
+            });
         }
 
         

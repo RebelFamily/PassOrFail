@@ -361,6 +361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requirements: {fileID: 7910789951839161920}
+  stateName: 
 --- !u!114 &7910789951839161920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,13 +374,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcb578ce6634e7f8fb591f45de0c6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4.5
+  moveSpeed: 4
   accuracy: 0.1
-  testTarget: {fileID: 0}
+  learningTime: 4
   agentSettings: {fileID: 3318525007647603535}
   destinationSetter: {fileID: 2462124654133474560}
   studentAnimator: {fileID: 8682565498045693005}
+  studentsData: {fileID: 11400000, guid: 55049ae0223bbb34ebeead367cebcd61, type: 2}
+  classesIndex: 
   curTarget: {fileID: 0}
+  isAdmitted: 0
+  curClassIndex: 0
+  randomWaitingPoint: {x: 0, y: 0, z: 0}
+  hasTakenAllClasses: 0
 --- !u!114 &8682565498045693005
 MonoBehaviour:
   m_ObjectHideFlags: 0

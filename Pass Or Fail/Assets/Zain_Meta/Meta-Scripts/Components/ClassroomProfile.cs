@@ -1,6 +1,7 @@
-﻿using System;
+﻿using DG.Tweening;
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.Triggers;
 
@@ -9,10 +10,12 @@ namespace Zain_Meta.Meta_Scripts.Components
     [SelectionBase]
     public class ClassroomProfile : MonoBehaviour
     {
+        [SerializeField] private ClassroomType classSubject;
         [SerializeField] private SeatProfile[] classroomSeats;
         [SerializeField] private TeachingArea teachingTriggerArea;
+        public Transform podiumTransforms,teacherChair;
 
-        private bool _isOpen, _isFull;
+        private bool _isOpen, _isFull,_canBeTaught;
 
         private ClassroomProfilesManager _classroomProfilesManager;
 
@@ -25,12 +28,27 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             EventsManager.OnStudentSatInClass += CheckForClassStrength;
             EventsManager.OnTeacherStartTeaching += TeachAllStudentsOfThisClass;
+            EventsManager.OnStudentLeftTheClassroom += ResetTheClass;
         }
 
         private void OnDisable()
         {
             EventsManager.OnStudentSatInClass -= CheckForClassStrength;
             EventsManager.OnTeacherStartTeaching -= TeachAllStudentsOfThisClass;
+            EventsManager.OnStudentLeftTheClassroom -= ResetTheClass;
+        }
+
+        private void ResetTheClass(StudentStateManager student)
+        {
+            _canBeTaught = false;
+            DOVirtual.DelayedCall(2f, () =>
+            {
+                _isFull = IsClassFull();
+                if (_isFull)
+                    teachingTriggerArea.ShowTeachingArea();
+                else
+                    teachingTriggerArea.HideTeachingArea();
+            });
         }
 
         private void TeachAllStudentsOfThisClass(ClassroomProfile classroom)
@@ -49,10 +67,11 @@ namespace Zain_Meta.Meta_Scripts.Components
             if (!_isOpen) return;
 
             _isFull = IsClassFull();
+            _canBeTaught = _isFull;
             if (_isFull)
-                teachingTriggerArea.HideTeachingArea();
-            else
                 teachingTriggerArea.ShowTeachingArea();
+            else
+                teachingTriggerArea.HideTeachingArea();
         }
 
 
@@ -93,11 +112,15 @@ namespace Zain_Meta.Meta_Scripts.Components
             return !AnySeatsAvailable();
         }
 
+        public bool ClassCanBeTaught() => _canBeTaught;
         public void OpenTheClass()
         {
             _isOpen = true;
             _classroomProfilesManager = ClassroomProfilesManager.Instance;
             _classroomProfilesManager.AddClasses(this);
         }
+
+        public int GetClassroomType() => (int)classSubject;
+        public TeachingArea GetTeachingArea() => teachingTriggerArea;
     }
 }

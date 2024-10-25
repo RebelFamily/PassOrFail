@@ -4,6 +4,7 @@ using Lean.Pool;
 using UnityEngine;
 using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.DataRelated;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.PlayerRelated;
 using Utility = Zain_Meta.Meta_Scripts.Managers.Utility;
@@ -58,7 +59,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             fillerCanvas.SetActive(false);
             unlockCol.enabled = false;
             _unlockingItem?.UnlockWithAnimation();
-            //EventsManager.ItemUnlockedEvent(this);
+            EventsManager.ClassroomUnlockedEvent();
             SaveTheData();
             gameObject.SetActive(false);
         }

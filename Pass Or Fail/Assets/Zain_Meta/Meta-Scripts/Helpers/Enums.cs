@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zain_Meta.Meta_Scripts
+namespace Zain_Meta.Meta_Scripts.Helpers
 {
     public enum ItemsName
     {
@@ -10,6 +10,13 @@ namespace Zain_Meta.Meta_Scripts
         Cash
     }
 
+    public enum ClassroomType
+    {
+        Maths,
+        Science,
+        Arts,
+        Geography
+    }
     [Serializable]
     public struct UpgradePrice
     {
