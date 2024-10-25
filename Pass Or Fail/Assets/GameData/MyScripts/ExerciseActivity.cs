@@ -5,7 +5,7 @@ public class ExerciseActivity : MonoBehaviour
     [SerializeField] private GameObject[] teachers;
     [SerializeField] private Animator[] students;
     private Animator _teacher;
-    [SerializeField] private GameObject canvas, firstStep;
+    [SerializeField] private GameObject canvas, firstStep, tutorial;
     private const float Duration = 0.5f;
     private float _timeCounter = 0f;
     private readonly WaitForSeconds _delay = new (2f), _delay1 = new (0.5f);
@@ -21,6 +21,8 @@ public class ExerciseActivity : MonoBehaviour
     public void StartActivity()
     {
         firstStep.SetActive(true);
+        tutorial.SetActive(true);
+        SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(false);
     }
     private void EndActivity()
     {

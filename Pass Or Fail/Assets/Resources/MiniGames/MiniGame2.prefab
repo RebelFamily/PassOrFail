@@ -5996,6 +5996,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2438770689139044323}
     m_Modifications:
+    - target: {fileID: 1111068055198776538, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6ff962c76bd710e4fb315645d0829f8f, type: 2}
     - target: {fileID: 2346867345006440307, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -6036,11 +6040,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2569432385894730730, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 13d3397e5f2145f4697da460bf79f679, type: 2}
     - target: {fileID: 3105962614667513679, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
       propertyPath: m_Name
       value: Indications (Effects)
       objectReference: {fileID: 0}
     - target: {fileID: 3105962614667513679, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5320455994490079660, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_Name
+      value: FillMore
+      objectReference: {fileID: 0}
+    - target: {fileID: 5320455994490079660, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404213555874104084, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
+      propertyPath: m_Name
+      value: NotEnough
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404213555874104084, guid: 2b5dc723d70261847a10f1a95b0e0919, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

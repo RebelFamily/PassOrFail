@@ -6,9 +6,9 @@ public class Controls : MonoBehaviour
     [SerializeField] private GameObject activityUI, touchPad, reportCard, progressBar, answerImage, timeBar;
     [SerializeField] private GameObject blinkAlert, perfects, warnings, shouts, protectTheEgg;
     [SerializeField] private RectTransform tutorialHand;
-    [SerializeField] private Sprite schoolDanceInstructions, libraryInstructions;
+    [SerializeField] private Sprite schoolDanceInstructions, libraryInstructions, gymClassInstructions;
     private const string Filler = "Filler", ActivityContainer = "Container", StreakText = "StreakText", AdButton = "AdButton", PassAlert = "PassAlert",
-        FailAlert = "FailAlert", ProtectionText = "ProtectionText", ProtectThe = "Protect the ";
+        FailAlert = "FailAlert", ProtectionText = "ProtectionText", ProtectThe = "Protect the ", InfinityHandPath = "Container/InfinityIconBg";
     
     public void EnableQuestionAnswerUI(bool flag)
     {
@@ -75,6 +75,10 @@ public class Controls : MonoBehaviour
     {
         activityUI.SetActive(flag);
     }
+    public void EnableInfinityHandUI(bool flag)
+    {
+        activityUI.transform.Find(InfinityHandPath).gameObject.SetActive(flag);
+    }
     public void EnableTouchPad(bool flag)
     {
         touchPad.SetActive(flag);
@@ -98,10 +102,15 @@ public class Controls : MonoBehaviour
             activityUI.transform.Find(ActivityContainer).GetComponent<Image>().sprite = libraryInstructions;
             timeBar.gameObject.SetActive(false);
         }
-        else
+        else if(activityName == PlayerPrefsHandler.ActivitiesNames[2])
         {
             activityUI.transform.Find(ActivityContainer).GetComponent<Image>().sprite = schoolDanceInstructions;
             timeBar.gameObject.SetActive(true);
+        }
+        else
+        {
+            activityUI.transform.Find(ActivityContainer).GetComponent<Image>().sprite = gymClassInstructions;
+            timeBar.gameObject.SetActive(false);
         }
     }
     public void ShowBlinkAlert(string status)
