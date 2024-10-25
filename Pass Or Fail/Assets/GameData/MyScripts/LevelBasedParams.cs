@@ -94,7 +94,9 @@ public class LevelBasedParams : MonoBehaviour
             case ActivityType.ExerciseActivity:
                 if (_exerciseActivity == null)
                     _exerciseActivity = GetComponent<ExerciseActivity>();
-                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
+                SharedUI.Instance.gamePlayUIManager.controls.EnableInfinityHandUI(false);
+                SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[7]);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
             default:

@@ -38,7 +38,6 @@ public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput
     {
         var t = pens[_penIndex].transform;
         t.DOKill();
-        //sharpener.SetBool(Sharp, false);
         pens[_penIndex].EnableAnimator(false);
         pens[_penIndex].AddBackPenCover();
         particles.Stop();
@@ -77,15 +76,14 @@ public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput
     {
         var t = pens[_penIndex].transform;
         t.DOKill();
-        //sharpener.SetBool(Sharp, false);
         pens[_penIndex].EnableAnimator(false);
         particles.Stop();
         PlayAudio(false);
-        //Debug.Log("IsPencilSharped: " + pencils[_pencilIndex].IsPencilSharped());
         if (pens[_penIndex].IsPenFilled())
         {
             EnableCanvas(false);
             perfects.SetActive(true);
+            pens[_penIndex].AddBackPenCover();
             t.parent = pensDefaultPoint[_penIndex];
             _penIndex++;
             Invoke(nameof(IsMiniGameEnded), 0.5f);
@@ -100,12 +98,10 @@ public class InkPenFilling : MonoBehaviour, IMiniGame, IMiniGameInput
     }
     public void MiniGameMouseDown()
     {
-        //Debug.Log("Pencil Sharpener Mini Game Mouse Down");
         FillPen();
     }
     public void MiniGameMouseUp()
     {
-        //Debug.Log("Pencil Sharpener Mini Game Mouse Up");
         ReleasePen();
     }
     private void PlayAudio(bool flag)
