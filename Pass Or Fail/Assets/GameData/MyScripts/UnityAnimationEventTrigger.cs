@@ -39,7 +39,7 @@ public class UnityAnimationEventTrigger : MonoBehaviour
     }
     private void Callback()
     {
-        //Debug.Log("Callback");
+        Debug.Log("Callback");
         transform.parent.GetComponent<Student>().MoveStudent(true);
     }
 }
