@@ -12,7 +12,7 @@ namespace PassOrFail.MiniGames
 
         private void CloseLoading()
         {
-            SharedUI.Instance.HideAll();
+            //SharedUI.Instance.HideAll();
         }
 
         public void GameComplete()
