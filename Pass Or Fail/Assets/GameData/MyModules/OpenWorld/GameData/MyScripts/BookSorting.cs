@@ -7,6 +7,13 @@ public class BookSorting : MonoBehaviour, IMiniGame
     public static BookSorting Instance;
     private int _completedStackCount = 0;
     private bool _isSorted = false;
+    public enum BookColor
+    {
+        Red,
+        Green,
+        Blue,
+        Yellow
+    }
     private void Awake()
     {
         Instance = this;
