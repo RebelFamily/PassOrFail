@@ -2,11 +2,11 @@
 using DG.Tweening;
 using Lean.Pool;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.DataRelated;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
+using Zain_Meta.Meta_Scripts.MetaRelated.Upgrades;
 using Zain_Meta.Meta_Scripts.PlayerRelated;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated
@@ -15,14 +15,14 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
     {
         [SerializeField] private ItemsName fileName;
 
-        [FormerlySerializedAs("unlockData")] [SerializeField]
-        private UpgradeData upgradeData;
+        [SerializeField] private UpgradeData upgradeData;
 
         [SerializeField] private Utility utility;
         [SerializeField] private int itemPrice;
         [SerializeField] private Image priceFiller;
         [SerializeField] private GameObject fillerCanvas;
         [SerializeField] private Collider unlockCol;
+        [SerializeField] private ClassroomUpgradeProfile upgradeItem;
         [SerializeField] private float sizeChange, originalSize;
         [SerializeField] private Text priceText;
         private IUnlocker _unlockingItem;
@@ -31,18 +31,15 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private CashManager _cashManager;
         private int _curRemainingPrice;
         private int _upgradeIndex;
-        private ES3Settings _settings;
+
         private string _fileString;
 
         private void Awake()
         {
             fillerCanvas.SetActive(true);
             _unlockingItem = GetComponent<IUnlocker>();
-            //loading...
             _fileString = "GameData/Upgrades/" + fileName + ".es3";
-            ES3.CacheFile(_fileString);
-            _settings = new ES3Settings(_fileString, ES3.Location.Cache);
-            upgradeData = ES3.Load(upgradeData.name, upgradeData, _settings);
+            upgradeData = ES3.Load(upgradeData.saveKey, _fileString, upgradeData);
 
             ReloadData();
         }
@@ -74,7 +71,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             if (!_cashManager) _cashManager = CashManager.Instance;
             //if (!_audioManager) _audioManager = AudioManager.Instance;
-            
+
             if (!_isPlayerTriggering)
                 yield break;
             while (_isPlayerTriggering)
@@ -112,7 +109,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                         UpgradeTheRoom();
                         break;
                     }
-                    
+
                     yield return null;
                 }
                 else
@@ -140,16 +137,17 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         private void ReloadData()
         {
-            _upgradeIndex = upgradeData.upgradedLevel - 1;
+            _upgradeIndex = upgradeData.upgradedLevel;
             _isUpgraded = upgradeData.isUpgraded;
             _curRemainingPrice = upgradeData.pricing[_upgradeIndex].remainingPrice;
             itemPrice = upgradeData.pricing[_upgradeIndex].pricesForEachUpgrade;
+
+            upgradeItem.ReloadTheUpgrade(_upgradeIndex, upgradeData.upgradeIndex);
 
             if (_isUpgraded)
             {
                 unlockCol.enabled = false;
                 fillerCanvas.SetActive(false);
-
                 _unlockingItem?.UnlockWithoutAnimation();
             }
             else
@@ -158,7 +156,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
                 priceFiller.fillAmount = normalValue;
                 _curRemainingPrice.SetFloatingPoint(priceText);
-
                 _unlockingItem?.KeepItLocked();
             }
         }
@@ -166,19 +163,15 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void SaveTheData()
         {
             upgradeData.isUpgraded = _isUpgraded;
-            upgradeData.upgradedLevel = _upgradeIndex+1;
             upgradeData.pricing[_upgradeIndex].remainingPrice = _curRemainingPrice;
-           
-            ES3.Save(upgradeData.name, upgradeData, _settings);
-            ES3.StoreCachedFile(_fileString);
+            ES3.Save(upgradeData.saveKey, upgradeData, _fileString);
         }
 
         private void SaveAfterUpgrade()
         {
             upgradeData.isUpgraded = _isUpgraded;
-            upgradeData.upgradedLevel = _upgradeIndex+1;
-            ES3.Save(upgradeData.name, upgradeData, _settings);
-            ES3.StoreCachedFile(_fileString); 
+            upgradeData.upgradedLevel = _upgradeIndex;
+            ES3.Save(upgradeData.saveKey, upgradeData, _fileString);
         }
 
         public bool IsPurchased()
@@ -191,10 +184,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [ContextMenu("Reset The Upgrade Area")]
         public void ResetTheUpgrade()
         {
+            if (_upgradeIndex >= upgradeData.pricing.Length)
+            {
+                _isUpgraded = true;
+                gameObject.SetActive(false);
+            }
+
             fillerCanvas.SetActive(true);
             unlockCol.enabled = true;
             _curRemainingPrice = upgradeData.pricing[_upgradeIndex].remainingPrice;
-            itemPrice=upgradeData.pricing[_upgradeIndex].pricesForEachUpgrade;
+            itemPrice = upgradeData.pricing[_upgradeIndex].pricesForEachUpgrade;
             var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
             priceFiller.fillAmount = normalValue;
             _curRemainingPrice.SetFloatingPoint(priceText);

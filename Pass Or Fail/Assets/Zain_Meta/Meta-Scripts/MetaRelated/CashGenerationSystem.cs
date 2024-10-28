@@ -5,7 +5,6 @@ using UnityEngine;
 using Zain_Meta.Meta_Scripts.DataRelated;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
-using Zain_Meta.Meta_Scripts.PlayerRelated;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
@@ -15,17 +14,18 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private ItemsName itemName;
         [SerializeField] private bool keepPersistent;
         [SerializeField] private int amountToGive;
-        public bool useForTutorial, useForVipShowing;
         public List<Transform> cashMade = new();
         public int curCashAmount;
         [SerializeField] private bool useVertical;
         [SerializeField] private CashOffsetData offsetData;
         [SerializeField] private Transform cashStackPos;
+         private List<Vector3> _nullItemsPos = new List<Vector3>();
         private float curXPos, curYPos, curZPos;
         private float yOffset, xOffset, zOffset;
         private float maxXVal, maxZVal;
-        
-        private Vector3 dispersalVector;
+
+        private int _nullListIndex;
+        private Vector3 _dispersalVector;
 
         private void Awake()
         {
@@ -36,7 +36,14 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             maxZVal = offsetData.maxZVal;
             LoadData();
         }
-        
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                AddCash(1, transform);
+            }
+        }
 
         private void LoadData()
         {
@@ -47,11 +54,12 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             {
                 var cash = utility.SpawnCashAt(transform);
                 cashMade.Add(cash.transform);
-                var positionToPlaceAt = new Vector3(curXPos, curYPos, curZPos);
+                _dispersalVector.x = curXPos;
+                _dispersalVector.y = curYPos;
+                _dispersalVector.z = curZPos;
                 var transform1 = cash.transform;
                 transform1.parent = cashStackPos;
-                transform1.localPosition = positionToPlaceAt;
-               // transform1.localScale = Vector3.one;
+                transform1.localPosition = _dispersalVector;
                 transform1.localEulerAngles = Vector3.zero;
                 if (useVertical)
                 {
@@ -106,6 +114,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 AddCashStack(spawningPos);
         }
 
+        /*
         private void ClearAllTheCash()
         {
             var len = cashMade.Count;
@@ -116,16 +125,28 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             cashMade.Clear();
             SaveData();
         }
+        */
 
         private void AddCashStack(Transform spawnPos)
         {
             var cash = utility.SpawnCashAt(spawnPos);
+            cash.myCashSystem = this;
             var transform1 = cash.transform;
             transform1.parent = cashStackPos;
             cashMade.Add(transform1);
-            var positionToPlaceAt = new Vector3(curXPos, curYPos, curZPos);
-            cash.transform.DOLocalJump(positionToPlaceAt, 1, 1, .5f).SetEase(Ease.InOutSine);
+            _dispersalVector.x = curXPos;
+            _dispersalVector.y = curYPos;
+            _dispersalVector.z = curZPos;
             cash.transform.DOLocalRotate(Vector3.zero, 0).SetEase(Ease.Linear);
+            if (_nullItemsPos.Count != 0)
+            {
+                cash.transform.DOLocalMove(_nullItemsPos[0], .25f).SetEase(Ease.InOutSine);
+                _nullItemsPos.RemoveAt(0);
+                return;
+            }
+
+            cash.transform.DOLocalMove(_dispersalVector, .25f).SetEase(Ease.InOutSine);
+
             if (useVertical)
             {
                 curYPos += yOffset;
@@ -149,7 +170,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 SaveData();
         }
 
-        private Transform GetLastItemFromStack()
+        /*private Transform GetLastItemFromStack()
         {
             if (cashMade.Count == 0)
             {
@@ -188,9 +209,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             if (keepPersistent)
                 SaveData();
             return lastItem;
-        }
+        }*/
 
-        private void OnTriggerEnter(Collider other)
+        /*private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out PlayerCollisionDetection player))
             {
@@ -208,13 +229,27 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void PickByPlayer(PlayerCollisionDetection player)
         {
             /*if (curCashAmount != 0)
-                audioManager.PlaySound("Hit");*/
+                audioManager.PlaySound("Hit");#1#
             var len = curCashAmount;
 
             ClearAllTheCash();
             if (len == 0) return;
             Vibration.VibratePop();
-            DOVirtual.DelayedCall(.75f, () => { player.cashStackingSystem.AddCashToPlayerStack(len); });
+            player.cashStackingSystem.AddCashToPlayerStack(len);
+        }*/
+
+        public void RemoveItemFromList(Transform item)
+        {
+            var index = cashMade.IndexOf(item);
+            if (index != -1)
+            {
+                cashMade.RemoveAt(index);
+                _nullItemsPos.Add(item.localPosition);
+                
+                if (cashMade.Count == 0)    _nullItemsPos.Clear();
+                
+                LeanPool.Despawn(item);
+            }
         }
     }
 }

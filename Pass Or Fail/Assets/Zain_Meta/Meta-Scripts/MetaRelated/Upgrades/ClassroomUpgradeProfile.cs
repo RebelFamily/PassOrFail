@@ -1,23 +1,33 @@
 ﻿using Cinemachine;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.Panel;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
 {
-    public class MathsClassroomUpgrade : MonoBehaviour, IUnlocker
+    public class ClassroomUpgradeProfile : MonoBehaviour, IUnlocker
     {
+        [SerializeField] private MeshLoader[] meshesToUpgrade;
         [SerializeField] private CinemachineVirtualCamera roomCamera;
-        [SerializeField] private GameObject[] roomVariations;
-        [SerializeField] private int curLevel;
-        private int _curRoomIndex;
+        [SerializeField] private int _curUpgradeLevel, _curLevelIndex;
         private ClassroomUpgradePanel _upgradePanel;
 
+        public int GetCurLevel() => _curUpgradeLevel;
+        public int GetCurIndex() => _curLevelIndex;
+        
         private void Start()
         {
             _upgradePanel = ClassroomUpgradePanel.Instance;
             roomCamera.m_Priority = 1;
-            roomVariations[_curRoomIndex].SetActive(true);
+         
+        }
+
+        public void ReloadTheUpgrade(int level,int index)
+        {
+            _curUpgradeLevel = level;
+            _curLevelIndex = index;
+            ApplyMeshes();
         }
 
         private void OnEnable()
@@ -38,7 +48,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
         public void UnlockWithAnimation()
         {
             roomCamera.m_Priority = 30;
-            _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade, ApplyThirdUpgrade, curLevel);
+            _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade, ApplyThirdUpgrade, _curUpgradeLevel);
         }
 
         public void UnlockWithoutAnimation()
@@ -53,23 +63,33 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
 
         private void ApplyFirstUpgrade()
         {
-            roomVariations[_curRoomIndex].SetActive(false);
-            _curRoomIndex = 0;
-            roomVariations[_curRoomIndex].SetActive(true);
+            _curUpgradeLevel = 0;
+            _curLevelIndex = 0;
+            ApplyMeshes();
         }
+
 
         private void ApplySecondUpgrade()
         {
-            roomVariations[_curRoomIndex].SetActive(false);
-            _curRoomIndex = 1;
-            roomVariations[_curRoomIndex].SetActive(true);
+            _curUpgradeLevel = 1;
+            _curLevelIndex = 0;
+            ApplyMeshes();
         }
 
         private void ApplyThirdUpgrade()
         {
-            roomVariations[_curRoomIndex].SetActive(false);
-            _curRoomIndex = 2;
-            roomVariations[_curRoomIndex].SetActive(true);
+            _curUpgradeLevel = 2;
+            _curLevelIndex = 0;
+            ApplyMeshes();
+        }
+
+
+        private void ApplyMeshes()
+        {
+            for (var i = 0; i < meshesToUpgrade.Length; i++)
+            {
+                meshesToUpgrade[i].LoadTheMesh(_curUpgradeLevel, _curLevelIndex);
+            }
         }
     }
 }

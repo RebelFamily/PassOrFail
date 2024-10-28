@@ -8,6 +8,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
     public class ArcadeMovement : MonoBehaviour
     {
         [SerializeField] private CharacterController controller;
+        [SerializeField] private FloatingJoystick joystick;
         [SerializeField] private PlayerAnimator playerAnimator;
         [SerializeField] private float moveSpeed;
         [SerializeField] private float turnSpeed;
@@ -80,15 +81,16 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
         private void GatherInputs()
         {
-            //if (!joystick) return;
+            if (!joystick) return;
             if (_stop)
             {
                 _input = Vector3.zero;
+                joystick.ResetInput();
                 playerAnimator.SetAnimations(_input.magnitude);
             }
 
-            var x = Input.GetAxis("Horizontal");
-            var z = Input.GetAxis("Vertical");
+            var x = joystick.Horizontal;
+            var z = joystick.Vertical;
             _input = new Vector3(x, 0f, z);
             playerAnimator.SetAnimations(_input.magnitude);
         }
@@ -101,6 +103,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             // controller.enabled = false;
             _input = Vector3.zero;
             playerAnimator.SetAnimations(0);
+            joystick.ResetInput();
         }
 
         private void ResumeMovement()

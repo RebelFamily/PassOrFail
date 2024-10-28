@@ -10,7 +10,6 @@ namespace Zain_Meta.Meta_Scripts.AI.States
         {
             _requirements = student.GetRequirements();
             _requirements.EnableTheStudent(true);
-            Debug.Log("admitted-donee");
         }
 
         public void UpdateState(StudentStateManager stateManager)
@@ -18,7 +17,6 @@ namespace Zain_Meta.Meta_Scripts.AI.States
             var seatTarget = _requirements.GetManager().GetSeatAtRequiredClass(stateManager,
                 _requirements.classesIndex.ToArray());
             if(!seatTarget) return;
-            Debug.Log("admitted-updted");
             _requirements.EnableTheStudent(true);
             _requirements.curTarget = seatTarget;
             _requirements.MoveTheTargetTo(seatTarget);

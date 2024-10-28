@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Zain_Meta.Meta_Scripts.Helpers
 {
@@ -28,5 +29,11 @@ namespace Zain_Meta.Meta_Scripts.Helpers
 
             remainingPrice = pricesForEachUpgrade;
         }
+    }
+
+    [Serializable]
+    public struct ClassroomUpgrade
+    {
+        public Mesh[] meshLevels;
     }
 }

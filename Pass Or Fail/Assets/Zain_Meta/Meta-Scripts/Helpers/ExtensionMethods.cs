@@ -54,6 +54,38 @@ namespace Zain_Meta.Meta_Scripts
                 () => { DOVirtual.Float(canvasGroup.alpha, 1, .25f, (alphaVal => canvasGroup.alpha = alphaVal)); });
         }
 
+
+        public static void ParabolicMovement(this Transform throwingObject, Transform target, float duration = 1f,
+            float arcHeight = 1f,Ease ease=Ease.Linear,Action onComplete = null)
+        {
+            Vector3 startPos = throwingObject.position;
+            var targetPosition = target.position;
+            Vector3 midPos = (startPos + targetPosition) * 0.5f;
+            midPos += Vector3.up * arcHeight;
+
+            // Create a bezier path with start, middle, and end positions
+            Vector3[] path = new Vector3[] { startPos, midPos, targetPosition };
+
+            // Use DOPath to move the object along the bezier path
+            throwingObject.DOPath(path, duration, PathType.CatmullRom)
+                .SetEase(ease)
+                .OnUpdate(() =>
+                {
+                    // Calculate the direction to the next point on the path
+                    var nextPosition =
+                        Vector3.Lerp(path[0], path[1], throwingObject.position.z); // Adjust for the proper next point
+                    var direction = (nextPosition - throwingObject.position).normalized;
+
+                    // Calculate target rotation
+                    var targetRotation = Quaternion.LookRotation(direction);
+                    throwingObject.rotation =
+                        Quaternion.RotateTowards(throwingObject.rotation, targetRotation, 720 * Time.deltaTime);
+                })
+                .OnComplete(() => 
+                    onComplete?.Invoke()
+                    );
+        }
+
         public static void ShowCanvas(this CanvasGroup canvas)
         {
             canvas.alpha = 1;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using Lean.Pool;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
     {
         [SerializeField] private ItemsName fileName;
         [SerializeField] private UnlockData unlockData;
+        [SerializeField] private float jumpPower, jumpDelay;
+        [SerializeField] private Ease jumpEase;
         [SerializeField] private Utility utility;
         [SerializeField] private int itemPrice;
         [SerializeField] private Image priceFiller;
@@ -25,9 +28,12 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private IUnlocker _unlockingItem;
         private bool _isPlayerTriggering, _isUnlocked;
         private readonly YieldInstruction _delayLong = new WaitForSeconds(1f);
+        private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
         private int _curRemainingPrice;
 
+        private int _removalPower;
+        private const int MaxPowerToRemove = 20;
         private ES3Settings _settings;
         private string _fileString;
 
@@ -38,11 +44,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             _curRemainingPrice = unlockData.price;
 
             _unlockingItem = GetComponent<IUnlocker>();
-            //loading...
             _fileString = "GameData/" + fileName + ".es3";
-            ES3.CacheFile(_fileString);
-            _settings = new ES3Settings(_fileString, ES3.Location.Cache);
-            unlockData = ES3.Load(unlockData.name, unlockData, _settings);
+            unlockData = ES3.Load(unlockData.saveKey,_fileString, unlockData);
 
             ReloadData();
         }
@@ -52,6 +55,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             _cashManager = CashManager.Instance;
         }
+        
 
         private void UnlockTheCounter()
         {
@@ -67,7 +71,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private IEnumerator StartTakingCashFromPlayer(PlayerCashSystem player)
         {
             if (!_cashManager) _cashManager = CashManager.Instance;
-            //if (!_audioManager) _audioManager = AudioManager.Instance;
 
             while (_isPlayerTriggering)
             {
@@ -92,11 +95,13 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                     var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
                     priceFiller.fillAmount = normalValue;
                     _curRemainingPrice.SetFloatingPoint(priceText);
-                    var cash = utility.SpawnCashAt(player.spawnPos);
+                    var cash = utility.SpawnGivingCashAt(player.spawnPos);
                     cash.transform.parent = transform;
-                    cash.transform.DOLocalJump(Vector3.zero, 1.25f, 1, .35f).SetEase(Ease.Linear)
-                        .OnComplete(() => { LeanPool.Despawn(cash); });
-
+                    cash.transform.ParabolicMovement(transform,jumpDelay,jumpPower,jumpEase, () =>
+                    {
+                        LeanPool.Despawn(cash);
+                    });
+                    
                     if (_curRemainingPrice <= 0)
                     {
                         UnlockTheCounter();
@@ -105,7 +110,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
                     unlockData.remainingPrice = _curRemainingPrice;
                     SaveTheData();
-                    yield return null;
+                    yield return _delayCash;
                 }
                 else
                 {
@@ -167,8 +172,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             unlockData.remainingPrice = _curRemainingPrice;
             unlockData.price = itemPrice;
 
-            ES3.Save(unlockData.name, unlockData, _settings);
-            ES3.StoreCachedFile(_fileString);
+            ES3.Save(unlockData.saveKey, unlockData,_fileString);
+           // ES3.StoreCachedFile(_fileString);
         }
 
         public bool IsPurchased()

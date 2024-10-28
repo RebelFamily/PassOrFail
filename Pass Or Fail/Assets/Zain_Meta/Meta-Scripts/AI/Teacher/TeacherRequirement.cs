@@ -169,11 +169,10 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
 
         public ClassroomProfile GetMyClass() => myClassToTeach;
 
-        public bool ShouldSitInClass()
+        private bool ShouldSitInClass()
         {
             var random = Random.Range(0, 10);
 
-            print("Random Number is :" + random);
             return random > 7;
         }
 
@@ -210,7 +209,6 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         {
             myCoffeeStack.isReadyToAccept = true;
             myChair.Show();
-            
         }
     }
 }
