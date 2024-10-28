@@ -7,8 +7,6 @@ namespace PassOrFail.MiniGames
     {
         public GameObject landModel;
         public GameObject landDisablePart;
-        public AcidData[] acidData;
-        public BoxCollider stopCollider;
         public Transform landModelFinalPosition;
         public Transform landModelParent;
         public Transform initialLiquidPosition;
@@ -51,6 +49,8 @@ namespace PassOrFail.MiniGames
 
         public void PourLiquid(Variables.ColorsName colorsName)
         {
+            _student.GetAnimator().ResetTrigger(Stop);
+            Debug.Log("Pouring Liquid on : "+gameObject.name);
             _student.GetAnimator().SetLayerWeight(1, 0f);
             switch (colorsName)
             {
@@ -65,6 +65,7 @@ namespace PassOrFail.MiniGames
 
         public void StopPouring()
         {
+            Debug.Log("buttonclick StopPouring");
             _student.GetAnimator().SetTrigger(Stop);
             _student.GetAnimator().SetLayerWeight(1, 1f);
         }

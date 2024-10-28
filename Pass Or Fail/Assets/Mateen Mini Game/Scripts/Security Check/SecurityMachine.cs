@@ -28,9 +28,9 @@ namespace PassOrFail.MiniGames
 
         private void DisplayDataOnMachine(Transform student)
         {
-            //Debug.Log("BagIndex : isLimitReached: "+_isLimitReached + " student: "+student + " :: "+bagsData[_currentBagIndex].transform);
             if(_isLimitReached) return;
             if(student != bagsData[_currentBagIndex].transform) return;
+            Debug.Log("BagIndex : student: "+bagsData[_currentBagIndex].transform + " prop Sprite: "+bagsData[_currentBagIndex].bagData.propSprite);
             //Debug.Log("BagIndex : isLimitReached: "+_isLimitReached + " what the fuck ");
             //Debug.Log("Hiding what");
             scanParticles.SetActive(true);

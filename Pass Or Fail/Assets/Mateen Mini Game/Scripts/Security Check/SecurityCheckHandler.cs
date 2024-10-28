@@ -29,8 +29,8 @@ namespace PassOrFail.MiniGames
 
         private void OnDisable()
         {
-            EventManager.OnStudentReachedDestination += EnableCanvas;
-            EventManager.OnStudentChecked += DisableCanvas;
+            EventManager.OnStudentReachedDestination -= EnableCanvas;
+            EventManager.OnStudentChecked -= DisableCanvas;
         }
 
         private void EnableCanvas(Transform student)

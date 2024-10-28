@@ -20,10 +20,11 @@ namespace PassOrFail.MiniGames
             if (students.Count == 0) return;
             if(isAllowed) students[0].ShowEmotion(allowExitPosition.position, allowExitPosition.eulerAngles, 4f, emotion);
             else students[0].ShowEmotion(dontAllowExitPosition.position, dontAllowExitPosition.eulerAngles, 4f, emotion);
+            Debug.Log("Removing Student");
             students.RemoveAt(0);
             if (students.Count == 0)
             {
-                //Debug.Log("Complete");
+                Debug.Log("Complete");
                 //GamePlayManager.Instance.LevelComplete(3f);
             }
             else
