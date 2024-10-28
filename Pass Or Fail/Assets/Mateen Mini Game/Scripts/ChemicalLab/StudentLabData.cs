@@ -13,6 +13,7 @@ namespace PassOrFail.MiniGames
         public Transform liquidParent;
         public GameObject leftFlask,rightFlask;
         public Sprite targetToAchieve;
+        public Animator jerkAnimator;
     }
 
     [System.Serializable]

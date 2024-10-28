@@ -81,31 +81,44 @@ public class LabChecker : MonoBehaviour
         StopLiquidFlow();
         studentLabData[_currentStudentIndex].StopPouring();
         studentLabData[_currentStudentIndex].HideFlaskInHand();
-        studentLabData[_currentStudentIndex].labData.landDisablePart.transform.DOMove(_previousPartPosition, .5f)
+        studentLabData[_currentStudentIndex].labData.landDisablePart.transform.DOMove(_previousPartPosition, 1f)
             .OnComplete((
                 () =>
                 {
-                    var model = studentLabData[_currentStudentIndex].labData.landModel.transform;
-                    model.DOShakePosition(1, .07f).OnComplete(((() =>
-                    {
-                        ShowResultEffect();
-                        Invoke(nameof(MergeModelWithStudent), 1.8f);
-                    })));
+                    //var model = studentLabData[_currentStudentIndex].labData.landModel.transform;
+                    studentLabData[_currentStudentIndex].labData.jerkAnimator.enabled = true;
+                    Invoke(nameof(ProceedModel),1.7f);
+                   
                 }));
+       
     }
 
+    private void ProceedModel()
+    {
+        studentLabData[_currentStudentIndex].labData.jerkAnimator.enabled = false;
+        /*model.DOShakePosition(2f, .07f).OnComplete(((() =>
+        {
+            ShowResultEffect();
+            Invoke(nameof(MergeModelWithStudent), 1.8f);
+        })));*/
+        ShowResultEffect();
+        Invoke(nameof(MergeModelWithStudent), 1.8f);
+    }
     private void ShowResultEffect()
     {
         switch (_accuracy)
         {
             case > 80:
                 goodEffect.SetActive(true);
+                //miniGameStudentHandler.ShowStudentExpression(Expressions.ExpressionType.Happy);
                 break;
             case > 65 and <= 80:
                 badEffect.SetActive(true);
+                //miniGameStudentHandler.ShowStudentExpression(Expressions.ExpressionType.Normal);
                 break;
             case <= 65:
                 smokeEffect.SetActive(true);
+                //miniGameStudentHandler.ShowStudentExpression(Expressions.ExpressionType.Angry0);
                 break;
         }
     }
@@ -141,6 +154,8 @@ public class LabChecker : MonoBehaviour
         {
             if (_lastSpawnColor != colorsName)
                 _isFillingWrongly = true;
+            else
+                _isFillingWrongly = false;
             //_accuracy -= 5;
         }
     }
