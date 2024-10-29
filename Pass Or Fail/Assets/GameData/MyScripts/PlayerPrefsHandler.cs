@@ -61,7 +61,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string TutorialStep2String = "TutorialStep2";
     #endregion
 
-    public const int TotalLevels = 28, TotalActivities = 8, TotalMiniGames = 3;
+    public const int TotalLevels = 28, TotalActivities = 8, TotalMiniGames = 6;
     private const string CurrentLevelString = "currentLevel";
     private const string LevelCounterString = "levelCounter";
     private const string CurrentActivityString = "currentActivity";
@@ -84,7 +84,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     private const string SchoolBuildingFiller = "SchoolBuildingFiller";
     private const string SchoolBuildingCost = "SchoolBuildingPrice";
 
-    public static readonly string[] ActivitiesNames = {"Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Uniform Checking", "Badges Distribution", "Attendance Marking", "Exercise Activity"};
+    public static readonly string[] ActivitiesNames = {"Attendance Marking", "Uniform Checking", "Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Badges Distribution", "Exercise Activity"};
     private static readonly int[] LevelNumbersForActivities = {3, 6, 9, 12, 15, 18, 21, 24};
     private static readonly int[] LevelNumbersForMiniGames = {2, 5, 7, 10, 13, 16, 19, 22, 25};
     
@@ -101,11 +101,11 @@ public class PlayerPrefsHandler : MonoBehaviour
         Timer
     }
     public static string FirstAdType = AdType.Simple.ToString(), InterAdType = AdType.Simple.ToString();
-    public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoToShowMetaString = "LevelNoToShowMeta",
-        ShowMiniGameString = "ShowMiniGame", LevelNoForRatingString = "LevelNoForRating", InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType";
+    public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoForRatingString = "LevelNoForRating", 
+        InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType", ShowAdOnMiniGameString = "ShowAdOnMiniGame";
     public static float FirstAdInterval = 30, InterAdInterval = 30;
-    public static int LevelNoToShowMeta = 1, LevelNoForRating = 3;
-    public static bool ShowMiniGame = false;
+    public static int LevelNoToShowMeta = 15, LevelNoForRating = 20;
+    public static bool ShowAdOnMiniGame = false;
     public static bool IsTimerFirstAd()
     {
         return FirstAdType == AdType.Timer.ToString();

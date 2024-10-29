@@ -98,26 +98,23 @@ public class GamePlayManager : MonoBehaviour
     {
         var path = LevelsPath + PlayerPrefsHandler.CurrentLevelNo;
         //Debug.Log(GameManager.Instance.ActivityFlag+ " CurrentLevelSettings " + GameManager.Instance.CurrentActivity);
-        if (PlayerPrefsHandler.ShowMiniGame)
+        if (!GameManager.Instance.MiniGameFlag)
         {
-            if (!GameManager.Instance.MiniGameFlag)
+            if (PlayerPrefsHandler.IsMiniGameTime())
             {
-                if (PlayerPrefsHandler.IsMiniGameTime())
-                {
-                    GameManager.Instance.MiniGameFlag = true;
-                    _gamePlayState = GamePlayState.MiniGame;
-                    path = MiniGamesPath + PlayerPrefsHandler.CurrentMiniGameNo;
-                    var mini = Instantiate((GameObject) Resources.Load(path));
-                    currenMiniGame = mini.GetComponent<MiniGame>();
-                    environmentManager.SetEnvironment(currenMiniGame.GetEnvironment());
-                    currenMiniGame.StartMiniGame();
-                    mainCamera.SetActive(false);
-                    Invoke(nameof(LevelStart), 0.1f);
-                    return;
-                }
+                GameManager.Instance.MiniGameFlag = true;
+                _gamePlayState = GamePlayState.MiniGame;
+                path = MiniGamesPath + PlayerPrefsHandler.CurrentMiniGameNo;
+                var mini = Instantiate((GameObject) Resources.Load(path));
+                currenMiniGame = mini.GetComponent<MiniGame>();
+                environmentManager.SetEnvironment(currenMiniGame.GetEnvironment());
+                currenMiniGame.StartMiniGame();
+                mainCamera.SetActive(false);
+                Invoke(nameof(LevelStart), 0.1f);
+                return;
             }
-            GameManager.Instance.MiniGameFlag = false;
         }
+        GameManager.Instance.MiniGameFlag = false;
         if (!GameManager.Instance.ActivityFlag)
         {
             if (PlayerPrefsHandler.IsActivityTime())
@@ -152,6 +149,8 @@ public class GamePlayManager : MonoBehaviour
         if (_gamePlayState == GamePlayState.MiniGame)
         {
             SetNextMiniGame();
+            if(PlayerPrefsHandler.ShowAdOnMiniGame)
+                ShowLevelCompleteAd();
             SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
             return;
         }

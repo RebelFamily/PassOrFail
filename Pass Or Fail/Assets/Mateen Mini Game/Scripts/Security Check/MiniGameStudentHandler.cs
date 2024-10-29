@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace PassOrFail.MiniGames
 {
     public class MiniGameStudentHandler : MonoBehaviour
@@ -8,13 +7,10 @@ namespace PassOrFail.MiniGames
         [SerializeField] private List<Student> students;
         [SerializeField] private Transform[] studentPositions;
         [SerializeField] private Transform allowExitPosition,dontAllowExitPosition;
-
         private void Start()
         {
-            Debug.Log("Start MiniGameStudentHandler");
             students[0].ShowEmotion(studentPositions[0].position, studentPositions[0].eulerAngles, 2f);
         }
-
         public void ExitStudent(Expressions.ExpressionType emotion, bool isAllowed)
         {
             if (students.Count == 0) return;
@@ -23,8 +19,7 @@ namespace PassOrFail.MiniGames
             students.RemoveAt(0);
             if (students.Count == 0)
             {
-                //Debug.Log("Complete");
-                //GamePlayManager.Instance.LevelComplete(3f);
+                Invoke(nameof(GameEnd), 3f);
             }
             else
             {
@@ -35,6 +30,10 @@ namespace PassOrFail.MiniGames
                     index++;
                 }
             }
+        }
+        private void GameEnd()
+        {
+            GamePlayManager.Instance.LevelComplete(0f);
         }
     }
 }

@@ -57,9 +57,8 @@ public class FirebaseManager : MonoBehaviour
             {PlayerPrefsHandler.FirstAdTypeString, PlayerPrefsHandler.AdType.Simple.ToString()},
             {PlayerPrefsHandler.InterAdIntervalString, 30},
             {PlayerPrefsHandler.InterAdTypeString, PlayerPrefsHandler.AdType.Simple.ToString()},
-            {PlayerPrefsHandler.LevelNoToShowMetaString, 1},
-            {PlayerPrefsHandler.ShowMiniGameString, false},
-            {PlayerPrefsHandler.LevelNoForRatingString, 3}
+            {PlayerPrefsHandler.LevelNoForRatingString, 3},
+            {PlayerPrefsHandler.ShowAdOnMiniGameString, false}
         };
         Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults)
             .ContinueWithOnMainThread(task =>
@@ -152,12 +151,10 @@ public class FirebaseManager : MonoBehaviour
             if(PlayerPrefsHandler.IsTimerFirstAd() && PlayerPrefsHandler.IsTimerInterAd())
                 AdsCaller.Instance.StartInterAdTimer();
         }
-        PlayerPrefsHandler.LevelNoToShowMeta = (int)Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
-            PlayerPrefsHandler.LevelNoToShowMetaString).LongValue;
-        PlayerPrefsHandler.ShowMiniGame = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
-            PlayerPrefsHandler.ShowMiniGameString).BooleanValue;
         PlayerPrefsHandler.LevelNoForRating = (int)Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
             PlayerPrefsHandler.LevelNoForRatingString).LongValue;
+        PlayerPrefsHandler.ShowAdOnMiniGame = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
+            PlayerPrefsHandler.ShowAdOnMiniGameString).BooleanValue;
     }
     #endregion
 }

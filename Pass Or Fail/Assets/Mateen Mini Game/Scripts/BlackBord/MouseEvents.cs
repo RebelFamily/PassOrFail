@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-
 namespace PassOrFail.MiniGames
 {
     public class MouseEvents : MonoBehaviour
@@ -8,31 +7,20 @@ namespace PassOrFail.MiniGames
         private bool _isDragging = false;
         private IDragAble _data;
         private readonly float _timeToMoveBack = .3f;
-
-
         private Transform _drgaingObject;
-
         private bool _isMovingBack;
-
         private bool _isToBlockInput;
-
         private Vector3 _startingPosition;
         private Quaternion _startingRotation;
-        private Camera _mainCamera;
+        [SerializeField] private Camera camera;
         private float _previousX;
-
-        private void Awake()
-        {
-            _mainCamera = Camera.main;
-        }
-
         private void LateUpdate()
         {
             if (_isToBlockInput) return;
             if (_isMovingBack) return;
             if (Input.GetMouseButtonDown(0))
             {
-                RaycastHit2D hit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Input.mousePosition));
+                RaycastHit2D hit = Physics2D.GetRayIntersection(camera.ScreenPointToRay(Input.mousePosition));
 
                 if (hit.collider != null)
                 {
@@ -56,8 +44,8 @@ namespace PassOrFail.MiniGames
 
             if (_isDragging && _drgaingObject != null)
             {
-                Vector3 mousePosition = _mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-                    Input.mousePosition.y, Mathf.Abs(_mainCamera.transform.position.z)));
+                Vector3 mousePosition = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
+                    Input.mousePosition.y, Mathf.Abs(camera.transform.position.z)));
                 _drgaingObject.position = new Vector3(mousePosition.x, mousePosition.y, 0);
                 /*if (mousePosition.x > _previousX)
                     _drgaingObject.rotation = Quaternion.Euler(0, 0, _drgaingObject.eulerAngles.z - .3f);

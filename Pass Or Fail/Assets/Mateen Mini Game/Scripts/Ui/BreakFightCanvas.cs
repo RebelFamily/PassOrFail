@@ -2,13 +2,12 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
 namespace PassOrFail.MiniGames
 {
-    public class BreakFightCanvas : MonoBehaviour
+    public class BreakFightCanvas : MonoBehaviour, IMiniGame
     {
         [SerializeField] private Button fightBreakBtn, sprayBtn ,tapItBtn;
-
+        [SerializeField] private GameObject canvas, perfects;
         [SerializeField] private  Image fillBar;
         private bool _isAlreadyStoppedFight,_isAlreadyGameStart;
         [SerializeField] private GameObject stopUi;
@@ -21,7 +20,6 @@ namespace PassOrFail.MiniGames
             tapItBtn.onClick.AddListener(ClickOnScreen);
             Callbacks.OnRewardSpray += ReceiveSprayReward;
         }
-
         private void OnDisable()
         {
             fightBreakBtn.onClick.RemoveListener(BreakFightClick);
@@ -29,21 +27,18 @@ namespace PassOrFail.MiniGames
             tapItBtn.onClick.RemoveListener(ClickOnScreen);
             Callbacks.OnRewardSpray -= ReceiveSprayReward;
         }
-
         private void BreakFightClick()
         {
             var filledAmount = fillBar.fillAmount + .05f;
             fillBar.fillAmount = filledAmount;
-            CheckIfFilled(filledAmount);
+            CheckIfFilled(filledAmount, false);
         }
-
         private void SprayClick()
         {
             if(_isAlreadyStoppedFight) return; 
             Callbacks.rewardType = Callbacks.RewardType.RewardSpray;
             AdsCaller.Instance.ShowRewardedAd();
         }
-
         private void ClickOnScreen()
         {
             if(_isAlreadyGameStart) return;
@@ -52,30 +47,36 @@ namespace PassOrFail.MiniGames
             tapItBtn.gameObject.SetActive(false);
             Invoke(nameof(ActivateStopGameUi),1f);
         }
-
         private void ActivateStopGameUi()
         {
             stopUi.SetActive(true);
         }
-
         private void ReceiveSprayReward()
         {
             spray.SetActive(true);
             fillBar.DOFillAmount(1, .5f).OnComplete((() =>
             {
-                CheckIfFilled(1);
+                CheckIfFilled(1, true);
             }));
         }
-        private void CheckIfFilled(float amount)
+        private void CheckIfFilled(float amount, bool isReward)
         {
             if(amount < 1) return;
-            //Game Complete
             _isAlreadyStoppedFight = true;
             EventManager.InvokeStopPlayerFight();
-            //onStopFight?.Invoke();
             fightBreakBtn.interactable = false;
             sprayBtn.interactable = false;
-            gameObject.SetActive(false);
+            canvas.SetActive(false);
+            //perfects.SetActive(true);
+            Invoke(nameof(EndMiniGame), isReward ? 4f : 2f);
+        }
+        public void StartMiniGame()
+        {
+            
+        }
+        public void EndMiniGame()
+        {
+            GamePlayManager.Instance.LevelComplete(0f);
         }
     }
 }

@@ -7,7 +7,8 @@ public class EnvironmentManager : MonoBehaviour
         ClassRoomWithTable,
         ClassRoomWithoutTable,
         Corridor,
-        SportsArea
+        SportsArea,
+        None
     }
     [SerializeField] private Inventory inventory;
     [SerializeField] private GameObject classRoom, corridor, lecturerTable, sportsArea;
@@ -42,7 +43,11 @@ public class EnvironmentManager : MonoBehaviour
                 sportsArea.SetActive(true);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(environmentType), environmentType, null);
+                lecturerTable.SetActive(false);
+                classRoom.SetActive(false);
+                corridor.SetActive(false);
+                sportsArea.SetActive(false);
+                break;
         }
     }
     public Inventory GetInventory()
