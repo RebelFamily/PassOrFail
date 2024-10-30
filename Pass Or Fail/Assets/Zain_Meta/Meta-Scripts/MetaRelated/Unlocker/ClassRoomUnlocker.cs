@@ -1,17 +1,20 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.Components;
+using Zain_Meta.Meta_Scripts.Helpers;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
 {
-    public class ClassRoomUnlocker : MonoBehaviour,IUnlocker
+    public class ClassRoomUnlocker : MonoBehaviour, IUnlocker
     {
+        [SerializeField] private ClassroomType type;
         [SerializeField] private ClassroomProfile classroomProfile;
         [SerializeField] private Transform roofPivot;
         [SerializeField] private Transform interiorPropsPivot;
         [SerializeField] private GameObject doorObj;
-        
-        
+
+
         public void KeepItLocked()
         {
             roofPivot.gameObject.SetActive(true);
@@ -19,8 +22,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             roofPivot.localScale = Vector3.one;
             doorObj.SetActive(true);
         }
+
         public void UnlockWithAnimation()
         {
+            CameraManager.Instance.SetCameraTarget(classroomProfile.transform,1f);
             roofPivot.localScale = Vector3.one;
             interiorPropsPivot.localScale = Vector3.one;
             var localScale = interiorPropsPivot.localScale;
@@ -33,6 +38,15 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
                 roofPivot.gameObject.SetActive(false);
                 classroomProfile.OpenTheClass();
             });
+            
+            if (OnBoardingManager.TutorialComplete) return;
+
+            if (type == ClassroomType.Maths)
+                OnBoardingManager.Instance.SetStateBasedOn(TutorialState.UnlockClassroom,
+                    TutorialState.IdleForSometime);
+            if (type == ClassroomType.Science)
+                OnBoardingManager.Instance.SetStateBasedOn(TutorialState.UnlockNextClassroom,
+                    TutorialState.Complete);
         }
 
         public void UnlockWithoutAnimation()
@@ -40,12 +54,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             roofPivot.gameObject.SetActive(false);
             interiorPropsPivot.localScale = Vector3.one;
             doorObj.SetActive(false);
-            DOVirtual.DelayedCall(.1f, () =>
-            {
-                classroomProfile.OpenTheClass();
-            });
+            DOVirtual.DelayedCall(.1f, () => { classroomProfile.OpenTheClass(); });
         }
-
-        
     }
 }

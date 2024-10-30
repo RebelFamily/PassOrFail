@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.Components;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
 
@@ -19,11 +20,17 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         private bool _isPlayerTriggering;
         private float _curTimerToServe;
 
+
+        private int _startingStudents;
+
         private void Start()
         {
             collisionTrigger.enabled = !hasReceptionist;
             _classesManager = ClassroomProfilesManager.Instance;
             _curTimerToServe = servingDelay;
+            receptionServingFiller.fillAmount = 0;
+            _startingStudents = PlayerPrefs.GetInt("StartingStudents", 0);
+            print("Served Students Are " + _startingStudents);
         }
 
 
@@ -39,7 +46,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         private void ServeByPlayer()
         {
             if (!_isPlayerTriggering) return;
-            if (!CanStudentBeAdmitted())
+            if (!CanStudentBeAdmittedByPlayer())
             {
                 receptionServingFiller.fillAmount = 0;
                 return;
@@ -71,7 +78,20 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                 firstInLine.GetRequirements().AssignMeClasses();
                 queuePoints[0].FreeTheSpot();
                 RearrangeAllStudentsInTheQueue();
-                firstInLine.AdmitMePlease();
+                if (!OnBoardingManager.Instance.CheckForCurrentState(TutorialState.AdmitKids))
+                    firstInLine.AdmitMePlease();
+                else
+                {
+                    firstInLine.WaitOutside();
+                    _startingStudents++;
+                    if (_startingStudents >= 4)
+                    {
+                        OnBoardingManager.Instance.SetStateBasedOn(TutorialState.AdmitKids,
+                            TutorialState.PickReceptionCash);
+                    }
+
+                    PlayerPrefs.SetInt("StartingStudents", _startingStudents);
+                }
             }
             else
             {
@@ -86,8 +106,16 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {
             if (hasReceptionist) return;
             _isPlayerTriggering = true;
+            if (OnBoardingManager.Instance.CheckForCurrentState(TutorialState.GotoReception) ||
+                OnBoardingManager.Instance.CheckForCurrentState(TutorialState.AdmitKids))
+                OnBoardingManager.Instance.HideWaypoints();
             receptionServingFiller.fillAmount = 0;
             _curTimerToServe = servingDelay;
+
+            if (OnBoardingManager.TutorialComplete) return;
+
+            OnBoardingManager.Instance.SetStateBasedOn(TutorialState.GotoReception,
+                TutorialState.AdmitKids);
         }
 
         public void StopServing()
@@ -104,6 +132,19 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             if (!firstInLine.CanBeServed()) return false;
 
             if (!_classesManager.CheckIfAnyClassIsFree()) return false;
+
+            return true;
+        }
+
+        private bool CanStudentBeAdmittedByPlayer()
+        {
+            if (!queuePoints[0].IsOccupied()) return false;
+            var firstInLine = queuePoints[0].GetStudentAtThisPoint();
+            if (!firstInLine.CanBeServed()) return false;
+
+            if (!OnBoardingManager.Instance.CheckForCurrentState(TutorialState.AdmitKids))
+                if (!_classesManager.CheckIfAnyClassIsFree())
+                    return false;
 
             return true;
         }

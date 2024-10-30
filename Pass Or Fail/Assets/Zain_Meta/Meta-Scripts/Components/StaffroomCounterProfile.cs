@@ -21,7 +21,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             {
                 if (!handler)
                 {
-                    Debug.LogError("No Handler Associated");
+                    Debug.LogWarning("No Handler Associated");
                     return;
                 }
 

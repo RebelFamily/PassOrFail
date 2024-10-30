@@ -31,11 +31,11 @@ namespace Zain_Meta.Meta_Scripts.Components
             if (isLeftSide)
             {
                 rightCamera.m_Priority = 1;
-                leftCamera.m_Priority = 20;
+                leftCamera.m_Priority = 10;
             }
             else
             {
-                rightCamera.m_Priority = 20;
+                rightCamera.m_Priority =10;
                 leftCamera.m_Priority = 1;
             }
         }

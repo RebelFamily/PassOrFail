@@ -13,10 +13,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         [SerializeField] private StudentsData studentsData;
         [SerializeField] private Utility utility;
-        [SerializeField] private Transform studentsSpawningPos;
         [SerializeField] private List<StudentRequirements> students = new();
         [SerializeField] private Collider spawningArea;
-        private const string _fileName = "GameData/SaveFile.es3";
+        [SerializeField] private int initialSpawningCount;
+        private const string FileName = "GameData/StudentsData.es3";
         private ES3Settings _settings;
 
         private void Awake()
@@ -25,20 +25,50 @@ namespace Zain_Meta.Meta_Scripts.Managers
             LoadData();
         }
 
-        private void Start()
+        #region Event Callbacks
+
+        private void OnEnable()
         {
-            SpawnLoadedStudents();
+            EventsManager.OnStudentStateUpdated += SaveDataInFile;
+            EventsManager.OnStudentLeftTheSchool += RemoveThisStudent;
         }
 
-        private void Update()
+        private void OnDisable()
         {
+            EventsManager.OnStudentStateUpdated -= SaveDataInFile;
+            EventsManager.OnStudentLeftTheSchool -= RemoveThisStudent;
+        }
+
+        private void RemoveThisStudent(StudentRequirements student)
+        {
+            if (!students.Contains(student)) return;
+            students.Remove(student);
+            SaveDataInFile();
             SpawnUnAdmittedStudents();
         }
 
-        public void AddStudentInTheSchool(StudentRequirements requirements)
+        #endregion
+
+
+        private void Start()
         {
-            if (students.Contains(requirements)) return;
-            students.Add(requirements);
+            SpawnLoadedStudents();
+            for (var i = 0; i < initialSpawningCount; i++)
+            {
+                SpawnUnAdmittedStudents();
+            }
+        }
+
+
+        public void AddStudentInTheSchool(StudentRequirements requirements,bool saveDataAlso)
+        {
+            if (!students.Contains(requirements))
+            {
+                students.Add(requirements);
+            }
+
+            if (saveDataAlso)
+                SaveDataInFile();
         }
 
         private void SpawnLoadedStudents()
@@ -58,12 +88,8 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private void SpawnUnAdmittedStudents()
         {
-            if (Input.GetMouseButtonDown(1))
-            {
-                var student = utility.SpawnStudentAt(studentsSpawningPos);
-                student.ChangeState(student.EnterSchoolState);
-                SaveDataInFile();
-            }
+            var student = utility.SpawnStudentAt(PointGenerator.RandomPointInBounds(spawningArea.bounds));
+            student.ChangeState(student.EnterSchoolState);
         }
 
         private void SaveDataInFile()
@@ -74,8 +100,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 SaveDataState(students[i]);
             }
 
-            ES3.Save("Students", studentsData);
-            // ES3.StoreCachedFile();
+            ES3.Save("Students", studentsData, FileName);
         }
 
         private void SaveDataState(StudentRequirements studentRequirements)
@@ -88,9 +113,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private void LoadData()
         {
-            /*ES3.CacheFile(_fileName);
-            _settings = new ES3Settings(ES3.Location.Cache);*/
-            studentsData = ES3.Load("Students", studentsData);
+            studentsData = ES3.Load("Students", FileName, studentsData);
         }
     }
 }

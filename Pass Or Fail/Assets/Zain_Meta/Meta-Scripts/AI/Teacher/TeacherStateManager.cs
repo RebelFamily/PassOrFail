@@ -21,9 +21,9 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         private ITeacherState _curState;
         public string stateName;
 
-        private void Start()
+        private void OnEnable()
         {
-            ChangeState(GoingToStaffRoom);
+            ChangeState(WaitInStaffRoom);
         }
 
         private void LateUpdate()

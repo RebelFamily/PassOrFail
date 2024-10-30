@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI.States;
+using Zain_Meta.Meta_Scripts.AI.Student.States;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI
@@ -21,6 +22,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         public LeaveClassroom LeaveClassroom = new LeaveClassroom();
         public WaitInCorridor WaitInCorridor = new WaitInCorridor();
         public MoveToCorridor MoveToCorridor = new MoveToCorridor();
+        public LeaveSchool LeaveSchool = new LeaveSchool();
 
         private IState _curState;
 
@@ -54,15 +56,20 @@ namespace Zain_Meta.Meta_Scripts.AI
         {
             if (_curState != StandInQueue) return;
             ChangeState(GoToClassRoom);
-            _studentsDataManager.AddStudentInTheSchool(requirements);
+            _studentsDataManager.AddStudentInTheSchool(requirements,true);
         }
         public void AdmitMePleaseForcefully()
         {
-            ChangeState(GoToClassRoom);
+            ChangeState(WaitInCorridor);
             _studentsDataManager=StudentsDataManager.Instance;
-            _studentsDataManager.AddStudentInTheSchool(requirements);
+            _studentsDataManager.AddStudentInTheSchool(requirements,false);
         }
 
+        public void WaitOutside()
+        {
+            ChangeState(WaitInCorridor);
+            _studentsDataManager.AddStudentInTheSchool(requirements,true);
+        }
         public void StartLearning()
         {
             if (_curState != SitOnDesk) return;

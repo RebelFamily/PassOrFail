@@ -131,6 +131,12 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
             _curTeachingIndex++;
         }
 
+        public bool IsPlayerTeachingMyClass()
+        {
+            return  myClassToTeach.GetTeachingArea().isPlayerTriggering;
+           
+        }
+
         public void StartRestingTimer()
         {
             _curRestingTimer = restingTime;

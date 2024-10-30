@@ -40,7 +40,7 @@ namespace Zain_Meta.Meta_Scripts.Panel
             optionA.onClick.RemoveAllListeners();
             optionB.onClick.RemoveAllListeners();
             optionC.onClick.RemoveAllListeners();
-            EventsManager.ClassroomUpgradedEvent();
+            EventsManager.ClassReadyToUpgradeEvent(null, false);
         }
     }
 }

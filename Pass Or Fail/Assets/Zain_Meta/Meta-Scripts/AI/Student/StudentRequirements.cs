@@ -81,7 +81,12 @@ namespace Zain_Meta.Meta_Scripts.AI
             destinationSetter.targetVector = target;
         }
 
-        public ClassroomProfilesManager GetManager() => _classesManager;
+        public ClassroomProfilesManager GetManager()
+        {
+            if (!_classesManager)
+                _classesManager = ClassroomProfilesManager.Instance;
+            return _classesManager;
+        }
 
         public void FaceTheTarget()
         {
@@ -94,16 +99,14 @@ namespace Zain_Meta.Meta_Scripts.AI
 
         public void CheckForLeavingTheSchool()
         {
+            EventsManager.StudentStateUpdatedEvent();
             if (curClassIndex >= classesIndex.Count)
                 hasTakenAllClasses = true;
             if (!hasTakenAllClasses) return;
 
             print("Chal Beta Nikal Shaba");
 
-            /*if (_isGone) return;
-            _isGone = true;
-            EventsManager.CustomerInitiated(false);
-            EventsManager.PersonLeftTheParkEvent(this);*/
+            EventsManager.StudentLeftTheSchoolEvent(this);
         }
 
         public void ResetTheMovementAnimation() => studentAnimator.NormalizeTheMovement();
@@ -139,7 +142,7 @@ namespace Zain_Meta.Meta_Scripts.AI
 
             print("assign Classes");
             _classesManager.AssignClasses(this);
-            
+            EventsManager.StudentStateUpdatedEvent();
         }
 
         public void AdjustRidesIndices(int replacingIndex)
@@ -147,7 +150,7 @@ namespace Zain_Meta.Meta_Scripts.AI
             (classesIndex[replacingIndex], classesIndex[curClassIndex]) =
                 (classesIndex[curClassIndex], classesIndex[replacingIndex]);
         }
-        
+
         public void PopulateStates(int[] statesIndices, int previousStateIndex)
         {
             foreach (var t in statesIndices)
@@ -157,6 +160,10 @@ namespace Zain_Meta.Meta_Scripts.AI
 
             curClassIndex = previousStateIndex;
         }
+
+        public void DestroyMe()
+        {
+            Destroy(gameObject);
+        }
     }
-    
 }

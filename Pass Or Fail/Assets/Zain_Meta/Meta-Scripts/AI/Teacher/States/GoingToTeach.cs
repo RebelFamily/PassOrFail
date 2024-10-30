@@ -14,6 +14,7 @@
 
         public void UpdateState(TeacherStateManager teacher)
         {
+            
             if (!_requirement.CheckForDistance()) return;
 
             if (!_requirement.GetMyClass().ClassCanBeTaught())

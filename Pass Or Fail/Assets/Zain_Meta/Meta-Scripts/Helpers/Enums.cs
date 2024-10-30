@@ -8,7 +8,8 @@ namespace Zain_Meta.Meta_Scripts.Helpers
         ClassRooms,
         Reception,
         RoomUpgrades,
-        Cash
+        Cash,
+        Teacher
     }
 
     public enum ClassroomType

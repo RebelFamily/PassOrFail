@@ -17,6 +17,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         [SerializeField] private List<ClassroomProfile> allClassrooms = new();
         [SerializeField] private WaitingLine waitingLine;
+        [SerializeField] private Transform exitingPoint;
         [SerializeField] private Collider waitingAreasInCorridor;
 
         public void AddClasses(ClassroomProfile newClass)
@@ -96,5 +97,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         }
         public Vector3 GetRandomPointInCorridor() =>
             PointGenerator.RandomPointInBounds(waitingAreasInCorridor.bounds);
+
+        public Transform GetExitingPoint() => exitingPoint;
     }
 }

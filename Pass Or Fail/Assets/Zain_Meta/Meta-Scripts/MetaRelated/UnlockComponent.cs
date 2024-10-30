@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
 using Lean.Pool;
 using UnityEngine;
@@ -12,7 +11,7 @@ using Utility = Zain_Meta.Meta_Scripts.Managers.Utility;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
-    public class UnlockComponent : MonoBehaviour, IPurchase
+    public class UnlockComponent : IPurchase
     {
         [SerializeField] private ItemsName fileName;
         [SerializeField] private UnlockData unlockData;
@@ -27,7 +26,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private Text priceText;
         private IUnlocker _unlockingItem;
         private bool _isPlayerTriggering, _isUnlocked;
-        private readonly YieldInstruction _delayLong = new WaitForSeconds(1f);
+        private readonly YieldInstruction _delayLong = new WaitForSeconds(.75f);
         private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
         private int _curRemainingPrice;
@@ -45,7 +44,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
             _unlockingItem = GetComponent<IUnlocker>();
             _fileString = "GameData/" + fileName + ".es3";
-            unlockData = ES3.Load(unlockData.saveKey,_fileString, unlockData);
+            unlockData = ES3.Load(unlockData.saveKey, _fileString, unlockData);
 
             ReloadData();
         }
@@ -55,7 +54,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             _cashManager = CashManager.Instance;
         }
-        
+
 
         private void UnlockTheCounter()
         {
@@ -64,6 +63,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             unlockCol.enabled = false;
             _unlockingItem?.UnlockWithAnimation();
             EventsManager.ClassroomUnlockedEvent();
+            EventsManager.ItemUnlockedEvent(this);
             SaveTheData();
             gameObject.SetActive(false);
         }
@@ -97,11 +97,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                     _curRemainingPrice.SetFloatingPoint(priceText);
                     var cash = utility.SpawnGivingCashAt(player.spawnPos);
                     cash.transform.parent = transform;
-                    cash.transform.ParabolicMovement(transform,jumpDelay,jumpPower,jumpEase, () =>
-                    {
-                        LeanPool.Despawn(cash);
-                    });
-                    
+                    cash.transform.ParabolicMovement(transform, jumpDelay, jumpPower, jumpEase,
+                        () => { LeanPool.Despawn(cash); });
+
                     if (_curRemainingPrice <= 0)
                     {
                         UnlockTheCounter();
@@ -124,7 +122,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             SaveTheData();
         }
 
-        public void StopPurchasing()
+        public override void StopPurchasing()
         {
             _isPlayerTriggering = false;
             DOTween.Kill(fillerCanvas);
@@ -132,7 +130,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             StopCoroutine(nameof(StartTakingCashFromPlayer));
         }
 
-        public void StartPurchasing(PlayerCashSystem cashPos)
+        public override void StartPurchasing(PlayerCashSystem cashPos)
         {
             _isPlayerTriggering = true;
             DOTween.Kill(fillerCanvas);
@@ -172,16 +170,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             unlockData.remainingPrice = _curRemainingPrice;
             unlockData.price = itemPrice;
 
-            ES3.Save(unlockData.saveKey, unlockData,_fileString);
-           // ES3.StoreCachedFile(_fileString);
+            ES3.Save(unlockData.saveKey, unlockData, _fileString);
+            // ES3.StoreCachedFile(_fileString);
         }
 
-        public bool IsPurchased()
+        public override bool IsPurchased()
         {
             if (unlockData.overrideUnlock) return true;
             return _isUnlocked;
         }
 
-        public int GetRemainingPrice() => unlockData.remainingPrice;
+        public override int GetRemainingPrice() => unlockData.remainingPrice;
     }
 }

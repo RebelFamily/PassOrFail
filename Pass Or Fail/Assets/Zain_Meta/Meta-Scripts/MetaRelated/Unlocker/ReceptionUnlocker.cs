@@ -1,5 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Helpers;
+using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.Triggers;
 
 namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
@@ -11,6 +13,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
 
         public void UnlockWithAnimation()
         {
+            CameraManager.Instance.SetCameraTarget(receptionistChairPivot,1f);
             receptionistChairPivot.gameObject.SetActive(true);
             receptionistChairPivot.localScale = Vector3.one;
             var localScale = receptionistChairPivot.localScale;
@@ -20,6 +23,11 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             {
                 reception.SetReceptionist(true);
             });
+            
+            if(OnBoardingManager.TutorialComplete) return;
+            
+            OnBoardingManager.Instance.SetStateBasedOn(TutorialState.UnlockReceptionist,
+                TutorialState.UnlockClassroom);
         }
 
         public void UnlockWithoutAnimation()

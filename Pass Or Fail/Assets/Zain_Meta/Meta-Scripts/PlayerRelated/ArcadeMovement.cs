@@ -20,11 +20,25 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         private void OnEnable()
         {
             EventsManager.OnTriggerTeaching += SnapToThisPos;
+            EventsManager.OnSwitchTheCamera += AdjustTheMovement;
         }
 
         private void OnDisable()
         {
             EventsManager.OnTriggerTeaching -= SnapToThisPos;
+            EventsManager.OnSwitchTheCamera -= AdjustTheMovement;
+        }
+
+        private void AdjustTheMovement(bool toSwitch)
+        {
+            if (toSwitch)
+            {
+                StopMovement();
+            }
+            else
+            {
+                ResumeMovement();
+            }
         }
 
         private void SnapToThisPos(bool startTeaching, Vector3 teachingPos, Vector3 rotation)
@@ -99,6 +113,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
         private void StopMovement()
         {
+            _stop = true;
             _curRotSpeed = _curMoveSpeed = 0;
             // controller.enabled = false;
             _input = Vector3.zero;
@@ -108,6 +123,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
         private void ResumeMovement()
         {
+            _stop = false;
             //controller.enabled = true;
             _curMoveSpeed = moveSpeed;
             _curRotSpeed = turnSpeed;

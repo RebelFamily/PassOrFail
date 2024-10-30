@@ -15,6 +15,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         [SerializeField] private Ease easeType;
         [SerializeField] private List<Transform> itemsStacked = new();
         [SerializeField] private int stackLimit;
+        [SerializeField] private float delayOnFirstPick;
         private Vector3 _positioningVector;
 
         private YieldInstruction _delay = new WaitForSeconds(.25f);
@@ -22,13 +23,11 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         public void StartStacking(StackingHandler stackingHandler)
         {
             StartCoroutine(nameof(Stacking_CO), stackingHandler);
-            CheckForItemsInStack();
         }
 
         public void StartDropping(StackingHandler stackingHandler)
         {
             StartCoroutine(nameof(UnstackingAll_CO), stackingHandler);
-            CheckForItemsInStack();
         }
 
         private void CheckForItemsInStack()
@@ -63,10 +62,12 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
                 yield return _delay;
             }
+            CheckForItemsInStack();
         }
 
         private IEnumerator UnstackingAll_CO(StackingHandler handler)
         {
+            yield return new WaitForSeconds(delayOnFirstPick);
             while (handler.isPlayerTriggering)
             {
                 //check if player has Items left
@@ -91,6 +92,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                 }
                 yield return _delay;
             }
+            CheckForItemsInStack();
         }
 
         private Transform GetLastItem()

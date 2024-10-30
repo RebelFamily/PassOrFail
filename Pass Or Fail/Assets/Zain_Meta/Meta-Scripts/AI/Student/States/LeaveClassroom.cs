@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Zain_Meta.Meta_Scripts.Managers;
+﻿using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI.States
 {
@@ -16,7 +15,9 @@ namespace Zain_Meta.Meta_Scripts.AI.States
         public void UpdateState(StudentStateManager stateManager)
         {
             _requirements.EnableTheStudent(true);
-            _requirements.MoveTheTargetTo(Vector3.zero);
+            _requirements.curTarget = _requirements.GetManager().GetExitingPoint();
+            _requirements.MoveTheTargetTo(_requirements.curTarget);
+            stateManager.ChangeState(stateManager.LeaveSchool);
         }
 
         public void ExitState(StudentStateManager stateManager)

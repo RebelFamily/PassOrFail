@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zain_Meta.Meta_Scripts.Components;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.Triggers
@@ -12,7 +14,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         [SerializeField] private Transform snappingPoint;
         [SerializeField] private GameObject triggerVisuals;
         [SerializeField] private ClassroomProfile myClass;
-        private bool _isPlayerTriggering;
+        public bool isPlayerTriggering;
 
         private void Awake()
         {
@@ -24,21 +26,26 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {
             if (classHasATeacher) return;
             HideTeachingArea();
-            _isPlayerTriggering = true; //later used in AI detection
+            isPlayerTriggering = true; //later used in AI detection
             EventsManager.TriggerTeachingEvent(true,
                 snappingPoint.position, snappingPoint.localEulerAngles);
 
+            if (OnBoardingManager.Instance.CheckForCurrentState(TutorialState.TeachTheClass))
+                OnBoardingManager.Instance.HideWaypoints();
             DOVirtual.DelayedCall(2.4f, () =>
             {
                 EventsManager.TeacherStartTeachingEvent(myClass);
                 StopServing();
+                if (OnBoardingManager.TutorialComplete) return;
+                OnBoardingManager.Instance.SetStateBasedOn(TutorialState.TeachTheClass,
+                    TutorialState.UnlockNextClassroom);
             });
         }
 
         public void StopServing()
         {
             if (classHasATeacher) return;
-            _isPlayerTriggering = false;
+            isPlayerTriggering = false;
             EventsManager.TriggerTeachingEvent(false,
                 snappingPoint.position, snappingPoint.localEulerAngles);
         }
@@ -51,8 +58,13 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         public void ShowTeachingArea()
         {
+            print("Show The Teaching Area");
             collisionTrigger.enabled = true;
             triggerVisuals.SetActive(true);
+
+            if (OnBoardingManager.TutorialComplete) return;
+            OnBoardingManager.Instance.SetStateBasedOn(TutorialState.IdleForSometime,
+                TutorialState.TeachTheClass);
         }
 
         public void ServeByTeacher()
@@ -63,8 +75,8 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                 EventsManager.TeacherStartTeachingEvent(myClass);
                 StopServing();
             });
-            
         }
+
         public Transform GetTeachingPos() => snappingPoint;
     }
 }

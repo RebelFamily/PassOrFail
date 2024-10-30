@@ -41,6 +41,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         private void ResetTheClass(StudentStateManager student)
         {
             _canBeTaught = false;
+            if(!_isOpen) return;
             DOVirtual.DelayedCall(2f, () =>
             {
                 _isFull = IsClassFull();
@@ -112,7 +113,10 @@ namespace Zain_Meta.Meta_Scripts.Components
             return !AnySeatsAvailable();
         }
 
-        public bool ClassCanBeTaught() => _canBeTaught;
+        public bool ClassCanBeTaught()
+        {
+            return _canBeTaught && !teachingTriggerArea.isPlayerTriggering ;
+        }
         public void OpenTheClass()
         {
             _isOpen = true;

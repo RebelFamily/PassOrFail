@@ -19,7 +19,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private bool useVertical;
         [SerializeField] private CashOffsetData offsetData;
         [SerializeField] private Transform cashStackPos;
-         private List<Vector3> _nullItemsPos = new List<Vector3>();
+        private List<Vector3> _nullItemsPos = new();
         private float curXPos, curYPos, curZPos;
         private float yOffset, xOffset, zOffset;
         private float maxXVal, maxZVal;
@@ -53,6 +53,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             for (var i = 0; i < previousCashCount; i++)
             {
                 var cash = utility.SpawnCashAt(transform);
+                cash.myCashSystem = this;
                 cashMade.Add(cash.transform);
                 _dispersalVector.x = curXPos;
                 _dispersalVector.y = curYPos;
@@ -170,74 +171,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 SaveData();
         }
 
-        /*private Transform GetLastItemFromStack()
-        {
-            if (cashMade.Count == 0)
-            {
-                if (keepPersistent)
-                    SaveData();
-
-                return null;
-            }
-
-            var lastItem = cashMade[cashMade.Count - 1];
-            cashMade.RemoveAt(cashMade.Count - 1);
-
-            if (useVertical)
-            {
-                curYPos -= yOffset;
-                if (curYPos < 0)
-                    curYPos = 0;
-            }
-            else
-            {
-                curZPos -= zOffset;
-                if (curZPos < 0)
-                {
-                    curZPos = 0;
-                    curXPos -= xOffset;
-                    if (curXPos < 0)
-                    {
-                        curXPos = 0;
-                        curYPos -= yOffset;
-                        if (curYPos < 0)
-                            curYPos = 0;
-                    }
-                }
-            }
-
-            if (keepPersistent)
-                SaveData();
-            return lastItem;
-        }*/
-
-        /*private void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent(out PlayerCollisionDetection player))
-            {
-                if (useForVipShowing && curCashAmount != 0)
-                {
-                    var count = PlayerPrefs.GetInt("PickCount", 0);
-                    count++;
-                    PlayerPrefs.SetInt("PickCount", count);
-                }
-
-                PickByPlayer(player);
-            }
-        }
-
-        private void PickByPlayer(PlayerCollisionDetection player)
-        {
-            /*if (curCashAmount != 0)
-                audioManager.PlaySound("Hit");#1#
-            var len = curCashAmount;
-
-            ClearAllTheCash();
-            if (len == 0) return;
-            Vibration.VibratePop();
-            player.cashStackingSystem.AddCashToPlayerStack(len);
-        }*/
-
         public void RemoveItemFromList(Transform item)
         {
             var index = cashMade.IndexOf(item);
@@ -245,11 +178,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             {
                 cashMade.RemoveAt(index);
                 _nullItemsPos.Add(item.localPosition);
-                
-                if (cashMade.Count == 0)    _nullItemsPos.Clear();
-                
+
+                if (cashMade.Count == 0) _nullItemsPos.Clear();
+
                 LeanPool.Despawn(item);
+                if (OnBoardingManager.TutorialComplete) return;
+                OnBoardingManager.Instance.SetStateBasedOn(TutorialState.PickReceptionCash
+                    , TutorialState.UnlockReceptionist);
             }
+
+            SaveData();
         }
     }
 }
