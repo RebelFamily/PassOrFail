@@ -14,6 +14,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
     public class UnlockComponent : IPurchase
     {
         [SerializeField] private ItemsName fileName;
+        [SerializeField] private int xpAmountToGive;
         [SerializeField] private UnlockData unlockData;
         [SerializeField] private float jumpPower, jumpDelay;
         [SerializeField] private Ease jumpEase;
@@ -26,13 +27,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private Text priceText;
         private IUnlocker _unlockingItem;
         private bool _isPlayerTriggering, _isUnlocked;
-        private readonly YieldInstruction _delayLong = new WaitForSeconds(.75f);
+        private readonly YieldInstruction _delayLong = new WaitForSeconds(.2f);
         private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
         private int _curRemainingPrice;
-
-        private int _removalPower;
-        private const int MaxPowerToRemove = 20;
         private ES3Settings _settings;
         private string _fileString;
 
@@ -41,7 +39,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             fillerCanvas.SetActive(true);
             unlockData.remainingPrice = unlockData.price;
             _curRemainingPrice = unlockData.price;
-
             _unlockingItem = GetComponent<IUnlocker>();
             _fileString = "GameData/" + fileName + ".es3";
             unlockData = ES3.Load(unlockData.saveKey, _fileString, unlockData);
@@ -64,6 +61,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             _unlockingItem?.UnlockWithAnimation();
             EventsManager.ClassroomUnlockedEvent();
             EventsManager.ItemUnlockedEvent(this);
+            XpManager.Instance.AddXp(xpAmountToGive);
             SaveTheData();
             gameObject.SetActive(false);
         }
@@ -181,5 +179,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         }
 
         public override int GetRemainingPrice() => unlockData.remainingPrice;
+        
+        public override void EnableMe(bool toEnable)
+        {
+            gameObject.SetActive(toEnable);
+        }
     }
 }

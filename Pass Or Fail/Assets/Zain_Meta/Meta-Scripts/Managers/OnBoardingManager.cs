@@ -62,6 +62,8 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 secondClassroomUnlocker.SetActive(true);
             }
 
+            navigationManager.HideEverything();
+
             if (TutorialComplete)
             {
                 navigationManager.ReloadThePurchasesData();
@@ -116,6 +118,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     waypointMarker.gameObject.SetActive(false);
                     waypointMarker.arrowPivot.gameObject.SetActive(false);
                     TutorialComplete = true;
+                    navigationManager.ReloadThePurchasesData();
                     break;
                 case TutorialState.IdleForSometime:
                     waypointMarker.gameObject.SetActive(false);
@@ -141,7 +144,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             curTutState = newState;
             PlayerPrefs.SetInt("CurTutIndex", curStateIndex);
-            DOVirtual.DelayedCall(2f, TakeActionOnState);
+            DOVirtual.DelayedCall(1f, TakeActionOnState);
         }
 
         public void GoToNextState()

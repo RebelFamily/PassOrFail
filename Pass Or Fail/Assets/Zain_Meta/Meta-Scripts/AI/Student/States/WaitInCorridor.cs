@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Zain_Meta.Meta_Scripts.Managers;
+﻿using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI.Student.States
 {
@@ -11,11 +10,12 @@ namespace Zain_Meta.Meta_Scripts.AI.Student.States
         {
             _requirements = student.GetRequirements();
             _requirements.MoveToRandomPointInCorridor();
-            EventsManager.StudentLeftTheClassroomEvent(student);
+            //EventsManager.StudentLeftTheClassroomEvent(student);
         }
 
         public void UpdateState(StudentStateManager stateManager)
         {
+            /*
             var seatTarget = _requirements.GetManager().GetSeatAtRequiredClass(stateManager,
                 _requirements.classesIndex.ToArray());
             if (seatTarget)
@@ -26,6 +26,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Student.States
                 stateManager.ChangeState(stateManager.ReachTheSeat);
                 return;
             }
+            */
 
             if (_requirements.CheckForDistance(_requirements.randomWaitingPoint))
             {

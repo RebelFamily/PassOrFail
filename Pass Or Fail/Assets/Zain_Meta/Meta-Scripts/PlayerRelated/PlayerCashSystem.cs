@@ -35,7 +35,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             var cashEmission = particle.emission.GetBurst(0);
             /*if (emissionCount > emissionCountLimit)
                 emissionCount = emissionCountLimit;*/
-            cashEmission.count = emissionCount;
+            cashEmission.count = 1;
             particle.emission.SetBurst(0, cashEmission);
             particle.Play();
             DOVirtual.DelayedCall(.5f, () => { cashParticles.follow = true; });
@@ -43,8 +43,8 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
         private void StackingCoroutine(int len)
         {
-            Vibration.VibratePop();
-            _cashManager.AddCash(5 * len);
+         //   Vibration.VibratePop();
+            _cashManager.AddCash(len);
         }
 
         public ArcadeMovement GetController() => arcadeController;

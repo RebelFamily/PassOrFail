@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI.Teacher.States;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI.Teacher
 {
@@ -17,13 +18,18 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         public DrinkCoffeeState DrinkCoffeeState = new DrinkCoffeeState();
         public MoveToRestingState MoveToRestingState = new MoveToRestingState();
         public RestingInClassState RestingInClassState = new RestingInClassState();
-        
+
         private ITeacherState _curState;
         public string stateName;
 
         private void OnEnable()
         {
-            ChangeState(WaitInStaffRoom);
+            ChangeState(GoingToTeach);
+        }
+
+        private void Start()
+        {
+            TeachersManager.Instance.AddNewTeacher(this);
         }
 
         private void LateUpdate()
@@ -46,5 +52,10 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         }
 
         public TeacherRequirement GetRequirement() => requirement;
+
+        public bool IsSleepy()
+        {
+            return _curState == SleepyState;
+        }
     }
 }

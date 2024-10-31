@@ -8,7 +8,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
     {
         [SerializeField] private Transform roofPivot;
         [SerializeField] private Transform interiorPropsPivot;
-        [SerializeField] private GameObject doorObj;
+        [SerializeField] private GameObject doorObj, breakRoomDoor, breakRoomRoof;
 
 
         public void KeepItLocked()
@@ -17,11 +17,13 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             interiorPropsPivot.localScale = Vector3.zero;
             roofPivot.localScale = Vector3.one;
             doorObj.SetActive(true);
+            breakRoomDoor.SetActive(true);
+            breakRoomRoof.SetActive(true);
         }
 
         public void UnlockWithAnimation()
         {
-            CameraManager.Instance.SetCameraTarget(interiorPropsPivot,1f);
+            CameraManager.Instance.SetCameraTarget(interiorPropsPivot, 1f);
             roofPivot.localScale = Vector3.one;
             interiorPropsPivot.localScale = Vector3.one;
             var localScale = interiorPropsPivot.localScale;
@@ -33,6 +35,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
                 doorObj.SetActive(false);
                 roofPivot.gameObject.SetActive(false);
             });
+            breakRoomDoor.SetActive(false);
+            breakRoomRoof.SetActive(false);
         }
 
         public void UnlockWithoutAnimation()
@@ -40,6 +44,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             roofPivot.gameObject.SetActive(false);
             interiorPropsPivot.localScale = Vector3.one;
             doorObj.SetActive(false);
+            breakRoomDoor.SetActive(false);
+            breakRoomRoof.SetActive(false);
         }
     }
 }

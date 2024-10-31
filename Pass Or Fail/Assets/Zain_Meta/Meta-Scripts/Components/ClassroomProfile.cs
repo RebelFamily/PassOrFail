@@ -42,14 +42,11 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             _canBeTaught = false;
             if(!_isOpen) return;
-            DOVirtual.DelayedCall(2f, () =>
-            {
-                _isFull = IsClassFull();
-                if (_isFull)
-                    teachingTriggerArea.ShowTeachingArea();
-                else
-                    teachingTriggerArea.HideTeachingArea();
-            });
+            _isFull = IsClassFull();
+            if (_isFull)
+                teachingTriggerArea.ShowTeachingArea();
+            else
+                teachingTriggerArea.HideTeachingArea();
         }
 
         private void TeachAllStudentsOfThisClass(ClassroomProfile classroom)
@@ -83,9 +80,10 @@ namespace Zain_Meta.Meta_Scripts.Components
             if (_isFull) return null;
             for (var i = 0; i < classroomSeats.Length; i++)
             {
-                if (!classroomSeats[i].IsSeatOccupied())
+                if (!classroomSeats[i].IsThisChairMarked())
                 {
                     classroomSeats[i].MarkForSitting(student);
+                    student.GetRequirements().mySeat = classroomSeats[i];
                     return classroomSeats[i].GetSeatingPoint();
                 }
             }
@@ -94,6 +92,20 @@ namespace Zain_Meta.Meta_Scripts.Components
         }
 
         public bool AnySeatsAvailable()
+        {
+            if (!_isOpen) return false;
+
+            for (var i = 0; i < classroomSeats.Length; i++)
+            {
+                if (!classroomSeats[i].IsThisChairMarked())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        private bool AnySeatsAvailableTest()
         {
             if (!_isOpen) return false;
 
@@ -108,9 +120,9 @@ namespace Zain_Meta.Meta_Scripts.Components
             return false;
         }
 
-        public bool IsClassFull()
+        private bool IsClassFull()
         {
-            return !AnySeatsAvailable();
+            return !AnySeatsAvailableTest();
         }
 
         public bool ClassCanBeTaught()
@@ -124,7 +136,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             _classroomProfilesManager.AddClasses(this);
         }
 
-        public int GetClassroomType() => (int)classSubject;
+        public ClassroomType GetClassroomType() =>classSubject;
         public TeachingArea GetTeachingArea() => teachingTriggerArea;
     }
 }

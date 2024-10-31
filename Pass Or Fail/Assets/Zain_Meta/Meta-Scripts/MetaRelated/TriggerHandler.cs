@@ -30,8 +30,8 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             {
                 DOTween.Kill(targetTransform);
 
-                targetTransform.DOScale(_actualSize, 0).SetEase(Ease.Linear);
-                targetTransform.DOScale(changeInSize, .25f);
+                /*targetTransform.DOScale(_actualSize, 0).SetEase(Ease.Linear);
+                targetTransform.DOScale(changeInSize, .25f);*/
                 _receptionProfile.StartServing();
                 //  EventsManager.PlayerInTrigger(true);
                 StartCoroutine(nameof(Delay_CO), player);
@@ -42,9 +42,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             if (other.TryGetComponent(out ArcadeMovement player))
             {
-                DOTween.Kill(targetTransform);
+               // DOTween.Kill(targetTransform);
                 StopCoroutine(nameof(Delay_CO));
-                targetTransform.DOScale(_actualSize, 0.1f).SetEase(Ease.Linear);
+                //targetTransform.DOScale(_actualSize, 0.1f).SetEase(Ease.Linear);
                 _receptionProfile.StopServing();
                 _hasTriggered = false;
                 //  EventsManager.PlayerInTrigger(false);

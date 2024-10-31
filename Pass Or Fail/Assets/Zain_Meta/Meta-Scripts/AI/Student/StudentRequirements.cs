@@ -2,6 +2,8 @@
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI
@@ -14,6 +16,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         [SerializeField] private AIPath agentSettings;
         [SerializeField] private AIDestinationSetter destinationSetter;
         [SerializeField] private StudentAnimation studentAnimator;
+        public SeatProfile mySeat;
         public List<int> classesIndex = new();
         public Transform curTarget;
         private ClassroomProfilesManager _classesManager;
@@ -139,13 +142,12 @@ namespace Zain_Meta.Meta_Scripts.AI
         public void AssignMeClasses()
         {
             if (!_classesManager) _classesManager = ClassroomProfilesManager.Instance;
-
-            print("assign Classes");
+            
             _classesManager.AssignClasses(this);
             EventsManager.StudentStateUpdatedEvent();
         }
 
-        public void AdjustRidesIndices(int replacingIndex)
+        public void AdjustClassIndices(int replacingIndex)
         {
             (classesIndex[replacingIndex], classesIndex[curClassIndex]) =
                 (classesIndex[curClassIndex], classesIndex[replacingIndex]);
@@ -164,6 +166,11 @@ namespace Zain_Meta.Meta_Scripts.AI
         public void DestroyMe()
         {
             Destroy(gameObject);
+        }
+
+        public void IncreaseClassIndex()
+        {
+            curClassIndex++;
         }
     }
 }

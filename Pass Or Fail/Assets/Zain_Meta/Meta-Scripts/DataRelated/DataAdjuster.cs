@@ -5,6 +5,12 @@ namespace Zain_Meta.Meta_Scripts.DataRelated
     public class DataAdjuster : MonoBehaviour
     {
         [SerializeField] private SaveClass[] allSaveClasses;
+
+        private void Awake()
+        {
+            Application.targetFrameRate = 90;
+        }
+
         private void OnDisable()
         {
             ResetAllData();

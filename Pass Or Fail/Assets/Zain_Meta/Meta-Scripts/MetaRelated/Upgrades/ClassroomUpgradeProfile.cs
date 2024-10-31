@@ -19,12 +19,14 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
         private const string path = "Classrooms/Class_Maths";
 
         private string _fileString;
+        private bool _isActiveUpgrade;
 
         private void Awake()
         {
             _fileString = "GameData/Upgrades/" + fileName + ".es3";
             LoadData();
         }
+        
 
         private void LoadData()
         {
@@ -42,11 +44,14 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
 
         public void UnlockWithAnimation()
         {
+            _isActiveUpgrade = true;
             _curUpgradeLevel = upgradeData.upgradedLevel;
             _curLevelIndex = upgradeData.upgradeIndex;
-            _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade, ApplyThirdUpgrade, _curUpgradeLevel);
+            _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade,
+                ApplyThirdUpgrade,SaveTheData, _curUpgradeLevel);
             ApplyFirstUpgrade();
             EventsManager.ClassReadyToUpgradeEvent(this, true);
+            SaveTheData();
         }
 
         public void UnlockWithoutAnimation()
@@ -83,7 +88,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             localScale.y = 0.1f;
             scalingPivot.localScale = localScale;
             scalingPivot.DOScaleY(1, .25f);
-            SaveTheData();
         }
 
         private void SaveTheData()

@@ -21,7 +21,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
             var localScale = teacherObj.localScale;
             localScale.y = 0.1f;
             teacherObj.localScale = localScale;
-            teacherObj.DOScaleY(1, .25f);
+            teacherObj.DOScaleY(1, .5f).OnComplete(() =>
+            {
+                ParticlesManager.Instance.PlayTeacherUnlockVfxFor(teacherObj);
+            });
         }
 
         public void UnlockWithoutAnimation()

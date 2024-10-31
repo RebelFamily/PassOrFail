@@ -24,5 +24,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             return false;
         }
+
+        public virtual void EnableMe(bool value)
+        {
+            
+        }
     }
 }

@@ -25,15 +25,14 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         public void AddToStack(Transform stackingItem)
         {
             stackedItems.Add(stackingItem);
+            _positionVector.x = _curXPos;
+            _positionVector.y = _curYPos;
+            _positionVector.z = _curZPos;
             stackingItem.transform.parent = stackPivot;
             stackingItem.DOLocalMove(_positionVector, tweenDelay).OnComplete(() => { actionAfterAddition?.Invoke(); });
             stackingItem.DOLocalRotate(Vector3.zero, 0).SetEase(Ease.Linear);
             stackingItem.DOScale(Vector3.one, 0).SetEase(Ease.Linear);
             _curYPos += offsetData.yOffset;
-
-            _positionVector.x = _curXPos;
-            _positionVector.y = _curYPos;
-            _positionVector.z = _curZPos;
             if (IsStackFull())
                 isReadyToAccept = false;
         }

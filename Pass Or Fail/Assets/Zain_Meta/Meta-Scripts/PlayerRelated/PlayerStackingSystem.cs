@@ -10,15 +10,17 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
     {
         [SerializeField] private Transform stackingPos;
         [SerializeField] private float stackingDelay;
+        [SerializeField] private ArcadeMovement movement;
         [SerializeField] private Animator playerAnim;
         [SerializeField] private StackOffsetData stackOffsetData;
         [SerializeField] private Ease easeType;
+        [SerializeField] private GameObject maxLimitText;
         [SerializeField] private List<Transform> itemsStacked = new();
         [SerializeField] private int stackLimit;
         [SerializeField] private float delayOnFirstPick;
         private Vector3 _positioningVector;
 
-        private YieldInstruction _delay = new WaitForSeconds(.25f);
+        private readonly YieldInstruction _delay = new WaitForSeconds(.25f);
 
         public void StartStacking(StackingHandler stackingHandler)
         {
@@ -42,9 +44,11 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                 //check if player has capacity
                 if (itemsStacked.Count >= stackLimit)
                 {
+                    maxLimitText.SetActive(true);
                     break;
                 }
 
+                maxLimitText.SetActive(false);
                 if (handler.HasItemsInStack())
                 {
                     var lastItemInHandler = handler.GetLastStackedItem();
@@ -59,7 +63,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                         _positioningVector.y += stackOffsetData.yOffset;
                     }
                 }
-
+                CheckForItemsInStack();
                 yield return _delay;
             }
             CheckForItemsInStack();
@@ -73,6 +77,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                 //check if player has Items left
                 if(handler.isReadyToAccept)
                 {
+                    maxLimitText.SetActive(false);
                     if (itemsStacked.Count <= 0)
                     {
                         break;

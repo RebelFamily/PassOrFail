@@ -3,6 +3,8 @@ using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI;
 using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Helpers;
+using Zain_Meta.Meta_Scripts.MetaRelated;
+using Zain_Meta.Meta_Scripts.MetaRelated.Upgrades;
 
 namespace Zain_Meta.Meta_Scripts.Managers
 {
@@ -17,8 +19,27 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         [SerializeField] private List<ClassroomProfile> allClassrooms = new();
         [SerializeField] private WaitingLine waitingLine;
-        [SerializeField] private Transform exitingPoint;
+        [SerializeField] private Transform exitingPoint, leavingCashPoint;
         [SerializeField] private Collider waitingAreasInCorridor;
+        [SerializeField] private CashGenerationSystem graduationCash;
+        [SerializeField] private int percentageIncreaseInGraduationAmount;
+
+        private void OnEnable()
+        {
+            EventsManager.OnClassReadyToUpgrade += IncreaseGraduationCash;
+        }
+
+        private void OnDisable()
+        {
+            EventsManager.OnClassReadyToUpgrade -= IncreaseGraduationCash;
+        }
+
+        private void IncreaseGraduationCash(ClassroomUpgradeProfile profile, bool val)
+        {
+            if (!val) return;
+            var amountInPercent = (percentageIncreaseInGraduationAmount * graduationCash.amountToGive) / 100;
+            graduationCash.amountToGive += amountInPercent;
+        }
 
         public void AddClasses(ClassroomProfile newClass)
         {
@@ -31,11 +52,9 @@ namespace Zain_Meta.Meta_Scripts.Managers
         {
             for (var i = 0; i < allClassrooms.Count; i++)
             {
-                if (!student.classesIndex.Contains(allClassrooms[i].GetClassroomType()))
-                    student.classesIndex.Add(allClassrooms[i].GetClassroomType());
+                if (!student.classesIndex.Contains((int)allClassrooms[i].GetClassroomType()))
+                    student.classesIndex.Add((int)allClassrooms[i].GetClassroomType());
             }
-
-            print("Classes Assigned to :" + student.name);
         }
 
 
@@ -51,22 +70,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             return false;
         }
-
-
-        // actually giving the seat
-        public Transform GetAvailableSeat(StudentStateManager student)
-        {
-            if (allClassrooms.Count == 0) return null;
-            for (var i = 0; i < allClassrooms.Count; i++)
-            {
-                var seat = allClassrooms[i].GetAvailableSeat(student);
-                if (seat)
-                    return seat;
-            }
-
-            return null;
-        }
-
+        
         public Transform GetSeatAtRequiredClass(StudentStateManager student, int[] requiredClasses)
         {
             if (allClassrooms.Count == 0) return null;
@@ -75,12 +79,14 @@ namespace Zain_Meta.Meta_Scripts.Managers
             {
                 for (var j = 0; j < allClassrooms.Count; j++)
                 {
-                    if (allClassrooms[j].GetClassroomType() == requiredClasses[i])
+                    if ((int)allClassrooms[j].GetClassroomType() == requiredClasses[i])
                     {
                         var seat = allClassrooms[i].GetAvailableSeat(student);
                         if (seat)
                         {
-                            student.GetRequirements().AdjustRidesIndices(i);
+                            print("seat of "+allClassrooms[j].GetClassroomType()+
+                                  " for "+ student.GetRequirements().curClassIndex);
+                            student.GetRequirements().AdjustClassIndices(i);
                             return seat;
                         }
                     }
@@ -89,15 +95,23 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             return null;
         }
+
         public Transform CheckForPointAtReception(StudentStateManager student)
         {
             if (!waitingLine) return null;
 
             return waitingLine.GetAvailableSpotAtReception(student);
         }
+
         public Vector3 GetRandomPointInCorridor() =>
             PointGenerator.RandomPointInBounds(waitingAreasInCorridor.bounds);
 
         public Transform GetExitingPoint() => exitingPoint;
+        public Transform GetLeavingCashPoint() => leavingCashPoint;
+
+        public void AddCashInGraduationStack(int amount, Transform pos)
+        {
+            graduationCash.AddCash(amount, pos);
+        }
     }
 }

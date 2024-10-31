@@ -13,7 +13,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
 
         public void UnlockWithAnimation()
         {
-            CameraManager.Instance.SetCameraTarget(receptionistChairPivot,1f);
             receptionistChairPivot.gameObject.SetActive(true);
             receptionistChairPivot.localScale = Vector3.one;
             var localScale = receptionistChairPivot.localScale;

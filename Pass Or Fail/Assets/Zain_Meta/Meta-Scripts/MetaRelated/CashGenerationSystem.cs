@@ -11,11 +11,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
     public class CashGenerationSystem : MonoBehaviour
     {
         [SerializeField] private Utility utility;
-        [SerializeField] private ItemsName itemName;
+        [SerializeField] private int itemName;
         [SerializeField] private bool keepPersistent;
-        [SerializeField] private int amountToGive;
+        public int amountToGive;
         public List<Transform> cashMade = new();
-        public int curCashAmount;
         [SerializeField] private bool useVertical;
         [SerializeField] private CashOffsetData offsetData;
         [SerializeField] private Transform cashStackPos;
@@ -37,23 +36,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             LoadData();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                AddCash(1, transform);
-            }
-        }
-
         private void LoadData()
         {
             if (!keepPersistent) return;
             var previousCashCount = PlayerPrefs.GetInt("cash" + itemName, 0);
-            curCashAmount = PlayerPrefs.GetInt("cashAmount" + itemName, 0);
+            amountToGive = PlayerPrefs.GetInt("AmountToGive"+ itemName, amountToGive);
             for (var i = 0; i < previousCashCount; i++)
             {
                 var cash = utility.SpawnCashAt(transform);
                 cash.myCashSystem = this;
+                cash.myAmount = amountToGive;
                 cashMade.Add(cash.transform);
                 _dispersalVector.x = curXPos;
                 _dispersalVector.y = curYPos;
@@ -86,52 +78,25 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void SaveData()
         {
             PlayerPrefs.SetInt("cash" + itemName, cashMade.Count);
-            PlayerPrefs.SetInt("cashAmount" + itemName, curCashAmount);
+            PlayerPrefs.SetInt("AmountToGive" + itemName, amountToGive);
         }
 
-        public void AddCash(int amount, Transform spawningPos)
+        public void AddCash(int amount,Transform spawningPos)
         {
-            SpawnCash(amount, spawningPos);
+            SpawnCash(amount,spawningPos);
         }
-
-        public void AddWithoutDelay(int amount)
-        {
-            curCashAmount += amount;
-            for (var i = 0; i < amount; i++)
-            {
-                AddCashStack(transform);
-            }
-        }
-
+        
         private void SpawnCash(int amount, Transform spawningPos)
         {
-            curCashAmount += amount;
-            if (amount > 250)
-            {
-                amount = amountToGive == 0 ? 250 : amountToGive;
-            }
-
             for (var i = 0; i < amount; i++)
                 AddCashStack(spawningPos);
         }
-
-        /*
-        private void ClearAllTheCash()
-        {
-            var len = cashMade.Count;
-            for (var i = 0; i < len; i++)
-                LeanPool.Despawn(GetLastItemFromStack());
-
-            curCashAmount = 0;
-            cashMade.Clear();
-            SaveData();
-        }
-        */
-
+        
         private void AddCashStack(Transform spawnPos)
         {
             var cash = utility.SpawnCashAt(spawnPos);
             cash.myCashSystem = this;
+            cash.myAmount = amountToGive;
             var transform1 = cash.transform;
             transform1.parent = cashStackPos;
             cashMade.Add(transform1);

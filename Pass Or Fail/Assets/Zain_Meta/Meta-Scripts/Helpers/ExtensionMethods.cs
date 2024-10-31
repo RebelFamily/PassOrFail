@@ -118,45 +118,17 @@ namespace Zain_Meta.Meta_Scripts
             {
                 var newCash = cashPrice / 1000000f;
                 newCash = (float)Math.Round(newCash, 2);
-                textMeshProUGUI.text = "$" + newCash + "M";
+                textMeshProUGUI.text =newCash + "M";
             }
 
             else if (cashPrice >= 1000)
             {
                 var newCash = cashPrice / 1000f;
                 newCash = (float)Math.Round(newCash, 2);
-                textMeshProUGUI.text = "$" + newCash + "k";
+                textMeshProUGUI.text =newCash + "k";
             }
             else
-                textMeshProUGUI.text = "$" + cashPrice;
-        }
-
-        public static void SetTextOfFiller(this int cashPrice, int total, Text textMeshProUGUI)
-        {
-            var filledAmount = total - cashPrice;
-            textMeshProUGUI.text = filledAmount + "/" + total;
-        }
-
-        public static void ConvertToPercentage(this int value, int total, Text textMeshProUGUI)
-        {
-            var filledAmount = total - value;
-            var percent = (filledAmount * 1f / total) * 100f;
-            textMeshProUGUI.text = Mathf.Floor(percent) + "%";
-        }
-
-        public static void CountDownTimer(this float timeToDisplay, Text timeText)
-        {
-            float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-            float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-            timeText.text = $"{minutes:00}:{seconds:00}";
-        }
-
-        public static void CountDownTimer(this float timeToDisplay, Text timeText, string extraText)
-        {
-            timeText.text = extraText + '\n';
-            float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-            float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-            timeText.text += $"{minutes:00}:{seconds:00}";
+                textMeshProUGUI.text = cashPrice.ToString();
         }
     }
 }

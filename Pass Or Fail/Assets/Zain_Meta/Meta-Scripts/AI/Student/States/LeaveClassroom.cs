@@ -9,15 +9,15 @@ namespace Zain_Meta.Meta_Scripts.AI.States
         public void EnterState(StudentStateManager student)
         {
             _requirements = student.GetRequirements();
-            EventsManager.StudentLeftTheClassroomEvent(student);
+         //   EventsManager.StudentLeftTheClassroomEvent(student);
         }
 
         public void UpdateState(StudentStateManager stateManager)
         {
             _requirements.EnableTheStudent(true);
-            _requirements.curTarget = _requirements.GetManager().GetExitingPoint();
+            _requirements.curTarget = _requirements.GetManager().GetLeavingCashPoint();
             _requirements.MoveTheTargetTo(_requirements.curTarget);
-            stateManager.ChangeState(stateManager.LeaveSchool);
+            stateManager.ChangeState(stateManager.GraduatingState);
         }
 
         public void ExitState(StudentStateManager stateManager)

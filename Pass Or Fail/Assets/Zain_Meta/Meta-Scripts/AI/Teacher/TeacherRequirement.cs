@@ -100,9 +100,9 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
             return Vector3.Distance(transform.position, curTarget.position) < accuracy;
         }
 
-        public bool CheckForDistance(Vector3 target)
+        public bool CheckForDistance(float testDistance)
         {
-            return Vector3.Distance(transform.position, target) < accuracy;
+            return Vector3.Distance(transform.position, curTarget.position) < testDistance;
         }
 
 
@@ -215,6 +215,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         {
             myCoffeeStack.isReadyToAccept = true;
             myChair.Show();
+            EventsManager.TeacherEnteredSleepyStateEvent(true);
         }
     }
 }

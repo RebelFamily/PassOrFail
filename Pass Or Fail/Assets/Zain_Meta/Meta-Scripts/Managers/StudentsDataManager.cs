@@ -12,11 +12,13 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
 
         [SerializeField] private StudentsData studentsData;
-        [SerializeField] private Utility utility;
         [SerializeField] private List<StudentRequirements> students = new();
         [SerializeField] private Collider spawningArea;
         [SerializeField] private int initialSpawningCount;
+
         private const string FileName = "GameData/StudentsData.es3";
+        private const string SpawningPath = "Characters/Students/Student";
+        private string[] _gendersArray = { "Boy", "Girl" };
         private ES3Settings _settings;
 
         private void Awake()
@@ -31,12 +33,14 @@ namespace Zain_Meta.Meta_Scripts.Managers
         {
             EventsManager.OnStudentStateUpdated += SaveDataInFile;
             EventsManager.OnStudentLeftTheSchool += RemoveThisStudent;
+            EventsManager.OnStudentAdmitted += SpawnUnAdmittedStudents;
         }
 
         private void OnDisable()
         {
             EventsManager.OnStudentStateUpdated -= SaveDataInFile;
             EventsManager.OnStudentLeftTheSchool -= RemoveThisStudent;
+            EventsManager.OnStudentAdmitted -= SpawnUnAdmittedStudents;
         }
 
         private void RemoveThisStudent(StudentRequirements student)
@@ -44,7 +48,6 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (!students.Contains(student)) return;
             students.Remove(student);
             SaveDataInFile();
-            SpawnUnAdmittedStudents();
         }
 
         #endregion
@@ -60,7 +63,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         }
 
 
-        public void AddStudentInTheSchool(StudentRequirements requirements,bool saveDataAlso)
+        public void AddStudentInTheSchool(StudentRequirements requirements, bool saveDataAlso)
         {
             if (!students.Contains(requirements))
             {
@@ -79,7 +82,14 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             for (var i = 0; i < studentsCount; i++)
             {
-                var student = utility.SpawnStudentAt(PointGenerator.RandomPointInBounds(spawningArea.bounds));
+                var gender = Random.Range(0, _gendersArray.Length);
+                var index = Random.Range(0, 4);
+                var student = Instantiate(Resources.Load<StudentStateManager>
+                        (SpawningPath + _gendersArray[gender] + "_" + index),
+                    PointGenerator.RandomPointInBounds(spawningArea.bounds),
+                    Quaternion.identity);
+
+                // var student = utility.SpawnStudentAt(PointGenerator.RandomPointInBounds(spawningArea.bounds));
                 student.GetRequirements().PopulateStates(studentsData.classesData[i].totalRides.ToArray(),
                     studentsData.classesData[i].curRideIndex);
                 student.AdmitMePleaseForcefully();
@@ -88,7 +98,12 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private void SpawnUnAdmittedStudents()
         {
-            var student = utility.SpawnStudentAt(PointGenerator.RandomPointInBounds(spawningArea.bounds));
+            var gender = Random.Range(0, _gendersArray.Length);
+            var index = Random.Range(0, 4);
+            var student = Instantiate(Resources.Load<StudentStateManager>
+                    (SpawningPath + _gendersArray[gender] + "_" + index),
+                PointGenerator.RandomPointInBounds(spawningArea.bounds),
+                Quaternion.identity);
             student.ChangeState(student.EnterSchoolState);
         }
 

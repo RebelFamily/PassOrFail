@@ -18,7 +18,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static event Action<StudentStateManager> OnStudentLeftTheClassroom;
         public static event Action OnStudentSatInClass;
         public static event Action<bool> OnSwitchTheCamera;
+        public static event Action OnClickedCoffeeButton;
+        public static event Action<bool> OnTeacherEnterSleepyState;
         public static event Action OnStudentStateUpdated;
+        public static event Action OnStudentAdmitted;
         public static event Action<StudentRequirements> OnStudentLeftTheSchool;
         
 
@@ -44,7 +47,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         public static void StudentLeftTheClassroomEvent(StudentStateManager student)
         {
-            OnStudentLeftTheClassroom?.Invoke(student);
+             OnStudentLeftTheClassroom?.Invoke(student);
         }
 
         public static void ClassroomUnlockedEvent()
@@ -75,6 +78,21 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static void ItemUnlockedEvent(IPurchase obj)
         {
             OnItemUnlocked?.Invoke(obj);
+        }
+
+        public static void ClickedCoffeeButtonEvent()
+        {
+            OnClickedCoffeeButton?.Invoke();
+        }
+
+        public static void TeacherEnteredSleepyStateEvent(bool hasEntered)
+        {
+            OnTeacherEnterSleepyState?.Invoke(hasEntered);
+        }
+
+        public static void StudentAdmitEvent()
+        {
+            OnStudentAdmitted?.Invoke();
         }
     }
 }

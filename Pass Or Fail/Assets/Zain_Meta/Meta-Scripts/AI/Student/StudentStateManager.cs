@@ -23,6 +23,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         public WaitInCorridor WaitInCorridor = new WaitInCorridor();
         public MoveToCorridor MoveToCorridor = new MoveToCorridor();
         public LeaveSchool LeaveSchool = new LeaveSchool();
+        public GraduatingState GraduatingState = new GraduatingState();
 
         private IState _curState;
 

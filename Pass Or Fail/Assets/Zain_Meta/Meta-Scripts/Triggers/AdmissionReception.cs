@@ -73,13 +73,16 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             if (_curTimerToServe < .1f)
             {
                 _curTimerToServe = servingDelay;
-                myCashGeneration.AddCash(1, queuePoints[0].transform);
+                myCashGeneration.AddCash(2, queuePoints[0].transform);
                 var firstInLine = queuePoints[0].GetStudentAtThisPoint();
                 firstInLine.GetRequirements().AssignMeClasses();
                 queuePoints[0].FreeTheSpot();
                 RearrangeAllStudentsInTheQueue();
                 if (!OnBoardingManager.Instance.CheckForCurrentState(TutorialState.AdmitKids))
+                {
                     firstInLine.AdmitMePlease();
+                    EventsManager.StudentAdmitEvent();
+                }
                 else
                 {
                     firstInLine.WaitOutside();
@@ -91,6 +94,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                     }
 
                     PlayerPrefs.SetInt("StartingStudents", _startingStudents);
+                    EventsManager.StudentAdmitEvent();
                 }
             }
             else

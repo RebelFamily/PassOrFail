@@ -7,6 +7,8 @@
         public void EnterState(StudentStateManager student)
         {
             _requirements = student.GetRequirements();
+            _requirements.curTarget = _requirements.GetManager().GetExitingPoint();
+            _requirements.MoveTheTargetTo(_requirements.curTarget);
             _requirements.EnableTheStudent(true);
         }
 

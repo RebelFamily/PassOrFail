@@ -13,7 +13,7 @@
 
         public void UpdateState(TeacherStateManager teacher)
         {
-            if(!_requirement.CheckForDistance()) return;
+            if(!_requirement.CheckForDistance(.5f)) return;
             
             _requirement.EnableTheTeacher(false);
             _requirement.FaceTheTarget();

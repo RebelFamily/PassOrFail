@@ -25,7 +25,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         [SerializeField] private Text priceText;
         private IUnlocker _unlockingItem;
         private bool _isPlayerTriggering, _isUpgraded;
-        private readonly YieldInstruction _delayLong = new WaitForSeconds(.4f);
+        private bool _isPurchasedForNow;
+        private readonly YieldInstruction _delayLong = new WaitForSeconds(.2f);
+        private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
         private int _curRemainingPrice;
         private int _upgradeLevel;
@@ -50,6 +52,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         private void UpgradeTheRoom()
         {
+            _isPurchasedForNow = true;
             _isPlayerTriggering = false;
             _upgradeLevel++;
             fillerCanvas.SetActive(false);
@@ -57,6 +60,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             SaveAfterUpgrade();
             _unlockingItem?.UnlockWithAnimation();
             EventsManager.ItemUnlockedEvent(this);
+            
             if (_upgradeLevel >= upgradeData.pricing.Length)
             {
                 _isUpgraded = true;
@@ -68,7 +72,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private IEnumerator StartTakingCashFromPlayer(PlayerCashSystem player)
         {
             if (!_cashManager) _cashManager = CashManager.Instance;
-            //if (!_audioManager) _audioManager = AudioManager.Instance;
 
             if (!_isPlayerTriggering)
                 yield break;
@@ -107,7 +110,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                         break;
                     }
 
-                    yield return null;
+                    yield return _delayCash;
                 }
                 else
                 {
@@ -136,22 +139,22 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         {
             _upgradeLevel = upgradeData.upgradedLevel;
             _isUpgraded = upgradeData.isUpgraded;
-            _curRemainingPrice = upgradeData.pricing[_upgradeLevel].remainingPrice;
-            itemPrice = upgradeData.pricing[_upgradeLevel].pricesForEachUpgrade;
             if (_isUpgraded)
             {
                 unlockCol.enabled = false;
                 fillerCanvas.SetActive(false);
                 _unlockingItem?.UnlockWithoutAnimation();
+                return;
             }
-            else
-            {
-                fillerCanvas.SetActive(true);
-                var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
-                priceFiller.fillAmount = normalValue;
-                _curRemainingPrice.SetFloatingPoint(priceText);
-                _unlockingItem?.KeepItLocked();
-            }
+           
+            _curRemainingPrice = upgradeData.pricing[_upgradeLevel].remainingPrice;
+            itemPrice = upgradeData.pricing[_upgradeLevel].pricesForEachUpgrade;
+            fillerCanvas.SetActive(true);
+            var normalValue = Mathf.InverseLerp(itemPrice, 0, _curRemainingPrice);
+            priceFiller.fillAmount = normalValue;
+            _curRemainingPrice.SetFloatingPoint(priceText);
+            _unlockingItem?.KeepItLocked();
+            
         }
 
         private void SaveTheData()
@@ -170,9 +173,15 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         public override bool IsPurchased()
         {
-            return _isUpgraded;
+            return  _isPurchasedForNow;
         }
 
+        public override void EnableMe(bool toEnable)
+        {
+            gameObject.SetActive(toEnable);
+            ResetTheUpgrade();
+        }
+        
         public override int GetRemainingPrice() => upgradeData.pricing[_upgradeLevel].remainingPrice;
 
         [ContextMenu("Reset The Upgrade Area")]
@@ -181,7 +190,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             if (_upgradeLevel >= upgradeData.pricing.Length)
             {
                 _isUpgraded = true;
+                fillerCanvas.SetActive(false);
+                unlockCol.enabled = false;
                 gameObject.SetActive(false);
+                return;
             }
 
             fillerCanvas.SetActive(true);
