@@ -1,11 +1,10 @@
 using UnityEngine;
 public class SaveTheEgg : MonoBehaviour
 {
-    //public static readonly string[] EggNames = new string[] {"SimpleEgg", "FriedEgg", "EggWithBandage", "BrokenEgg", "EasterEgg1", "EasterEgg2", "EasterEgg3", "EasterEgg4", "DinoEgg"};
     [SerializeField] private EggsInventory eggsInventory;
-    [SerializeField] private string breakableObjectName = "Baby Egg";
+    [SerializeField] private string mainInstructions = "Protect the Baby Egg", description0 = "- No Scratch", description1 = "- No Breaks";
     [SerializeField] private string[] eggTaskNames;
-    private int _questionIndex = 0, _questionCounter = 0;
+    private int _questionIndex = 0;
     [SerializeField] private Student[] students;
     private readonly int[] _eggIndexesToAsk = new int[3];
     public void InvokeSetEggs()
@@ -17,14 +16,7 @@ public class SaveTheEgg : MonoBehaviour
         for (var i = 0; i < students.Length; i++)
         {
             var eggIndex = 0;
-            if (PlayerPrefsHandler.LevelCounter > PlayerPrefsHandler.TotalLevels - 1)
-            {
-                eggIndex = Random.Range(0, eggsInventory.eggs.Length);
-            }
-            else
-            {
-                eggIndex = GetEggIndex(eggTaskNames[i]);
-            }
+            eggIndex = PlayerPrefsHandler.LevelCounter > PlayerPrefsHandler.TotalLevels - 1 ? Random.Range(0, eggsInventory.eggs.Length) : GetEggIndex(eggTaskNames[i]);
             _eggIndexesToAsk[i] = eggIndex;
             var pos = students[i].GetGender() == Gender.FemaleStudent ? eggsInventory.eggs[eggIndex].positionForFemale : 
                 eggsInventory.eggs[eggIndex].positionForMale;
@@ -48,8 +40,16 @@ public class SaveTheEgg : MonoBehaviour
         _questionIndex++;
         return flag;
     }
-    public string GetBreakableObjectName()
+    public string GetMainInstructions()
     {
-        return breakableObjectName;
+        return mainInstructions;
+    }
+    public string GetDescription0()
+    {
+        return description0;
+    }
+    public string GetDescription1()
+    {
+        return description1;
     }
 }

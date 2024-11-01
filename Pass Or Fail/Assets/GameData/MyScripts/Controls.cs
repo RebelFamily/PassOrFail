@@ -8,7 +8,8 @@ public class Controls : MonoBehaviour
     [SerializeField] private RectTransform tutorialHand;
     [SerializeField] private Sprite schoolDanceInstructions, libraryInstructions, gymClassInstructions;
     private const string Filler = "Filler", ActivityContainer = "Container", StreakText = "StreakText", AdButton = "AdButton", PassAlert = "PassAlert",
-        FailAlert = "FailAlert", ProtectionText = "ProtectionText", ProtectThe = "Protect the ", InfinityHandPath = "Container/InfinityIconBg";
+        FailAlert = "FailAlert", EggProtectionText = "ProtectionText", InfinityHandPath = "Container/InfinityIconBg",
+        Description0String = "Description0", Description1String = "Description1";
     
     public void EnableQuestionAnswerUI(bool flag)
     {
@@ -134,9 +135,11 @@ public class Controls : MonoBehaviour
     {
         return reportCard;
     }
-    public void SetProtectionText(string newValue)
+    public void SetProtectionText(string instructions, string description0, string description1)
     {
-        protectTheEgg.transform.Find(ProtectionText).GetComponent<Text>().text = ProtectThe + newValue;
+        protectTheEgg.transform.Find(EggProtectionText).GetComponent<Text>().text = instructions;
+        protectTheEgg.transform.Find(Description0String).GetComponent<Text>().text = description0;
+        protectTheEgg.transform.Find(Description1String).GetComponent<Text>().text = description1;
     }
 
     #region Level Based Methods

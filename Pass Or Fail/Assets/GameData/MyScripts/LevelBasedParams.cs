@@ -42,7 +42,8 @@ public class LevelBasedParams : MonoBehaviour
                 SetQuestionAnswer();
                 if (_questionAnswer.IsSaveTheEgg())
                 {
-                    SharedUI.Instance.gamePlayUIManager.controls.SetProtectionText(_questionAnswer.GetBreakableObjectName());
+                    SharedUI.Instance.gamePlayUIManager.controls.SetProtectionText(_questionAnswer.GetMainInstructions(), _questionAnswer.GetDescription0(), 
+                        _questionAnswer.GetDescription1());
                     SharedUI.Instance.gamePlayUIManager.controls.EnableProtectTheEggUI();
                 }
                 _questionAnswer.SetCameraView();
