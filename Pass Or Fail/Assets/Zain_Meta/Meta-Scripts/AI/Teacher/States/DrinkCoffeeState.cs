@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using UnityEngine;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
@@ -12,9 +13,14 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
             _requirement = teacher.GetRequirement();
             _requirement.EnableTheTeacher(false);
             EventsManager.TeacherEnteredSleepyStateEvent(false);
-            DOVirtual.DelayedCall(1f, () => { _requirement.DrinkTheCoffee(); });
-            DOVirtual.DelayedCall(2f, () =>
+            DOVirtual.DelayedCall(1f, () =>
             {
+                _requirement.DrinkTheCoffee();
+                Debug.Log("Drank Coffee");
+            });
+            DOVirtual.DelayedCall(4f, () =>
+            {
+                Debug.Log("lets Go!!");
                 _requirement.GetUpFromDesk();
                 _requirement.NormalizeMovement();
                 teacher.ChangeState(teacher.GoingToTeach);

@@ -8,11 +8,11 @@ namespace Zain_Meta.Meta_Scripts.DataRelated
     [CreateAssetMenu(fileName = "StudentsData_", menuName = "Data/StudentsData", order = 0)]
     public class StudentsData : SaveClass
     {
-         public List<DataClass> classesData = new();
+        public List<DataClass> classesData = new();
 
-        public void AddEachPersonData(int[] totalRides, int curRideIndex)
+        public void AddEachPersonData(int[] totalRides, int curClassIndex)
         {
-            var data = new DataClass(totalRides, curRideIndex);
+            var data = new DataClass(totalRides, curClassIndex);
             classesData.Add(data);
         }
 
@@ -33,10 +33,10 @@ namespace Zain_Meta.Meta_Scripts.DataRelated
         public DataClass(int[] rides, int curIndex)
         {
             totalRides = rides.ToList();
-            curRideIndex = curIndex;
+            curClassIndex = curIndex;
         }
 
         public List<int> totalRides;
-        public int curRideIndex;
+        public int curClassIndex;
     }
 }

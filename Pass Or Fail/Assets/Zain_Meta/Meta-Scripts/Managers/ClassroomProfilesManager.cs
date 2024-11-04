@@ -2,7 +2,6 @@
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI;
 using Zain_Meta.Meta_Scripts.Components;
-using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
 using Zain_Meta.Meta_Scripts.MetaRelated.Upgrades;
 
@@ -12,17 +11,28 @@ namespace Zain_Meta.Meta_Scripts.Managers
     {
         public static ClassroomProfilesManager Instance;
 
+        private SharedUI _shared;
+
         private void Awake()
         {
             Instance = this;
         }
 
+        private void Start()
+        {
+            _shared = SharedUI.Instance;
+            if (_shared)
+                _shared.HideAll();
+        }
+
         [SerializeField] private List<ClassroomProfile> allClassrooms = new();
         [SerializeField] private WaitingLine waitingLine;
         [SerializeField] private Transform exitingPoint, leavingCashPoint;
-        [SerializeField] private Collider waitingAreasInCorridor;
+        [SerializeField] private Transform[] randomPointsInCorridor;
+        [SerializeField] private RandomPoint[] randomPoints;
         [SerializeField] private CashGenerationSystem graduationCash;
         [SerializeField] private int percentageIncreaseInGraduationAmount;
+        private int _curRandomPoint;
 
         private void OnEnable()
         {
@@ -70,7 +80,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             return false;
         }
-        
+
         public Transform GetSeatAtRequiredClass(StudentStateManager student, int[] requiredClasses)
         {
             if (allClassrooms.Count == 0) return null;
@@ -81,12 +91,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 {
                     if ((int)allClassrooms[j].GetClassroomType() == requiredClasses[i])
                     {
-                        var seat = allClassrooms[i].GetAvailableSeat(student);
+                        var seat = allClassrooms[j].GetAvailableSeat(student);
                         if (seat)
                         {
-                            print("seat of "+allClassrooms[j].GetClassroomType()+
-                                  " for "+ student.GetRequirements().curClassIndex);
-                            student.GetRequirements().AdjustClassIndices(i);
+                            student.GetRequirements().SwapClassIndices(i);
                             return seat;
                         }
                     }
@@ -103,8 +111,27 @@ namespace Zain_Meta.Meta_Scripts.Managers
             return waitingLine.GetAvailableSpotAtReception(student);
         }
 
-        public Vector3 GetRandomPointInCorridor() =>
-            PointGenerator.RandomPointInBounds(waitingAreasInCorridor.bounds);
+        public Transform GetRandomPointInCorridor()
+        {
+            //return  PointGenerator.RandomPointInBounds(waitingAreasInCorridor.bounds);
+
+            _curRandomPoint %= randomPointsInCorridor.Length;
+            return randomPointsInCorridor[_curRandomPoint++];
+        }
+
+        public RandomPoint GetARandomWaitingPoint()
+        {
+            for (var i = 0; i < randomPoints.Length; i++)
+            {
+                if (randomPoints[i].IsEmpty())
+                {
+                    randomPoints[i].OccupyThis();
+                    return randomPoints[i];
+                }
+            }
+
+            return null;
+        }
 
         public Transform GetExitingPoint() => exitingPoint;
         public Transform GetLeavingCashPoint() => leavingCashPoint;

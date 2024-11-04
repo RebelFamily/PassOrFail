@@ -1,4 +1,6 @@
-﻿namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
+﻿using UnityEngine;
+
+namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
 {
     public class TeachingState: ITeacherState
     {
@@ -8,6 +10,7 @@
             _requirement = teacher.GetRequirement();
             _requirement.EnableTheTeacher(false);
             _requirement.TeachTheClass();
+            Debug.Log($"Teach Me");
         }
 
         public void UpdateState(TeacherStateManager teacher)

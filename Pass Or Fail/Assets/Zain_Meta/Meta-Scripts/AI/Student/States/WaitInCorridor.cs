@@ -1,6 +1,4 @@
-﻿using Zain_Meta.Meta_Scripts.Managers;
-
-namespace Zain_Meta.Meta_Scripts.AI.Student.States
+﻿namespace Zain_Meta.Meta_Scripts.AI.Student.States
 {
     public class WaitInCorridor : IState
     {
@@ -10,26 +8,14 @@ namespace Zain_Meta.Meta_Scripts.AI.Student.States
         {
             _requirements = student.GetRequirements();
             _requirements.MoveToRandomPointInCorridor();
-            //EventsManager.StudentLeftTheClassroomEvent(student);
+            _requirements.GetManager().AssignClasses(_requirements);
         }
 
         public void UpdateState(StudentStateManager stateManager)
         {
-            /*
-            var seatTarget = _requirements.GetManager().GetSeatAtRequiredClass(stateManager,
-                _requirements.classesIndex.ToArray());
-            if (seatTarget)
+            if (_requirements.CheckForDistance())
             {
-                _requirements.EnableTheStudent(true);
-                _requirements.curTarget = seatTarget;
-                _requirements.MoveTheTargetTo(seatTarget);
-                stateManager.ChangeState(stateManager.ReachTheSeat);
-                return;
-            }
-            */
-
-            if (_requirements.CheckForDistance(_requirements.randomWaitingPoint))
-            {
+                _requirements.FaceTheTarget();
                 stateManager.ChangeState(stateManager.MoveToCorridor);
             }
         }

@@ -29,6 +29,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private readonly YieldInstruction _delayLong = new WaitForSeconds(.2f);
         private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
+        private AudioManager _audioManager;
         private int _curRemainingPrice;
         private int _upgradeLevel;
 
@@ -48,6 +49,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void Start()
         {
             _cashManager = CashManager.Instance;
+            _audioManager = AudioManager.Instance;
         }
 
         private void UpgradeTheRoom()
@@ -60,7 +62,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             SaveAfterUpgrade();
             _unlockingItem?.UnlockWithAnimation();
             EventsManager.ItemUnlockedEvent(this);
-            
+
             if (_upgradeLevel >= upgradeData.pricing.Length)
             {
                 _isUpgraded = true;
@@ -102,6 +104,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                     cash.transform.parent = transform;
                     cash.transform.ParabolicMovement(transform, jumpDelay, jumpPower, jumpEase,
                         () => { LeanPool.Despawn(cash); });
+                    _audioManager.PlaySound("PutCash");
                     upgradeData.pricing[_upgradeLevel].remainingPrice = _curRemainingPrice;
                     SaveTheData();
                     if (_curRemainingPrice <= 0)
@@ -146,7 +149,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 _unlockingItem?.UnlockWithoutAnimation();
                 return;
             }
-           
+
             _curRemainingPrice = upgradeData.pricing[_upgradeLevel].remainingPrice;
             itemPrice = upgradeData.pricing[_upgradeLevel].pricesForEachUpgrade;
             fillerCanvas.SetActive(true);
@@ -154,7 +157,6 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             priceFiller.fillAmount = normalValue;
             _curRemainingPrice.SetFloatingPoint(priceText);
             _unlockingItem?.KeepItLocked();
-            
         }
 
         private void SaveTheData()
@@ -173,7 +175,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         public override bool IsPurchased()
         {
-            return  _isPurchasedForNow;
+            return _isPurchasedForNow;
         }
 
         public override void EnableMe(bool toEnable)
@@ -181,7 +183,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             gameObject.SetActive(toEnable);
             ResetTheUpgrade();
         }
-        
+
         public override int GetRemainingPrice() => upgradeData.pricing[_upgradeLevel].remainingPrice;
 
         [ContextMenu("Reset The Upgrade Area")]

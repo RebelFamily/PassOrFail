@@ -8,6 +8,7 @@
         {
             _requirements = student.GetRequirements();
             _requirements.EnableTheStudent(false);
+            _requirements.GetManager().AssignClasses(_requirements);
         }
 
         public void UpdateState(StudentStateManager stateManager)
@@ -16,6 +17,7 @@
                 _requirements.classesIndex.ToArray());
             if (!seatTarget) return;
 
+            _requirements.curRandomPoint.EmptyThis();
             _requirements.EnableTheStudent(true);
             _requirements.curTarget = seatTarget;
             _requirements.MoveTheTargetTo(seatTarget);

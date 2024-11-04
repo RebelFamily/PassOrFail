@@ -19,7 +19,7 @@ namespace Zain_Meta.Meta_Scripts.Components
 
         public void ProduceMoreCoffee()
         {
-            DOVirtual.DelayedCall(3f, () => 
+            DOVirtual.DelayedCall(1.5f, () => 
                 { handlerToUse.AddToStack(utility.SpawnCoffeeAt(spawningPos)); });
         }
     }

@@ -21,6 +21,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         private Vector3 _positioningVector;
 
         private readonly YieldInstruction _delay = new WaitForSeconds(.25f);
+        private readonly YieldInstruction _delayLong = new WaitForSeconds(.5f);
 
         public void StartStacking(StackingHandler stackingHandler)
         {
@@ -35,6 +36,12 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         private void CheckForItemsInStack()
         {
             playerAnim.SetLayerWeight(1, itemsStacked.Count > 0 ? 1 : 0);
+            maxLimitText.SetActive(itemsStacked.Count >= stackLimit);
+        }
+
+        private void LateUpdate()
+        {
+            CheckForItemsInStack();
         }
 
         private IEnumerator Stacking_CO(StackingHandler handler)
@@ -56,17 +63,16 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                     {
                         itemsStacked.Add(lastItemInHandler);
                         lastItemInHandler.transform.parent = stackingPos;
-                        lastItemInHandler.transform.DOLocalMove(_positioningVector,stackingDelay)
+                        lastItemInHandler.transform.DOLocalMove(_positioningVector, stackingDelay)
                             .SetEase(easeType);
                         lastItemInHandler.transform.DOLocalRotate(Vector3.zero, 0);
                         lastItemInHandler.transform.DOScale(Vector3.one, 0);
                         _positioningVector.y += stackOffsetData.yOffset;
                     }
                 }
-                CheckForItemsInStack();
+
                 yield return _delay;
             }
-            CheckForItemsInStack();
         }
 
         private IEnumerator UnstackingAll_CO(StackingHandler handler)
@@ -74,30 +80,40 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             yield return new WaitForSeconds(delayOnFirstPick);
             while (handler.isPlayerTriggering)
             {
-                //check if player has Items left
-                if(handler.isReadyToAccept)
+                if (!movement.IsMoving())
                 {
-                    maxLimitText.SetActive(false);
-                    if (itemsStacked.Count <= 0)
+                    if (handler.isReadyToAccept)
                     {
-                        break;
-                    }
+                        maxLimitText.SetActive(false);
+                        if (itemsStacked.Count <= 0)
+                        {
+                            break;
+                        }
 
-                    // remove item from player stack and give it to handler         
+                        // remove item from player stack and give it to handler         
 
-                    if (!handler.IsStackFull())
-                    {
-                        var itemInStack = GetLastItem();
+                        if (!handler.IsStackFull())
+                        {
+                            var itemInStack = GetLastItem();
 
-                        handler.AddToStack(itemInStack);
-                        _positioningVector.y -= stackOffsetData.yOffset;
-                        if (_positioningVector.y < 0)
-                            _positioningVector.y = 0;
+                            handler.AddToStack(itemInStack);
+                            _positioningVector.y -= stackOffsetData.yOffset;
+                            if (_positioningVector.y < 0)
+                                _positioningVector.y = 0;
+                        }
+
+                        yield return _delay;
                     }
                 }
-                yield return _delay;
+                else
+                {
+                    yield return _delayLong;
+                }
+
+                yield return null;
+                if (!handler.isPlayerTriggering)
+                    break;
             }
-            CheckForItemsInStack();
         }
 
         private Transform GetLastItem()

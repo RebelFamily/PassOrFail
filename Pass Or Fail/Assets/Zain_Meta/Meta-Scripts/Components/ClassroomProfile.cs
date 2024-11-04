@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
@@ -13,9 +12,10 @@ namespace Zain_Meta.Meta_Scripts.Components
         [SerializeField] private ClassroomType classSubject;
         [SerializeField] private SeatProfile[] classroomSeats;
         [SerializeField] private TeachingArea teachingTriggerArea;
-        public Transform podiumTransforms,teacherChair;
+        [SerializeField] private TextAppear boardWork;
+        public Transform podiumTransforms, teacherChair;
 
-        private bool _isOpen, _isFull,_canBeTaught;
+        private bool _isOpen, _isFull, _canBeTaught, _areaShown;
 
         private ClassroomProfilesManager _classroomProfilesManager;
 
@@ -29,6 +29,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnStudentSatInClass += CheckForClassStrength;
             EventsManager.OnTeacherStartTeaching += TeachAllStudentsOfThisClass;
             EventsManager.OnStudentLeftTheClassroom += ResetTheClass;
+            EventsManager.OnShowBoardText += ShowTextOnBoard;
         }
 
         private void OnDisable()
@@ -36,24 +37,36 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnStudentSatInClass -= CheckForClassStrength;
             EventsManager.OnTeacherStartTeaching -= TeachAllStudentsOfThisClass;
             EventsManager.OnStudentLeftTheClassroom -= ResetTheClass;
+            EventsManager.OnShowBoardText -= ShowTextOnBoard;
         }
+
+        private void ShowTextOnBoard(bool toTeach, ClassroomProfile classroomProfile)
+        {
+            if (classroomProfile != this) return;
+
+            if (toTeach)
+                boardWork.ShowMesh();
+        }
+
 
         private void ResetTheClass(StudentStateManager student)
         {
+            boardWork.HideMesh();
             _canBeTaught = false;
-            if(!_isOpen) return;
+            _areaShown = false;
+            _isFull = false;
+            /*if(!_isOpen) return;
             _isFull = IsClassFull();
             if (_isFull)
                 teachingTriggerArea.ShowTeachingArea();
             else
-                teachingTriggerArea.HideTeachingArea();
+                teachingTriggerArea.HideTeachingArea();*/
         }
 
         private void TeachAllStudentsOfThisClass(ClassroomProfile classroom)
         {
             if (classroom != this) return;
 
-            // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < classroomSeats.Length; i++)
             {
                 classroomSeats[i].GiveHomeworkToThisKid();
@@ -64,12 +77,19 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             if (!_isOpen) return;
 
+            if (_areaShown) return;
             _isFull = IsClassFull();
             _canBeTaught = _isFull;
             if (_isFull)
+            {
                 teachingTriggerArea.ShowTeachingArea();
+                _areaShown = true;
+            }
             else
+            {
                 teachingTriggerArea.HideTeachingArea();
+                _areaShown = false;
+            }
         }
 
 
@@ -105,6 +125,7 @@ namespace Zain_Meta.Meta_Scripts.Components
 
             return false;
         }
+
         private bool AnySeatsAvailableTest()
         {
             if (!_isOpen) return false;
@@ -127,16 +148,18 @@ namespace Zain_Meta.Meta_Scripts.Components
 
         public bool ClassCanBeTaught()
         {
-            return _canBeTaught && !teachingTriggerArea.isPlayerTriggering ;
+            return _canBeTaught && !teachingTriggerArea.isPlayerTriggering;
         }
+
         public void OpenTheClass()
         {
             _isOpen = true;
+            _areaShown = false;
             _classroomProfilesManager = ClassroomProfilesManager.Instance;
             _classroomProfilesManager.AddClasses(this);
         }
 
-        public ClassroomType GetClassroomType() =>classSubject;
+        public ClassroomType GetClassroomType() => classSubject;
         public TeachingArea GetTeachingArea() => teachingTriggerArea;
     }
 }

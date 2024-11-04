@@ -11,7 +11,7 @@ namespace Zain_Meta.Meta_Scripts.AI.States
         public void EnterState(StudentStateManager student)
         {
             _requirements = student.GetRequirements();
-            _requirements.IncreaseClassIndex();
+            _requirements.RemoveTheTakenClass();
             _requirements.GetUpFromDesk();
             _requirements.CheckForLeavingTheSchool();
             _gettingUpDelay = 1f;

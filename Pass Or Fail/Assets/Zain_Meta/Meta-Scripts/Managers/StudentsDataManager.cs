@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.AI;
 using Zain_Meta.Meta_Scripts.DataRelated;
@@ -13,6 +14,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         [SerializeField] private StudentsData studentsData;
         [SerializeField] private List<StudentRequirements> students = new();
+        [SerializeField] private int maxStudentsToAdmit;
         [SerializeField] private Collider spawningArea;
         [SerializeField] private int initialSpawningCount;
 
@@ -20,6 +22,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private const string SpawningPath = "Characters/Students/Student";
         private string[] _gendersArray = { "Boy", "Girl" };
         private ES3Settings _settings;
+        private YieldInstruction _delay = new WaitForSeconds(.15f);
 
         private void Awake()
         {
@@ -55,7 +58,34 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private void Start()
         {
-            SpawnLoadedStudents();
+            StartCoroutine(nameof(InitiateSpawning_CO));
+        }
+
+        private IEnumerator InitiateSpawning_CO()
+        {
+          //  SpawnLoadedStudents();
+            var studentsCount = studentsData.classesData.Count;
+
+            if (studentsCount > maxStudentsToAdmit)
+                studentsCount = maxStudentsToAdmit;
+            print("Count of Students Is " + studentsCount);
+
+            for (var i = 0; i < studentsCount; i++)
+            {
+                var gender = Random.Range(0, _gendersArray.Length);
+                var index = Random.Range(0, 4);
+                var student = Instantiate(Resources.Load<StudentStateManager>
+                        (SpawningPath + _gendersArray[gender] + "_" + index),
+                    PointGenerator.RandomPointInBounds(spawningArea.bounds),
+                    Quaternion.identity);
+
+             
+                student.GetRequirements().PopulateStates(studentsData.classesData[i].totalRides.ToArray()
+                    ,studentsData.classesData[i].curClassIndex);
+                student.AdmitMePleaseForcefully();
+                yield return _delay;
+            }
+            yield return null;
             for (var i = 0; i < initialSpawningCount; i++)
             {
                 SpawnUnAdmittedStudents();
@@ -76,28 +106,12 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private void SpawnLoadedStudents()
         {
-            var studentsCount = studentsData.classesData.Count;
-
-            print("Count of Students Is " + studentsCount);
-
-            for (var i = 0; i < studentsCount; i++)
-            {
-                var gender = Random.Range(0, _gendersArray.Length);
-                var index = Random.Range(0, 4);
-                var student = Instantiate(Resources.Load<StudentStateManager>
-                        (SpawningPath + _gendersArray[gender] + "_" + index),
-                    PointGenerator.RandomPointInBounds(spawningArea.bounds),
-                    Quaternion.identity);
-
-                // var student = utility.SpawnStudentAt(PointGenerator.RandomPointInBounds(spawningArea.bounds));
-                student.GetRequirements().PopulateStates(studentsData.classesData[i].totalRides.ToArray(),
-                    studentsData.classesData[i].curRideIndex);
-                student.AdmitMePleaseForcefully();
-            }
+            
         }
 
         private void SpawnUnAdmittedStudents()
         {
+            if(students.Count>=maxStudentsToAdmit) return;
             var gender = Random.Range(0, _gendersArray.Length);
             var index = Random.Range(0, 4);
             var student = Instantiate(Resources.Load<StudentStateManager>
@@ -121,9 +135,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private void SaveDataState(StudentRequirements studentRequirements)
         {
             studentsData.AddEachPersonData(
-                studentRequirements.classesIndex.ToArray(),
-                studentRequirements.curClassIndex
-            );
+                studentRequirements.classesIndex.ToArray(),studentRequirements.curClassIndex);
         }
 
         private void LoadData()

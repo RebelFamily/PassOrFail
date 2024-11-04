@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
@@ -21,12 +22,27 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         {
             EventsManager.OnTriggerTeaching += SnapToThisPos;
             EventsManager.OnSwitchTheCamera += AdjustTheMovement;
+            EventsManager.OnSnapPlayer += SnapThePlayer;
         }
 
         private void OnDisable()
         {
             EventsManager.OnTriggerTeaching -= SnapToThisPos;
             EventsManager.OnSwitchTheCamera -= AdjustTheMovement;
+            EventsManager.OnSnapPlayer -= SnapThePlayer;
+        }
+
+        private void SnapThePlayer(Transform posToSnapAt)
+        {
+            print("snapped");
+           StopMovement();
+            transform.DORotateQuaternion(posToSnapAt.rotation, .15f).SetEase(Ease.Linear);
+            var position = posToSnapAt.position;
+            transform.DOMoveX(position.x, .15f).SetEase(Ease.Linear);
+            transform.DOMoveZ(position.z, .15f).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                ResumeMovement();
+            });
         }
 
         private void AdjustTheMovement(bool toSwitch)
@@ -41,7 +57,8 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             }
         }
 
-        private void SnapToThisPos(bool startTeaching, Vector3 teachingPos, Vector3 rotation)
+        private void SnapToThisPos(bool startTeaching, Vector3 teachingPos,
+            Vector3 rotation, ClassroomProfile classroomProfile)
         {
             if (!startTeaching)
             {

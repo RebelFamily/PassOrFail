@@ -35,6 +35,14 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             maxZVal = offsetData.maxZVal;
             LoadData();
         }
+        
+        private void Update()
+            {
+                if(Input.GetKeyDown(KeyCode.A))
+                {
+                    AddCash(1,transform);
+                }
+            }
 
         private void LoadData()
         {
@@ -144,7 +152,11 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                 cashMade.RemoveAt(index);
                 _nullItemsPos.Add(item.localPosition);
 
-                if (cashMade.Count == 0) _nullItemsPos.Clear();
+                if (cashMade.Count == 0)
+                {
+                    curXPos = curYPos = curZPos = 0;
+                    _nullItemsPos.Clear();
+                }
 
                 LeanPool.Despawn(item);
                 if (OnBoardingManager.TutorialComplete) return;

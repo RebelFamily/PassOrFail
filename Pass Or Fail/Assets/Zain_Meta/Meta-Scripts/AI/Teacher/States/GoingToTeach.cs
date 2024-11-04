@@ -1,4 +1,6 @@
-﻿namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
+﻿using UnityEngine;
+
+namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
 {
     public class GoingToTeach : ITeacherState
     {
@@ -10,11 +12,11 @@
             _requirement.EnableTheTeacher(true);
             _requirement.curTarget = _requirement.GetMyTeachingPoint();
             _requirement.MoveTheTargetTo();
+            Debug.Log("Going To Teach");
         }
 
         public void UpdateState(TeacherStateManager teacher)
         {
-            
             if (!_requirement.CheckForDistance()) return;
 
             if (!_requirement.GetMyClass().ClassCanBeTaught())

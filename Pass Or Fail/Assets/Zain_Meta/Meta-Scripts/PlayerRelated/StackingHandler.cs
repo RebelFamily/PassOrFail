@@ -13,9 +13,8 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         [SerializeField] private float tweenDelay;
         [SerializeField] private StackOffsetData offsetData;
         [SerializeField] private bool hasLimit;
-        [SerializeField] private bool hideAfterReachingLimit;
         [SerializeField] private int limitAmount;
-        [SerializeField] private UnityEvent actionAfterAddition, actionAfterRemoval;
+        [SerializeField] private UnityEvent actionAfterAddition, actionAfterRemoval, actionWithTween;
         public bool isReadyToAccept;
         private float _curXPos, _curYPos, _curZPos;
 
@@ -25,13 +24,14 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         public void AddToStack(Transform stackingItem)
         {
             stackedItems.Add(stackingItem);
+            actionAfterAddition?.Invoke();
             _positionVector.x = _curXPos;
             _positionVector.y = _curYPos;
             _positionVector.z = _curZPos;
             stackingItem.transform.parent = stackPivot;
-            stackingItem.DOLocalMove(_positionVector, tweenDelay).OnComplete(() => { actionAfterAddition?.Invoke(); });
             stackingItem.DOLocalRotate(Vector3.zero, 0).SetEase(Ease.Linear);
             stackingItem.DOScale(Vector3.one, 0).SetEase(Ease.Linear);
+            stackingItem.DOLocalMove(_positionVector, tweenDelay).OnComplete(() => { actionWithTween?.Invoke(); });
             _curYPos += offsetData.yOffset;
             if (IsStackFull())
                 isReadyToAccept = false;

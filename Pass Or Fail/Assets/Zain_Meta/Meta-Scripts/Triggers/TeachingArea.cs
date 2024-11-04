@@ -25,8 +25,9 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             isPlayerTriggering = true; //later used in AI detection
             HideTeachingArea();
             EventsManager.TriggerTeachingEvent(true,
-                snappingPoint.position, snappingPoint.localEulerAngles);
+                snappingPoint.position, snappingPoint.localEulerAngles,myClass);
 
+            EventsManager.ShowBoardTextEvent(true,myClass);
             if (OnBoardingManager.Instance.CheckForCurrentState(TutorialState.TeachTheClass))
                 OnBoardingManager.Instance.HideWaypoints();
             DOVirtual.DelayedCall(2.4f, () =>
@@ -43,7 +44,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {  
             isPlayerTriggering = false;
             EventsManager.TriggerTeachingEvent(false,
-                snappingPoint.position, snappingPoint.localEulerAngles);
+                snappingPoint.position, snappingPoint.localEulerAngles,null);
         }
 
         public void HideTeachingArea()
@@ -65,6 +66,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         public void ServeByTeacher()
         {
             HideTeachingArea();
+            EventsManager.ShowBoardTextEvent(true,myClass);
             DOVirtual.DelayedCall(2.4f, () =>
             {
                 EventsManager.TeacherStartTeachingEvent(myClass);

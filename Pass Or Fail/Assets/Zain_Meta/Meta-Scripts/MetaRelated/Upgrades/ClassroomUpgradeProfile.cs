@@ -11,7 +11,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
     {
         [SerializeField] private ItemsName fileName;
         [SerializeField] private UpgradeData upgradeData;
+        [SerializeField] private RoomColorData roomColorsData;
         [SerializeField] private int _curUpgradeLevel, _curLevelIndex;
+        [SerializeField] private RoomColorAdjuster roomColorAdjuster;
         [SerializeField] private Transform scalingPivot;
         [SerializeField] private Transform upgradingPivot;
         private ClassroomUpgradePanel _upgradePanel;
@@ -19,14 +21,13 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
         private const string path = "Classrooms/Class_Maths";
 
         private string _fileString;
-        private bool _isActiveUpgrade;
 
         private void Awake()
         {
             _fileString = "GameData/Upgrades/" + fileName + ".es3";
             LoadData();
         }
-        
+
 
         private void LoadData()
         {
@@ -35,6 +36,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             _curUpgradeLevel = upgradeData.upgradedLevel;
             _curLevelIndex = upgradeData.upgradeIndex;
             ApplyMeshes();
+            ApplyColors();
         }
 
         private void Start()
@@ -44,39 +46,46 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
 
         public void UnlockWithAnimation()
         {
-            _isActiveUpgrade = true;
             _curUpgradeLevel = upgradeData.upgradedLevel;
             _curLevelIndex = upgradeData.upgradeIndex;
             _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade,
-                ApplyThirdUpgrade,SaveTheData, _curUpgradeLevel);
+                ApplyThirdUpgrade, SaveTheData, _curUpgradeLevel,
+                upgradeData.pricing[_curUpgradeLevel].renderToShowA,
+                upgradeData.pricing[_curUpgradeLevel].renderToShowB,
+                upgradeData.pricing[_curUpgradeLevel].renderToShowC);
             ApplyFirstUpgrade();
             EventsManager.ClassReadyToUpgradeEvent(this, true);
             SaveTheData();
         }
 
         public void UnlockWithoutAnimation()
-        { }
+        {
+        }
 
         public void KeepItLocked()
-        { }
+        {
+        }
 
         private void ApplyFirstUpgrade()
         {
             _curLevelIndex = 0;
             ApplyMeshes();
+            ApplyColors();
         }
 
         private void ApplySecondUpgrade()
         {
             _curLevelIndex = 1;
             ApplyMeshes();
+            ApplyColors();
         }
+
         private void ApplyThirdUpgrade()
         {
             _curLevelIndex = 2;
             ApplyMeshes();
+            ApplyColors();
         }
-        
         private void ApplyMeshes()
         {
             if (_curSpawnedUpgrade)
@@ -88,6 +97,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             localScale.y = 0.1f;
             scalingPivot.localScale = localScale;
             scalingPivot.DOScaleY(1, .25f);
+        }
+        private void ApplyColors()
+        {
+            roomColorAdjuster.AdjustColors(roomColorsData.roomColorsDatum[_curUpgradeLevel].roomColors[_curLevelIndex]);
         }
 
         private void SaveTheData()

@@ -10,13 +10,15 @@ namespace Zain_Meta.Meta_Scripts.Managers
     public class EventsManager : MonoBehaviour
     {
         public static event Action<bool,bool> OnEnteredClassroom;
-        public static event Action<bool,Vector3,Vector3> OnTriggerTeaching;
+        public static event Action<bool,Vector3,Vector3,ClassroomProfile> OnTriggerTeaching;
+        public static event Action<bool,ClassroomProfile> OnShowBoardText;
         public static event Action<ClassroomProfile> OnTeacherStartTeaching;
         public static event Action<IPurchase> OnItemUnlocked;
         public static event Action<ClassroomUpgradeProfile,bool> OnClassReadyToUpgrade;
         public static event Action OnClassroomUnlocked;
         public static event Action<StudentStateManager> OnStudentLeftTheClassroom;
         public static event Action OnStudentSatInClass;
+        public static event Action<Transform> OnSnapPlayer;
         public static event Action<bool> OnSwitchTheCamera;
         public static event Action OnClickedCoffeeButton;
         public static event Action<bool> OnTeacherEnterSleepyState;
@@ -30,9 +32,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
             OnEnteredClassroom?.Invoke(isLeftClassroom,hasEntered);
         }
 
-        public static void TriggerTeachingEvent(bool toTeach,Vector3 positionToMoveTo,Vector3 rotationToUse)
+        public static void TriggerTeachingEvent(bool toTeach,Vector3 positionToMoveTo,Vector3 rotationToUse
+            ,ClassroomProfile classroomProfile)
         {
-            OnTriggerTeaching?.Invoke(toTeach,positionToMoveTo,rotationToUse);
+            OnTriggerTeaching?.Invoke(toTeach,positionToMoveTo,rotationToUse,classroomProfile);
         }
         
         public static void StudentSatInClassEvent()
@@ -93,6 +96,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static void StudentAdmitEvent()
         {
             OnStudentAdmitted?.Invoke();
+        }
+
+        public static void ShowBoardTextEvent(bool ToShow,ClassroomProfile classroomProfile)
+        {
+            OnShowBoardText?.Invoke(ToShow,classroomProfile);
+        }
+
+        public static void SnapPlayerEvent(Transform obj)
+        {
+            OnSnapPlayer?.Invoke(obj);
         }
     }
 }

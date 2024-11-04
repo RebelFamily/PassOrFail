@@ -50,7 +50,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
 
         private void Start()
         {
-            agentSettings.maxAcceleration = moveSpeed;
+            agentSettings.maxSpeed = moveSpeed;
             _curRestingTimer = restingTime;
             _curTeachingAmount = Random.Range(minTeaching, maxTeaching);
         }

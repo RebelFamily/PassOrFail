@@ -4,6 +4,7 @@ using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
+using Zain_Meta.Meta_Scripts.PlayerRelated;
 
 namespace Zain_Meta.Meta_Scripts.Triggers
 {
@@ -11,6 +12,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
     {
         [SerializeField] private CashGenerationSystem myCashGeneration;
         [SerializeField] private bool hasReceptionist;
+        [SerializeField] private Transform snappingPos;
         [SerializeField] private Collider collisionTrigger;
         [SerializeField] private Receptionist receptionist;
         [SerializeField] private Image receptionServingFiller;
@@ -19,7 +21,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         private ClassroomProfilesManager _classesManager;
         private bool _isPlayerTriggering;
         private float _curTimerToServe;
-
+        private bool _serveByPlayer;
 
         private int _startingStudents;
 
@@ -45,6 +47,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private void ServeByPlayer()
         {
+            _serveByPlayer = true;
             if (!_isPlayerTriggering) return;
             if (!CanStudentBeAdmittedByPlayer())
             {
@@ -57,6 +60,7 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private void ServeByHelper()
         {
+            _serveByPlayer = false;
             if (!CanStudentBeAdmitted())
             {
                 receptionServingFiller.fillAmount = 0;
@@ -72,6 +76,8 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {
             if (_curTimerToServe < .1f)
             {
+                if(_serveByPlayer)
+                    AdjustPlayerPos();
                 _curTimerToServe = servingDelay;
                 myCashGeneration.AddCash(2, queuePoints[0].transform);
                 var firstInLine = queuePoints[0].GetStudentAtThisPoint();
@@ -115,11 +121,16 @@ namespace Zain_Meta.Meta_Scripts.Triggers
                 OnBoardingManager.Instance.HideWaypoints();
             receptionServingFiller.fillAmount = 0;
             _curTimerToServe = servingDelay;
-
+            AdjustPlayerPos();
             if (OnBoardingManager.TutorialComplete) return;
 
             OnBoardingManager.Instance.SetStateBasedOn(TutorialState.GotoReception,
                 TutorialState.AdmitKids);
+        }
+
+        private void AdjustPlayerPos()
+        {
+            EventsManager.SnapPlayerEvent(snappingPos);
         }
 
         public void StopServing()

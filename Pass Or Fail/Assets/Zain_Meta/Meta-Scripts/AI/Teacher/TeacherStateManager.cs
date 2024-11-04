@@ -24,7 +24,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
 
         private void OnEnable()
         {
-            ChangeState(GoingToTeach);
+            ChangeState(WaitingInClass);
         }
 
         private void Start()

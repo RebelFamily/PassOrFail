@@ -67,6 +67,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (TutorialComplete)
             {
                 navigationManager.ReloadThePurchasesData();
+                startingHandTut.SetActive(false);
                 return;
             }
 

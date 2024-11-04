@@ -14,17 +14,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
         public void UnlockWithAnimation()
         {
             receptionistChairPivot.gameObject.SetActive(true);
+            ParticlesManager.Instance.PlayTeacherUnlockVfxFor(receptionistChairPivot);
             receptionistChairPivot.localScale = Vector3.one;
             var localScale = receptionistChairPivot.localScale;
             localScale.y = 0.1f;
             receptionistChairPivot.localScale = localScale;
-            receptionistChairPivot.DOScaleY(1, .15f).SetEase(Ease.InBack).OnComplete(() =>
-            {
-                reception.SetReceptionist(true);
-            });
-            
-            if(OnBoardingManager.TutorialComplete) return;
-            
+            receptionistChairPivot.DOScaleY(1, .15f).SetEase(Ease.Linear)
+                .OnComplete(() => { reception.SetReceptionist(true); });
+
+            if (OnBoardingManager.TutorialComplete) return;
+
             OnBoardingManager.Instance.SetStateBasedOn(TutorialState.UnlockReceptionist,
                 TutorialState.UnlockClassroom);
         }

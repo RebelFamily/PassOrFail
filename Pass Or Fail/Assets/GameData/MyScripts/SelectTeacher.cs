@@ -16,7 +16,8 @@ public class SelectTeacher : Splash
             gameObject.SetActive(false);
             SharedUI.Instance.SetNextSceneIndex(2);
             SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Splash);
-            SharedUI.Instance.OpenSpecialMenu(PlayerPrefsHandler.CurrencyCounter);
+           // SharedUI.Instance.OpenSpecialMenu(PlayerPrefsHandler.CurrencyCounter);
+           //TODO: reset this after testing
         }
         /*if (!PlayerPrefsHandler.GetBool(PlayerPrefsHandler.SecondPlay))
         {
@@ -33,7 +34,8 @@ public class SelectTeacher : Splash
     }
     private void Disable()
     {
-        SharedUI.Instance.OpenSpecialMenu(PlayerPrefsHandler.CurrencyCounter);
+       // SharedUI.Instance.OpenSpecialMenu(PlayerPrefsHandler.CurrencyCounter);
+       //TODO: reset this after testing
         gameObject.SetActive(false);
     }
     public void HireTeacher(int no)

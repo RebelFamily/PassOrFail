@@ -53,7 +53,6 @@ namespace Zain_Meta.Meta_Scripts.Components
         public void GiveHomeworkToThisKid()
         {
             if (!studentSittingAtThisSpot) return;
-            print("Aa na puttar zara kaam kr!!");
             studentSittingAtThisSpot.StartLearning();
         }
 

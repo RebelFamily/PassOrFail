@@ -30,6 +30,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private readonly YieldInstruction _delayLong = new WaitForSeconds(.2f);
         private readonly YieldInstruction _delayCash = new WaitForSeconds(0.1f);
         private CashManager _cashManager;
+        private AudioManager _audioManager;
         private int _curRemainingPrice;
         private ES3Settings _settings;
         private string _fileString;
@@ -50,6 +51,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
         private void Start()
         {
             _cashManager = CashManager.Instance;
+            _audioManager = AudioManager.Instance;
         }
 
 
@@ -97,7 +99,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                     cash.transform.parent = transform;
                     cash.transform.ParabolicMovement(transform, jumpDelay, jumpPower, jumpEase,
                         () => { LeanPool.Despawn(cash); });
-
+                    _audioManager.PlaySound("PutCash");
                     if (_curRemainingPrice <= 0)
                     {
                         UnlockTheCounter();

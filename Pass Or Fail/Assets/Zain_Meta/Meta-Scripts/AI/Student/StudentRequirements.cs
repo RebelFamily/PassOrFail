@@ -2,7 +2,7 @@
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Managers;
 
@@ -16,18 +16,20 @@ namespace Zain_Meta.Meta_Scripts.AI
         [SerializeField] private AIPath agentSettings;
         [SerializeField] private AIDestinationSetter destinationSetter;
         [SerializeField] private StudentAnimation studentAnimator;
+        [SerializeField] private GameObject workingCanvas;
+        [SerializeField] private Image fillingImage;
+        public RandomPoint curRandomPoint;
         public SeatProfile mySeat;
         public List<int> classesIndex = new();
+        public int curClassIndex;
         public Transform curTarget;
         private ClassroomProfilesManager _classesManager;
-        public int curClassIndex;
-        public Vector3 randomWaitingPoint;
         public bool hasTakenAllClasses;
         private float _curLearningTimer;
 
         private void Start()
         {
-            agentSettings.maxAcceleration = moveSpeed;
+            agentSettings.maxSpeed = moveSpeed;
             _classesManager = ClassroomProfilesManager.Instance;
             _curLearningTimer = learningTime;
         }
@@ -98,16 +100,20 @@ namespace Zain_Meta.Meta_Scripts.AI
         }
 
         public void SitOnDesk() => studentAnimator.PlaySittingAnimation(true);
-        public void GetUpFromDesk() => studentAnimator.PlaySittingAnimation(false);
+
+        public void GetUpFromDesk()
+        {
+            studentAnimator.PlaySittingAnimation(false);
+            workingCanvas.SetActive(false);
+        }
 
         public void CheckForLeavingTheSchool()
         {
             EventsManager.StudentStateUpdatedEvent();
-            if (curClassIndex >= classesIndex.Count)
+            if (curClassIndex >=classesIndex.Count)
                 hasTakenAllClasses = true;
-            if (!hasTakenAllClasses) return;
 
-            print("Chal Beta Nikal Shaba");
+            if (!hasTakenAllClasses) return;
 
             EventsManager.StudentLeftTheSchoolEvent(this);
         }
@@ -116,12 +122,14 @@ namespace Zain_Meta.Meta_Scripts.AI
 
         public void StartDoingClasswork()
         {
+            workingCanvas.SetActive(true);
             _curLearningTimer = learningTime;
             studentAnimator.PlayLearningAnimation();
         }
 
         public bool HasFinishedDoingClasswork()
         {
+            fillingImage.fillAmount = Mathf.InverseLerp(learningTime, 0, _curLearningTimer);
             if (_curLearningTimer < .1f)
             {
                 _curLearningTimer = learningTime;
@@ -135,25 +143,33 @@ namespace Zain_Meta.Meta_Scripts.AI
         public void MoveToRandomPointInCorridor()
         {
             EnableTheStudent(true);
-            randomWaitingPoint = GetManager().GetRandomPointInCorridor();
-            MoveTheTargetTo(randomWaitingPoint);
+            curRandomPoint = GetManager().GetARandomWaitingPoint();
+            if (curRandomPoint)
+            {
+                curTarget = curRandomPoint.GetPoint();
+                MoveTheTargetTo(curTarget);
+            }
+            else
+                print("No Random Point");
         }
 
         public void AssignMeClasses()
         {
             if (!_classesManager) _classesManager = ClassroomProfilesManager.Instance;
-            
+
             _classesManager.AssignClasses(this);
             EventsManager.StudentStateUpdatedEvent();
         }
 
-        public void AdjustClassIndices(int replacingIndex)
+
+        public void SwapClassIndices(int replacingIndex)
         {
             (classesIndex[replacingIndex], classesIndex[curClassIndex]) =
                 (classesIndex[curClassIndex], classesIndex[replacingIndex]);
         }
 
-        public void PopulateStates(int[] statesIndices, int previousStateIndex)
+
+        public void PopulateStates(int[] statesIndices,int previousStateIndex)
         {
             foreach (var t in statesIndices)
             {
@@ -168,8 +184,9 @@ namespace Zain_Meta.Meta_Scripts.AI
             Destroy(gameObject);
         }
 
-        public void IncreaseClassIndex()
+        public void RemoveTheTakenClass()
         {
+            //classesIndex.RemoveAt(0);
             curClassIndex++;
         }
     }

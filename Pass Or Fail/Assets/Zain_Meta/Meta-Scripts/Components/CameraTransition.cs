@@ -28,6 +28,7 @@ namespace Zain_Meta.Meta_Scripts.Components
                 return;
             }
 
+            cmCamera.m_Priority = 1;
             if (isLeftSide)
             {
                 rightCamera.m_Priority = 1;
@@ -35,7 +36,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             }
             else
             {
-                rightCamera.m_Priority =10;
+                rightCamera.m_Priority = 10;
                 leftCamera.m_Priority = 1;
             }
         }
