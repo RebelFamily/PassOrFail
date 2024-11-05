@@ -25,7 +25,6 @@ namespace Zain_Meta.Meta_Scripts.Helpers
     {
         public int pricesForEachUpgrade;
         public int remainingPrice;
-       public Sprite renderToShowA,renderToShowB,renderToShowC;
 
         public void ResetPrice()
         {

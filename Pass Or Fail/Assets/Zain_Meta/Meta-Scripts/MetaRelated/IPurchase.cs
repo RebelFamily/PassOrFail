@@ -20,12 +20,17 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             
         }
 
+        public  void Hide()
+        {
+            gameObject.SetActive(false);
+            transform.localScale = Vector3.zero;
+        }
         public virtual bool IsPurchased()
         {
             return false;
         }
 
-        public virtual void EnableMe(bool value)
+        public virtual void EnableMe(bool value,bool showNow)
         {
             
         }

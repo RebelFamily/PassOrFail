@@ -43,12 +43,14 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             visual.SetActive(true);
             myCol.enabled = true;
+            handler.isPlayerTriggering = false;
         }
 
         public void Hide()
         {
             visual.SetActive(false);
             myCol.enabled = false;
+            handler.isPlayerTriggering = false;
         }
     }
 }

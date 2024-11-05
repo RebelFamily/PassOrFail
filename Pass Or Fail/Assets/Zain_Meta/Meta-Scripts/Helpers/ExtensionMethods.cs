@@ -130,5 +130,11 @@ namespace Zain_Meta.Meta_Scripts
             else
                 textMeshProUGUI.text = cashPrice.ToString();
         }
+        public static void CountDownTimer(this float timeToDisplay, Text timeText)
+        {
+            float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+            float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+            timeText.text = $"{minutes:00}:{seconds:00}";
+        }
     }
 }

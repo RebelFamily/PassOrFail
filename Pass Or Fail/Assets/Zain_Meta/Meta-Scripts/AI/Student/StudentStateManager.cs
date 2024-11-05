@@ -61,7 +61,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         }
         public void AdmitMePleaseForcefully()
         {
-            ChangeState(WaitInCorridor);
+            ChangeState(GoToClassRoom);
             _studentsDataManager=StudentsDataManager.Instance;
             _studentsDataManager.AddStudentInTheSchool(requirements,false);
         }

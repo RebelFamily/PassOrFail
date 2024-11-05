@@ -66,6 +66,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             if (TutorialComplete)
             {
+                EventsManager.TutCompleteEvent();
                 navigationManager.ReloadThePurchasesData();
                 startingHandTut.SetActive(false);
                 return;
@@ -98,13 +99,18 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     break;
                 case TutorialState.UnlockReceptionist:
                     receptionistUnlocker.SetActive(true);
+                    receptionistUnlockerTarget.localScale = Vector3.zero;
                     waypointMarker.target = receptionistUnlockerTarget;
                     cameraSwitcher.ZoomToTarget(receptionistUnlockerTarget);
+                    receptionistUnlockerTarget.DOScale(1, .5f);
+                    StudentsDataManager.Instance.SpawnExtra();
                     break;
                 case TutorialState.UnlockClassroom:
                     classroomUnlocker.SetActive(true);
+                    firstClassroomUnlockerTarget.localScale = Vector3.zero;
                     waypointMarker.target = firstClassroomUnlockerTarget;
                     cameraSwitcher.ZoomToTarget(firstClassroomUnlockerTarget);
+                    firstClassroomUnlockerTarget.DOScale(1, .5f);
                     break;
                 case TutorialState.TeachTheClass:
                     waypointMarker.target = teachingClassTrigger;
@@ -119,7 +125,8 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     waypointMarker.gameObject.SetActive(false);
                     waypointMarker.arrowPivot.gameObject.SetActive(false);
                     TutorialComplete = true;
-                    navigationManager.ReloadThePurchasesData();
+                    navigationManager.LookAtNextUnlock();
+                    EventsManager.TutCompleteEvent();
                     break;
                 case TutorialState.IdleForSometime:
                     waypointMarker.gameObject.SetActive(false);
@@ -201,6 +208,11 @@ namespace Zain_Meta.Meta_Scripts.Managers
         {
             waypointMarker.gameObject.SetActive(false);
             waypointMarker.arrowPivot.gameObject.SetActive(false);
+        }
+
+        public bool CanSpawnStudents()
+        {
+            return curStateIndex > 3;
         }
     }
 }

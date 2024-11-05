@@ -93,6 +93,11 @@ namespace Zain_Meta.Meta_Scripts.AI
             return _classesManager;
         }
 
+        public ClassroomProfile GetMyClass()
+        {
+            return _classesManager.GetThisClass(classesIndex[curClassIndex]);
+        }
+
         public void FaceTheTarget()
         {
             if (!curTarget) return;

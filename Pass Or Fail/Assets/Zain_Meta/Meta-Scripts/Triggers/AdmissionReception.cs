@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zain_Meta.Meta_Scripts.AI;
 using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
-using Zain_Meta.Meta_Scripts.PlayerRelated;
 
 namespace Zain_Meta.Meta_Scripts.Triggers
 {
@@ -25,6 +25,27 @@ namespace Zain_Meta.Meta_Scripts.Triggers
 
         private int _startingStudents;
 
+        private void OnEnable()
+        {
+            EventsManager.OnStudentLeftTheSchool += CheckForEmptyReception;
+        }
+
+        private void OnDisable()
+        {
+            EventsManager.OnStudentLeftTheSchool -= CheckForEmptyReception;
+        }
+
+        private void CheckForEmptyReception(StudentRequirements student)
+        {
+            for (var i = 0; i < queuePoints.Length; i++)
+            {
+                if(queuePoints[i].IsOccupied())
+                    return;
+            }
+            StudentsDataManager.Instance.SpawnUnAdmittedStudents();
+        }
+
+
         private void Start()
         {
             collisionTrigger.enabled = !hasReceptionist;
@@ -32,7 +53,6 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             _curTimerToServe = servingDelay;
             receptionServingFiller.fillAmount = 0;
             _startingStudents = PlayerPrefs.GetInt("StartingStudents", 0);
-            print("Served Students Are " + _startingStudents);
         }
 
 
@@ -116,9 +136,9 @@ namespace Zain_Meta.Meta_Scripts.Triggers
         {
             if (hasReceptionist) return;
             _isPlayerTriggering = true;
-            if (OnBoardingManager.Instance.CheckForCurrentState(TutorialState.GotoReception) ||
+            /*if (OnBoardingManager.Instance.CheckForCurrentState(TutorialState.GotoReception) ||
                 OnBoardingManager.Instance.CheckForCurrentState(TutorialState.AdmitKids))
-                OnBoardingManager.Instance.HideWaypoints();
+                OnBoardingManager.Instance.HideWaypoints();*/
             receptionServingFiller.fillAmount = 0;
             _curTimerToServe = servingDelay;
             AdjustPlayerPos();

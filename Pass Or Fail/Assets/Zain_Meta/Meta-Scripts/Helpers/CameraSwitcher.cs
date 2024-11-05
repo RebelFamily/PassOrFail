@@ -29,7 +29,7 @@ namespace Zain_Meta.Meta_Scripts.Helpers
             var oldPriority = playerCamera.m_Priority;
             playerCamera.m_Priority = 1;
             switchingCamera.m_Priority = 100;
-            DOVirtual.DelayedCall(1.5f, () =>
+            DOVirtual.DelayedCall(1.75f, () =>
             {
                 EventsManager.SwitchTheCameraEvent(false);
                 playerCamera.m_Priority = oldPriority;

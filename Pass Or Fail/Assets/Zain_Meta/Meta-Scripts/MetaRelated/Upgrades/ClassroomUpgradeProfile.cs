@@ -11,6 +11,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
     {
         [SerializeField] private ItemsName fileName;
         [SerializeField] private UpgradeData upgradeData;
+        [SerializeField] private RenderData renderData;
         [SerializeField] private RoomColorData roomColorsData;
         [SerializeField] private int _curUpgradeLevel, _curLevelIndex;
         [SerializeField] private RoomColorAdjuster roomColorAdjuster;
@@ -50,9 +51,9 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             _curLevelIndex = upgradeData.upgradeIndex;
             _upgradePanel.PopulateThePanel(ApplyFirstUpgrade, ApplySecondUpgrade,
                 ApplyThirdUpgrade, SaveTheData, _curUpgradeLevel,
-                upgradeData.pricing[_curUpgradeLevel].renderToShowA,
-                upgradeData.pricing[_curUpgradeLevel].renderToShowB,
-                upgradeData.pricing[_curUpgradeLevel].renderToShowC);
+                renderData.renders[_curUpgradeLevel - 1].renderToShowA,
+                renderData.renders[_curUpgradeLevel - 1].renderToShowB,
+                renderData.renders[_curUpgradeLevel - 1].renderToShowC);
             ApplyFirstUpgrade();
             EventsManager.ClassReadyToUpgradeEvent(this, true);
             SaveTheData();
@@ -86,6 +87,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             ApplyMeshes();
             ApplyColors();
         }
+
         private void ApplyMeshes()
         {
             if (_curSpawnedUpgrade)
@@ -98,6 +100,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Upgrades
             scalingPivot.localScale = localScale;
             scalingPivot.DOScaleY(1, .25f);
         }
+
         private void ApplyColors()
         {
             roomColorAdjuster.AdjustColors(roomColorsData.roomColorsDatum[_curUpgradeLevel].roomColors[_curLevelIndex]);

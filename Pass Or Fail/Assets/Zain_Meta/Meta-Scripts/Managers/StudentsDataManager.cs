@@ -51,6 +51,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (!students.Contains(student)) return;
             students.Remove(student);
             SaveDataInFile();
+           // SpawnUnAdmittedStudents();
         }
 
         #endregion
@@ -85,10 +86,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 student.AdmitMePleaseForcefully();
                 yield return _delay;
             }
-            yield return null;
+            yield return _delay;
             for (var i = 0; i < initialSpawningCount; i++)
             {
-                SpawnUnAdmittedStudents();
+                var gender = Random.Range(0, _gendersArray.Length);
+                var index = Random.Range(0, 4);
+                var student = Instantiate(Resources.Load<StudentStateManager>
+                        (SpawningPath + _gendersArray[gender] + "_" + index),
+                    PointGenerator.RandomPointInBounds(spawningArea.bounds),
+                    Quaternion.identity);
+                student.ChangeState(student.EnterSchoolState);
             }
         }
 
@@ -103,14 +110,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (saveDataAlso)
                 SaveDataInFile();
         }
-
-        private void SpawnLoadedStudents()
+        
+        public void SpawnUnAdmittedStudents()
         {
-            
-        }
-
-        private void SpawnUnAdmittedStudents()
-        {
+            if(!OnBoardingManager.Instance.CanSpawnStudents()) return;
             if(students.Count>=maxStudentsToAdmit) return;
             var gender = Random.Range(0, _gendersArray.Length);
             var index = Random.Range(0, 4);
@@ -121,6 +124,19 @@ namespace Zain_Meta.Meta_Scripts.Managers
             student.ChangeState(student.EnterSchoolState);
         }
 
+        public void SpawnExtra()
+        {
+            for (var i = 0; i < initialSpawningCount; i++)
+            {
+                var gender = Random.Range(0, _gendersArray.Length);
+                var index = Random.Range(0, 4);
+                var student = Instantiate(Resources.Load<StudentStateManager>
+                        (SpawningPath + _gendersArray[gender] + "_" + index),
+                    PointGenerator.RandomPointInBounds(spawningArea.bounds),
+                    Quaternion.identity);
+                student.ChangeState(student.EnterSchoolState);
+            }
+        }
         private void SaveDataInFile()
         {
             studentsData.ClearAllStateData();

@@ -182,9 +182,10 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 
         public override int GetRemainingPrice() => unlockData.remainingPrice;
         
-        public override void EnableMe(bool toEnable)
+        public override void EnableMe(bool toEnable,bool showNow)
         {
             gameObject.SetActive(toEnable);
+            transform.DOScale(1, .5f);
         }
     }
 }

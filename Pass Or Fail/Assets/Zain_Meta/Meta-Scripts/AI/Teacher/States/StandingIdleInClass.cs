@@ -8,19 +8,17 @@
         {
             _requirement = teacher.GetRequirement();
             _requirement.EnableTheTeacher(false);
+            if (_requirement.HasTaughtEnoughClasses())
+                teacher.ChangeState(teacher.GoingToStaffRoom);
         }
 
         public void UpdateState(TeacherStateManager teacher)
         {
-            if (_requirement.HasTaughtEnoughClasses())
-            {
-                teacher.ChangeState(teacher.GoingToStaffRoom);
-            }
+            if (_requirement.GetMyClass().ClassCanBeTaught())
+                teacher.ChangeState(teacher.GoingToTeach);
             else
             {
-                if (!_requirement.GetMyClass().ClassCanBeTaught()) return;
-
-                teacher.ChangeState(teacher.GoingToTeach);
+                _requirement.GetMyClass().MakeSureToTeachMe();
             }
         }
 

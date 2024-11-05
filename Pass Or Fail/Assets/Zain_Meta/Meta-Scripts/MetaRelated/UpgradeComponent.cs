@@ -178,9 +178,16 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
             return _isPurchasedForNow;
         }
 
-        public override void EnableMe(bool toEnable)
+        public override void EnableMe(bool toEnable,bool showNow)
         {
             gameObject.SetActive(toEnable);
+            if(!showNow)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            transform.DOScale(1, .5f);
             ResetTheUpgrade();
         }
 

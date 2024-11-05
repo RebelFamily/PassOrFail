@@ -18,7 +18,7 @@ namespace Zain_Meta.Meta_Scripts.Helpers
         {
             DOVirtual.DelayedCall(.5f, () =>
             {
-                mesh.material.DOColor(oneAlpha, 1.25f);
+                mesh.material.DOColor(oneAlpha, 1.75f);
             });
         }
 

@@ -15,7 +15,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         [SerializeField] private TextAppear boardWork;
         public Transform podiumTransforms, teacherChair;
 
-        private bool _isOpen, _isFull, _canBeTaught, _areaShown;
+       [SerializeField] private bool _isOpen, _isFull, _canBeTaught;
 
         private ClassroomProfilesManager _classroomProfilesManager;
 
@@ -53,7 +53,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             boardWork.HideMesh();
             _canBeTaught = false;
-            _areaShown = false;
+           // _areaShown = false;
             _isFull = false;
             /*if(!_isOpen) return;
             _isFull = IsClassFull();
@@ -73,25 +73,29 @@ namespace Zain_Meta.Meta_Scripts.Components
             }
         }
 
-        private void CheckForClassStrength()
+        private void CheckForClassStrength(ClassroomProfile classroomProfile)
         {
+            if(classroomProfile!=this) return;
+            
             if (!_isOpen) return;
-
-            if (_areaShown) return;
+            
             _isFull = IsClassFull();
             _canBeTaught = _isFull;
             if (_isFull)
             {
                 teachingTriggerArea.ShowTeachingArea();
-                _areaShown = true;
             }
             else
             {
                 teachingTriggerArea.HideTeachingArea();
-                _areaShown = false;
             }
         }
 
+        public void MakeSureToTeachMe()
+        {
+            _isFull = IsClassFull();
+            _canBeTaught = _isFull;
+        }
 
         public Transform GetAvailableSeat(StudentStateManager student)
         {
@@ -154,7 +158,6 @@ namespace Zain_Meta.Meta_Scripts.Components
         public void OpenTheClass()
         {
             _isOpen = true;
-            _areaShown = false;
             _classroomProfilesManager = ClassroomProfilesManager.Instance;
             _classroomProfilesManager.AddClasses(this);
         }

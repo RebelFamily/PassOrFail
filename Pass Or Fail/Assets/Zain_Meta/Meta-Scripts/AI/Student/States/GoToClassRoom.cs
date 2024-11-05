@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Zain_Meta.Meta_Scripts.AI.States
+﻿namespace Zain_Meta.Meta_Scripts.AI.States
 {
     public class GoToClassRoom : IState
     {

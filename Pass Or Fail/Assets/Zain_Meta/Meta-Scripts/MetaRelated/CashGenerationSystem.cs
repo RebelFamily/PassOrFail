@@ -157,7 +157,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
                     curXPos = curYPos = curZPos = 0;
                     _nullItemsPos.Clear();
                 }
-
+                SaveData();
                 LeanPool.Despawn(item);
                 if (OnBoardingManager.TutorialComplete) return;
                 OnBoardingManager.Instance.SetStateBasedOn(TutorialState.PickReceptionCash

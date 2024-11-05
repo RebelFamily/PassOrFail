@@ -3,7 +3,6 @@ using AssetKits.ParticleImage;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using Zain_Meta.Meta_Scripts.MetaRelated.Upgrades;
 
 namespace Zain_Meta.Meta_Scripts.Managers
 {
@@ -25,7 +24,6 @@ namespace Zain_Meta.Meta_Scripts.Managers
         }
 
         [SerializeField] private ParticleImage xpParticles;
-        [SerializeField] private CanvasGroup panel;
         [SerializeField] private Text rankText;
         [SerializeField] private Text curXpText;
         [SerializeField] private int xpOffsetPerRank, curXpCount, myRankCount;
@@ -35,23 +33,12 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private void OnEnable()
         {
             xpParticles.onStop.AddListener(IncreaseXpOnComplete);
-            EventsManager.OnClassReadyToUpgrade += SetVisibility;
         }
 
         private void OnDisable()
         {
             xpParticles.onStop.RemoveListener(IncreaseXpOnComplete);
-            EventsManager.OnClassReadyToUpgrade -= SetVisibility;
         }
-
-        private void SetVisibility(ClassroomUpgradeProfile arg1, bool toHide)
-        {
-            if (toHide)
-                panel.HideCanvas();
-            else
-                panel.ShowCanvas();
-        }
-
 
         private void GetRankData()
         {

@@ -25,7 +25,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated.Unlocker
 
         public void UnlockWithAnimation()
         {
-            CameraManager.Instance.SetCameraTarget(classroomProfile.transform,1f);
+            CameraManager.Instance.SetCameraTarget(classroomProfile.transform,1.5f);
             roofPivot.localScale = Vector3.one;
             interiorPropsPivot.localScale = Vector3.one;
             var localScale = interiorPropsPivot.localScale;

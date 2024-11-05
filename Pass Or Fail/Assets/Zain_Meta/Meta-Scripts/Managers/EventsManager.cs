@@ -14,13 +14,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static event Action<bool,ClassroomProfile> OnShowBoardText;
         public static event Action<ClassroomProfile> OnTeacherStartTeaching;
         public static event Action<IPurchase> OnItemUnlocked;
+        public static event Action<Transform> OnTriggeredWithRoom;
         public static event Action<ClassroomUpgradeProfile,bool> OnClassReadyToUpgrade;
         public static event Action OnClassroomUnlocked;
         public static event Action<StudentStateManager> OnStudentLeftTheClassroom;
-        public static event Action OnStudentSatInClass;
+        public static event Action<ClassroomProfile> OnStudentSatInClass;
         public static event Action<Transform> OnSnapPlayer;
         public static event Action<bool> OnSwitchTheCamera;
         public static event Action OnClickedCoffeeButton;
+        public static event Action OnBackToFoot;
+        public static event Action OnTutComplete;
         public static event Action<bool> OnTeacherEnterSleepyState;
         public static event Action OnStudentStateUpdated;
         public static event Action OnStudentAdmitted;
@@ -38,9 +41,9 @@ namespace Zain_Meta.Meta_Scripts.Managers
             OnTriggerTeaching?.Invoke(toTeach,positionToMoveTo,rotationToUse,classroomProfile);
         }
         
-        public static void StudentSatInClassEvent()
+        public static void StudentSatInClassEvent(ClassroomProfile classroomProfile)
         {
-            OnStudentSatInClass?.Invoke();
+            OnStudentSatInClass?.Invoke(classroomProfile);
         }
 
         public static void TeacherStartTeachingEvent(ClassroomProfile obj)
@@ -106,6 +109,21 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static void SnapPlayerEvent(Transform obj)
         {
             OnSnapPlayer?.Invoke(obj);
+        }
+
+        public static void TutCompleteEvent()
+        {
+            OnTutComplete?.Invoke();
+        }
+
+        public static void BackToFootEvent()
+        {
+            OnBackToFoot?.Invoke();
+        }
+
+        public static void TriggerWithRoomEvent(Transform obj)
+        {
+            OnTriggeredWithRoom?.Invoke(obj);
         }
     }
 }

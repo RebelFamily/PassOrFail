@@ -15,7 +15,10 @@ namespace Zain_Meta.Meta_Scripts.AI.States
             _requirements.SitOnDesk();
 
             _requirements.mySeat.ActuallySitOnThis();
-            DOVirtual.DelayedCall(.5f, EventsManager.StudentSatInClassEvent);
+            DOVirtual.DelayedCall(.5f,()=>
+            {
+                EventsManager.StudentSatInClassEvent(_requirements.GetMyClass());
+            });
         }
 
         public void UpdateState(StudentStateManager stateManager)

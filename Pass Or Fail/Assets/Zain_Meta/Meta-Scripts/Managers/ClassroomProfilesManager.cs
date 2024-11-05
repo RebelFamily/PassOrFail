@@ -67,6 +67,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
             }
         }
 
+        public ClassroomProfile GetThisClass(int index)
+        {
+            for (var i = 0; i < allClassrooms.Count; i++)
+            {
+                if ((int)allClassrooms[i].GetClassroomType() == index)
+                    return allClassrooms[i];
+            }
+
+            return null;
+        }
 
         // checking for the seats
         public bool CheckIfAnyClassIsFree()

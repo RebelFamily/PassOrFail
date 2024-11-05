@@ -1,6 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 using Zain_Meta.Meta_Scripts.Components;
+using Zain_Meta.Meta_Scripts.DataRelated;
 using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
@@ -8,21 +9,35 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
     [RequireComponent(typeof(PlayerAnimator))]
     public class ArcadeMovement : MonoBehaviour
     {
+        public enum PlayerState
+        {
+            ByFoot, //0
+            RidingSkateboard, //1
+            RidingOneWheelCycle, //2
+        }
+
+        [SerializeField] private PlayerState curPlayerWalkingState;
+        [SerializeField] private PlayerState defaultStateOfPlayer;
+        [SerializeField] private PlayerSpeedData playerSpeedData;
         [SerializeField] private CharacterController controller;
         [SerializeField] private FloatingJoystick joystick;
+        [SerializeField] private RideEnabler rideEnabler;
         [SerializeField] private PlayerAnimator playerAnimator;
         [SerializeField] private float moveSpeed;
         [SerializeField] private float turnSpeed;
-
+        private IRideable _myCurRide;
         private float _curMoveSpeed, _curRotSpeed;
         private Vector3 _input;
         private bool _stop;
+
 
         private void OnEnable()
         {
             EventsManager.OnTriggerTeaching += SnapToThisPos;
             EventsManager.OnSwitchTheCamera += AdjustTheMovement;
             EventsManager.OnSnapPlayer += SnapThePlayer;
+            Callbacks.OnRewardARide += RewardMeARide;
+            EventsManager.OnBackToFoot += ResetTheState;
         }
 
         private void OnDisable()
@@ -30,19 +45,40 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             EventsManager.OnTriggerTeaching -= SnapToThisPos;
             EventsManager.OnSwitchTheCamera -= AdjustTheMovement;
             EventsManager.OnSnapPlayer -= SnapThePlayer;
+            Callbacks.OnRewardARide -= RewardMeARide;
+            EventsManager.OnBackToFoot -= ResetTheState;
         }
+
+        private void ResetTheState()
+        {
+            curPlayerWalkingState = defaultStateOfPlayer;
+            PlayerPrefs.SetInt("RideType", (int)curPlayerWalkingState);
+            SetValuesBasedOnState();
+        }
+
+        private void RewardMeARide(Callbacks.RewardType rideType)
+        {
+            if (rideType != Callbacks.RewardType.RewardUniCycle &&
+                rideType != Callbacks.RewardType.RewardSkateboard) return;
+
+            curPlayerWalkingState = rideType switch
+            {
+                Callbacks.RewardType.RewardUniCycle => PlayerState.RidingOneWheelCycle,
+                Callbacks.RewardType.RewardSkateboard => PlayerState.RidingSkateboard,
+                _ => curPlayerWalkingState
+            };
+            PlayerPrefs.SetInt("RideType", (int)curPlayerWalkingState);
+            SetValuesBasedOnState();
+        }
+
 
         private void SnapThePlayer(Transform posToSnapAt)
         {
-            print("snapped");
-           StopMovement();
+            StopMovement();
             transform.DORotateQuaternion(posToSnapAt.rotation, .15f).SetEase(Ease.Linear);
             var position = posToSnapAt.position;
             transform.DOMoveX(position.x, .15f).SetEase(Ease.Linear);
-            transform.DOMoveZ(position.z, .15f).SetEase(Ease.Linear).OnComplete(() =>
-            {
-                ResumeMovement();
-            });
+            transform.DOMoveZ(position.z, .15f).SetEase(Ease.Linear).OnComplete(() => { ResumeMovement(); });
         }
 
         private void AdjustTheMovement(bool toSwitch)
@@ -65,18 +101,68 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                 ResumeMovement();
                 return;
             }
-
+            
             StopMovement();
             transform.DOMove(teachingPos, .15f);
-            transform.DORotate(rotation, .15f).OnComplete(() => { playerAnimator.PlayTeachingAnim(); });
+            transform.DORotate(rotation, .15f).OnComplete(() =>
+            {
+                playerAnimator.PlayTeachingAnim();
+            });
         }
 
         private void Start()
         {
+            /*_curMoveSpeed = moveSpeed;
+            _curRotSpeed = turnSpeed;*/
+            AdjustRideData();
+        }
+
+        private void AdjustRideData()
+        {
+            var rideIndex = PlayerPrefs.GetInt("RideType", 0);
+            var normalRide = PlayerPrefs.GetInt("DefaultState", (int)defaultStateOfPlayer);
+            defaultStateOfPlayer = normalRide switch
+            {
+                0 => PlayerState.ByFoot,
+                3 => PlayerState.RidingOneWheelCycle,
+                _ => defaultStateOfPlayer
+            };
+
+            curPlayerWalkingState = rideIndex switch
+            {
+                0 => defaultStateOfPlayer,
+                1 => PlayerState.RidingSkateboard,
+                2 => PlayerState.RidingOneWheelCycle,
+                _ => defaultStateOfPlayer
+            };
+            SetValuesBasedOnState();
+        }
+
+        private void SetValuesBasedOnState()
+        {
+            playerAnimator.SetRideAnimations(curPlayerWalkingState);
+            rideEnabler.EnableTheRide(curPlayerWalkingState);
+            switch (curPlayerWalkingState)
+            {
+                case PlayerState.ByFoot:
+                    moveSpeed = playerSpeedData.moveSpeedNormal;
+                    turnSpeed = playerSpeedData.turnSpeedNormal;
+                    break;
+                case PlayerState.RidingSkateboard:
+                    moveSpeed = playerSpeedData.moveSpeedBoard;
+                    turnSpeed = playerSpeedData.turnSpeedBoard;
+                    break;
+                case PlayerState.RidingOneWheelCycle:
+                    moveSpeed = playerSpeedData.moveSpeedCycle;
+                    turnSpeed = playerSpeedData.turnSpeedCycle;
+                    break;
+            }
+
+            print(curPlayerWalkingState);
+            _myCurRide = rideEnabler.GetCurrentRide();
             _curMoveSpeed = moveSpeed;
             _curRotSpeed = turnSpeed;
         }
-
 
         private void SetMovement()
         {
@@ -89,6 +175,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             if (_stop || controller.enabled == false) return;
             SetMovement();
             Move();
+            _myCurRide?.Move(_input.x, _input, _curMoveSpeed);
         }
 
 

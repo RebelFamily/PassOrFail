@@ -101,6 +101,7 @@ namespace Zain_Meta.Meta_Scripts.Panel
             optionC.onClick.RemoveAllListeners();
             EventsManager.ClassReadyToUpgradeEvent(null, false);
             XpManager.Instance.AddXp(3);
+            _savingAction?.Invoke();
         }
 
         public void ApplyAndCloseWithOptionB()
@@ -112,6 +113,7 @@ namespace Zain_Meta.Meta_Scripts.Panel
             optionC.onClick.RemoveAllListeners();
             EventsManager.ClassReadyToUpgradeEvent(null, false);
             XpManager.Instance.AddXp(3);
+            _savingAction?.Invoke();
         }
 
         public void ApplyOptionC()

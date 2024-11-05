@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Zain_Meta.Meta_Scripts.Components;
 using Zain_Meta.Meta_Scripts.DataRelated;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
 {
@@ -17,9 +20,10 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         [SerializeField] private GameObject maxLimitText;
         [SerializeField] private List<Transform> itemsStacked = new();
         [SerializeField] private int stackLimit;
-        [SerializeField] private float delayOnFirstPick;
         private Vector3 _positioningVector;
+        private float _curY;
 
+        private bool _isTeaching;
         private readonly YieldInstruction _delay = new WaitForSeconds(.25f);
         private readonly YieldInstruction _delayLong = new WaitForSeconds(.5f);
 
@@ -39,8 +43,36 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             maxLimitText.SetActive(itemsStacked.Count >= stackLimit);
         }
 
+        private void OnEnable()
+        {
+            EventsManager.OnTriggerTeaching += HideCoffeeStack;
+
+        }
+
+        private void OnDisable()
+        {
+            EventsManager.OnTriggerTeaching -= HideCoffeeStack;
+        }
+
+        private void HideCoffeeStack(bool toHide, Vector3 arg2, Vector3 arg3, ClassroomProfile arg4)
+        {
+            if (toHide)
+            {
+                stackingPos.gameObject.SetActive(false);
+                _isTeaching = true;
+                playerAnim.SetLayerWeight(1, 0);
+                maxLimitText.SetActive(false);
+            }
+            else
+            {
+                stackingPos.gameObject.SetActive(true);
+                _isTeaching = false;
+            }
+        }
+
         private void LateUpdate()
         {
+            if(_isTeaching) return;
             CheckForItemsInStack();
         }
 
@@ -63,21 +95,20 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                     {
                         itemsStacked.Add(lastItemInHandler);
                         lastItemInHandler.transform.parent = stackingPos;
-                        lastItemInHandler.transform.DOLocalMove(_positioningVector, stackingDelay)
+                        lastItemInHandler.transform.DOLocalMove(new Vector3(0,_curY,0), stackingDelay)
                             .SetEase(easeType);
+                        _curY+= stackOffsetData.yOffset;
                         lastItemInHandler.transform.DOLocalRotate(Vector3.zero, 0);
                         lastItemInHandler.transform.DOScale(Vector3.one, 0);
-                        _positioningVector.y += stackOffsetData.yOffset;
                     }
                 }
 
-                yield return _delay;
+                yield return null;
             }
         }
 
         private IEnumerator UnstackingAll_CO(StackingHandler handler)
         {
-            yield return new WaitForSeconds(delayOnFirstPick);
             while (handler.isPlayerTriggering)
             {
                 if (!movement.IsMoving())

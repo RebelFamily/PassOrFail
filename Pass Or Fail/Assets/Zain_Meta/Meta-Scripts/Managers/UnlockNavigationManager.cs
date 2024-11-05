@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
+using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.MetaRelated;
 
 namespace Zain_Meta.Meta_Scripts.Managers
@@ -7,13 +9,13 @@ namespace Zain_Meta.Meta_Scripts.Managers
     {
         [SerializeField] private IPurchase[] purchases;
         [SerializeField] private int curUnlockIndex;
-        
+        [SerializeField] private CameraSwitcher switcher;
 
         public void HideEverything()
         {
             for (var i = 0; i < purchases.Length; i++)
             {
-                purchases[i].EnableMe(false);
+                purchases[i].Hide();
             }
         }
         public void ReloadThePurchasesData()
@@ -21,17 +23,17 @@ namespace Zain_Meta.Meta_Scripts.Managers
             curUnlockIndex = PlayerPrefs.GetInt("CurUnlockingIndex", 0);
             for (var i = 0; i < purchases.Length; i++)
             {
-                purchases[i].EnableMe(false);
+                purchases[i].Hide();
             }
 
             if (OnBoardingManager.TutorialComplete)
             {
-                for (var i = 0; i <= curUnlockIndex; i++)
+                for (var i = 0; i < curUnlockIndex; i++)
                 {
-                    purchases[i].EnableMe(true);
+                    purchases[i].EnableMe(true,false);
                 }
 
-                purchases[curUnlockIndex].EnableMe(true);
+                purchases[curUnlockIndex].EnableMe(true,true);
             }
         }
 
@@ -56,12 +58,27 @@ namespace Zain_Meta.Meta_Scripts.Managers
             }
 
             PlayerPrefs.SetInt("CurUnlockingIndex", curUnlockIndex);
-            GoForNextUnlocker();
+            LookToNextTarget();
+        }
+
+        public void LookAtNextUnlock()
+        {
+            LookToNextTarget();
         }
 
         private void GoForNextUnlocker()
         {
-            purchases[curUnlockIndex].EnableMe(true);
+            purchases[curUnlockIndex].EnableMe(true,true);
+        }
+
+        private void LookToNextTarget()
+        {
+            print("Switcher");
+            DOVirtual.DelayedCall(3f, () =>
+            {
+                switcher.ZoomToTarget(purchases[curUnlockIndex].transform);
+                DOVirtual.DelayedCall(.5f, GoForNextUnlocker);
+            });
         }
     }
 }
