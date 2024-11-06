@@ -13,6 +13,11 @@
 
         public void UpdateState(TeacherStateManager teacher)
         {
+            if (_requirement.HasTaughtEnoughClasses())
+            {
+                teacher.ChangeState(teacher.GoingToStaffRoom);
+                return;
+            }
             if(!_requirement.CheckForDistance()) return;
             _requirement.FaceTheTarget();
             teacher.ChangeState(teacher.StandingIdleInClass);

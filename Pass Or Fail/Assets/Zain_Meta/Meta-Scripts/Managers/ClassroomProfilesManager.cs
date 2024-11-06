@@ -120,14 +120,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
             return waitingLine.GetAvailableSpotAtReception(student);
         }
-
-        public Transform GetRandomPointInCorridor()
-        {
-            //return  PointGenerator.RandomPointInBounds(waitingAreasInCorridor.bounds);
-
-            _curRandomPoint %= randomPointsInCorridor.Length;
-            return randomPointsInCorridor[_curRandomPoint++];
-        }
+        
 
         public RandomPoint GetARandomWaitingPoint()
         {

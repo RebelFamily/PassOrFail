@@ -19,6 +19,21 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             _cashManager = CashManager.Instance;
         }
 
+        private void OnEnable()
+        {
+            Callbacks.OnRewardGroundCashInMeta += GiveMeCash;
+        }
+
+        private void OnDisable()
+        {
+            Callbacks.OnRewardGroundCashInMeta -= GiveMeCash;
+        }
+
+        private void GiveMeCash()
+        {
+            PlayCashVfx(10);
+            DOVirtual.DelayedCall(.75f, () => { StackingCoroutine(200); });
+        }
 
         public void AddCashToPlayerStack(int len)
         {
@@ -26,16 +41,18 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             DOVirtual.DelayedCall(.75f, () => { StackingCoroutine(len); });
         }
 
-        private void PlayCashVfx(int emissionCount)
+        private void PlayCashVfx(int emissionCount,bool useEmissionCount=false)
         {
             cashParticles.follow = false;
             cashParticles.target = spawnPos;
             cashParticles.transform.position = particleAttractionPos.position;
             var particle = cashParticles.GetComponent<ParticleSystem>();
             var cashEmission = particle.emission.GetBurst(0);
-            /*if (emissionCount > emissionCountLimit)
-                emissionCount = emissionCountLimit;*/
-            cashEmission.count = 1;
+          
+            if(!useEmissionCount)
+                cashEmission.count = 1;
+            else
+                cashEmission.count = emissionCount;
             particle.emission.SetBurst(0, cashEmission);
             particle.Play();
             DOVirtual.DelayedCall(.5f, () => { cashParticles.follow = true; });

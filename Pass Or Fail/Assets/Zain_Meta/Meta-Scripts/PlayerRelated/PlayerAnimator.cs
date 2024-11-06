@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.PlayerRelated
 {
@@ -18,6 +19,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         public void PlayTeachingAnim()
         {
             playerAnim.SetTrigger(Teach);
+            AudioManager.Instance.PlaySound("WritingOnBoard");
         }
 
         public void SetRideAnimations(ArcadeMovement.PlayerState curState)

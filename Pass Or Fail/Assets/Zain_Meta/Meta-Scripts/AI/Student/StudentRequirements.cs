@@ -64,6 +64,7 @@ namespace Zain_Meta.Meta_Scripts.AI
 
         public void MoveTheTargetTo(Transform target)
         {
+            PlaceOnGround();
             EnableTheStudent(true);
             destinationSetter.target = target;
         }
@@ -73,9 +74,9 @@ namespace Zain_Meta.Meta_Scripts.AI
             return Vector3.Distance(transform.position, curTarget.position) < accuracy;
         }
 
-        public bool CheckForDistance(Vector3 target)
+        public bool CheckForDistance(float distance)
         {
-            return Vector3.Distance(transform.position, target) < accuracy;
+            return Vector3.Distance(transform.position, curTarget.position) < distance;
         }
 
 
@@ -102,6 +103,14 @@ namespace Zain_Meta.Meta_Scripts.AI
         {
             if (!curTarget) return;
             transform.DORotateQuaternion(curTarget.rotation, .1f);
+            transform.DOMove(curTarget.position, .1f);
+        }
+
+        private void PlaceOnGround()
+        {
+            var transformLocalPosition = transform.localPosition;
+            transformLocalPosition.y = 0;
+            transform.localPosition = transformLocalPosition;
         }
 
         public void SitOnDesk() => studentAnimator.PlaySittingAnimation(true);
@@ -115,7 +124,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         public void CheckForLeavingTheSchool()
         {
             EventsManager.StudentStateUpdatedEvent();
-            if (curClassIndex >=classesIndex.Count)
+            if (curClassIndex >= classesIndex.Count)
                 hasTakenAllClasses = true;
 
             if (!hasTakenAllClasses) return;
@@ -155,7 +164,7 @@ namespace Zain_Meta.Meta_Scripts.AI
                 MoveTheTargetTo(curTarget);
             }
             else
-                print("No Random Point");
+                Debug.LogError("No Random Point");
         }
 
         public void AssignMeClasses()
@@ -174,7 +183,7 @@ namespace Zain_Meta.Meta_Scripts.AI
         }
 
 
-        public void PopulateStates(int[] statesIndices,int previousStateIndex)
+        public void PopulateStates(int[] statesIndices, int previousStateIndex)
         {
             foreach (var t in statesIndices)
             {
@@ -191,7 +200,6 @@ namespace Zain_Meta.Meta_Scripts.AI
 
         public void RemoveTheTakenClass()
         {
-            //classesIndex.RemoveAt(0);
             curClassIndex++;
         }
     }

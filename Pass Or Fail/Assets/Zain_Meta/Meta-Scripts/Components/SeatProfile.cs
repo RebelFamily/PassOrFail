@@ -22,7 +22,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnStudentLeftTheClassroom -= EmptyMySpot;
         }
 
-        private void EmptyMySpot(StudentStateManager student)
+        private void EmptyMySpot(StudentStateManager student, ClassroomProfile classroomProfile)
         {
             if (student != studentSittingAtThisSpot) return;
             EmptyTheSpot();

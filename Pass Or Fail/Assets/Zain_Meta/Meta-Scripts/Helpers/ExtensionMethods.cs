@@ -130,6 +130,26 @@ namespace Zain_Meta.Meta_Scripts
             else
                 textMeshProUGUI.text = cashPrice.ToString();
         }
+        public static void SetFloatingPoint(this int cashPrice, Text textMeshProUGUI,string extraMsg)
+        {
+            if (cashPrice >= 1000000)
+            {
+                var newCash = cashPrice / 1000000f;
+                newCash = (float)Math.Round(newCash, 2);
+                textMeshProUGUI.text =newCash + "M";
+            }
+
+            else if (cashPrice >= 1000)
+            {
+                var newCash = cashPrice / 1000f;
+                newCash = (float)Math.Round(newCash, 2);
+                textMeshProUGUI.text =newCash + "k";
+            }
+            else
+                textMeshProUGUI.text = cashPrice.ToString();
+
+            textMeshProUGUI.text += extraMsg;
+        }
         public static void CountDownTimer(this float timeToDisplay, Text timeText)
         {
             float minutes = Mathf.FloorToInt(timeToDisplay / 60);

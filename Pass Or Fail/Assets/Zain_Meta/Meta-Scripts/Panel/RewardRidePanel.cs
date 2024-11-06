@@ -11,6 +11,7 @@ namespace Zain_Meta.Meta_Scripts.Panel
         [SerializeField] private RectTransform timerBar;
         [SerializeField] private Image rideImage;
         [SerializeField] private Text timerText;
+        [SerializeField] private Image fillerImage;
 
         [SerializeField] private ArcadeMovement.PlayerState curStateToGive;
         private float _curTimer;
@@ -33,9 +34,11 @@ namespace Zain_Meta.Meta_Scripts.Panel
             timerBar.ScaleUI(val, .15f);
         }
 
-        public void SetTheTimer(float timer)
+        public void SetTheTimer(float timer, float totalTime)
         {
             timer.CountDownTimer(timerText);
+          //  fillerImage.fillAmount = Mathf.InverseLerp(totalTime, 0, timer);
+            fillerImage.fillAmount = Mathf.InverseLerp(0, totalTime, timer);
         }
 
         public void ClickedWatchAd()

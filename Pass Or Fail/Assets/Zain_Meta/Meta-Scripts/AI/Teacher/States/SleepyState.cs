@@ -10,11 +10,8 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
         {
             _requirement = teacher.GetRequirement();
             _requirement.SitOnDesk();
-            DOVirtual.DelayedCall(1f, () =>
-            {
-                _requirement.PlaySleepyAnim();
-                _requirement.ImReadyForCoffee();
-            });
+            _requirement.PlaySleepyAnim();
+            _requirement.ImReadyForCoffee();
         }
 
         public void UpdateState(TeacherStateManager teacher)

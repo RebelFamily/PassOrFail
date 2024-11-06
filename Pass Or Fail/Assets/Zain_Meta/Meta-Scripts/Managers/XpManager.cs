@@ -50,9 +50,9 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         public void AddXp(int amount)
         {
-            print("Give Xp of " + amount);
             curXpCount += amount;
             xpParticles.SetBurst(0, 0, amount);
+            AudioManager.Instance.PlaySound("UnlockSound");
             StartCoroutine(nameof(PlayTheParticlesWithNormalDelay));
         }
 

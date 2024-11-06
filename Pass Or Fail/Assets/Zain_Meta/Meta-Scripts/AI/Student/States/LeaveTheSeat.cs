@@ -11,11 +11,11 @@ namespace Zain_Meta.Meta_Scripts.AI.States
         public void EnterState(StudentStateManager student)
         {
             _requirements = student.GetRequirements();
+            EventsManager.StudentLeftTheClassroomEvent(student,_requirements.GetMyClass());
             _requirements.RemoveTheTakenClass();
             _requirements.GetUpFromDesk();
             _requirements.CheckForLeavingTheSchool();
             _gettingUpDelay = 1f;
-            EventsManager.StudentLeftTheClassroomEvent(student);
         }
 
         public void UpdateState(StudentStateManager stateManager)

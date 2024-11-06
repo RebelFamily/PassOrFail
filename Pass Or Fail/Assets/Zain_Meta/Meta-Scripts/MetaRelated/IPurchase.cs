@@ -5,6 +5,7 @@ namespace Zain_Meta.Meta_Scripts.MetaRelated
 {
     public class IPurchase: MonoBehaviour
     {
+        public bool isUpgrade;
         public virtual void StartPurchasing(PlayerCashSystem cashSystem)
         {
             

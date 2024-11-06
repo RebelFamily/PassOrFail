@@ -15,7 +15,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         [SerializeField] private TextAppear boardWork;
         public Transform podiumTransforms, teacherChair;
 
-       [SerializeField] private bool _isOpen, _isFull, _canBeTaught;
+        [SerializeField] private bool _isOpen, _isFull, _canBeTaught, hasTaught;
 
         private ClassroomProfilesManager _classroomProfilesManager;
 
@@ -49,11 +49,12 @@ namespace Zain_Meta.Meta_Scripts.Components
         }
 
 
-        private void ResetTheClass(StudentStateManager student)
+        private void ResetTheClass(StudentStateManager student, ClassroomProfile classroomProfile)
         {
+            if (classroomProfile != this) return;
             boardWork.HideMesh();
             _canBeTaught = false;
-           // _areaShown = false;
+            hasTaught = false;
             _isFull = false;
             /*if(!_isOpen) return;
             _isFull = IsClassFull();
@@ -63,7 +64,7 @@ namespace Zain_Meta.Meta_Scripts.Components
                 teachingTriggerArea.HideTeachingArea();*/
         }
 
-        private void TeachAllStudentsOfThisClass(ClassroomProfile classroom)
+        private void TeachAllStudentsOfThisClass(ClassroomProfile classroom,bool val)
         {
             if (classroom != this) return;
 
@@ -71,14 +72,16 @@ namespace Zain_Meta.Meta_Scripts.Components
             {
                 classroomSeats[i].GiveHomeworkToThisKid();
             }
+
+            hasTaught = true;
         }
 
         private void CheckForClassStrength(ClassroomProfile classroomProfile)
         {
-            if(classroomProfile!=this) return;
-            
+            if (classroomProfile != this) return;
+
             if (!_isOpen) return;
-            
+
             _isFull = IsClassFull();
             _canBeTaught = _isFull;
             if (_isFull)
@@ -152,7 +155,7 @@ namespace Zain_Meta.Meta_Scripts.Components
 
         public bool ClassCanBeTaught()
         {
-            return _canBeTaught && !teachingTriggerArea.isPlayerTriggering;
+            return _canBeTaught && !teachingTriggerArea.isPlayerTriggering && !hasTaught;
         }
 
         public void OpenTheClass()

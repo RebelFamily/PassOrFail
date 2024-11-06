@@ -26,10 +26,12 @@ public class Callbacks : MonoBehaviour {
     public static event RewardSchoolBuilding OnRewardSchoolBuilding;
     public delegate void RewardMistakeCorrection();
     public delegate void RewardClassroomUpgrade();
+    public delegate void RewardGroundCash();
     public delegate void RewardRide(RewardType rideType);
     public static event RewardMistakeCorrection OnRewardMistakeCorrection;
     public static event RewardClassroomUpgrade OnRewardClassroomUpgrade;
     public static event RewardRide OnRewardARide;
+    public static event RewardGroundCash OnRewardGroundCashInMeta;
     private const string SdkName = "MaxAdmob";
     public static RewardType rewardType;
     private void Start () 
@@ -111,6 +113,11 @@ public class Callbacks : MonoBehaviour {
                 GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
                 FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
                 break;
+            case RewardType.GroundCashInMeta:
+                OnRewardGroundCashInMeta?.Invoke();
+                GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
+                FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -130,6 +137,7 @@ public class Callbacks : MonoBehaviour {
         MistakeCorrection,
         RewardClassroomUpgradeInMeta,
         RewardUniCycle,
-        RewardSkateboard
+        RewardSkateboard,
+        GroundCashInMeta
     }
 }

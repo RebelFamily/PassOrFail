@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 using Zain_Meta.Meta_Scripts.Helpers;
 using Zain_Meta.Meta_Scripts.Managers;
@@ -99,7 +100,7 @@ namespace Zain_Meta.Meta_Scripts.Components
                 PlayerPrefs.SetFloat("timerRideReward", _curTimerActivation);
             }
 
-            rewardRidePanel.SetTheTimer(_curTimerActivation);
+            rewardRidePanel.SetTheTimer(_curTimerActivation,timeForRideToRemainActive);
         }
 
         private void ChangeItem()
@@ -132,7 +133,7 @@ namespace Zain_Meta.Meta_Scripts.Components
         {
             _myCollider.enabled = val;
             itemsParent.gameObject.SetActive(val);
-            targetTransform.gameObject.SetActive(val);
+          //  targetTransform.gameObject.SetActive(val);
         }
 
 
@@ -146,7 +147,8 @@ namespace Zain_Meta.Meta_Scripts.Components
                 targetTransform.DOScale(_actualSize, 0).SetEase(Ease.Linear);
                 targetTransform.DOScale(changeInSize, .1f).SetEase(Ease.Linear);
                 _isShowing = true;
-                DOVirtual.DelayedCall(1f, () => { StartCoroutine(nameof(FillingCoroutine)); });
+                EventsManager.TriggerWithRewardEvent(true);
+                StartCoroutine(nameof(FillingCoroutine));
             }
         }
 
@@ -158,9 +160,11 @@ namespace Zain_Meta.Meta_Scripts.Components
                 DOTween.Kill(targetTransform);
                 timerFiller.color = normalColor;
                 timerFiller.fillAmount = 0;
-                _isShowing = false;
                 targetTransform.DOScale(_actualSize, 0.1f).SetEase(Ease.Linear);
+                _isShowing = false;
                 StopCoroutine(nameof(FillingCoroutine));
+                EventsManager.TriggerWithRewardEvent(false);
+                rewardRidePanel.HideThePanel();
             }
         }
 
@@ -186,6 +190,7 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnTutComplete += ShowTheRides;
             Callbacks.OnRewardARide += CheckForShowing;
             EventsManager.OnTriggeredWithRoom += PlaceWithThere;
+            EventsManager.OnInterPopupShown += StopTriggeringWithThis;
         }
 
         private void OnDisable()
@@ -193,6 +198,16 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnTutComplete -= ShowTheRides;
             Callbacks.OnRewardARide -= CheckForShowing;
             EventsManager.OnTriggeredWithRoom -= PlaceWithThere;
+            EventsManager.OnInterPopupShown -= StopTriggeringWithThis;
+        }
+
+        private void StopTriggeringWithThis()
+        {
+            _isTriggering = false;
+            _isShowing = false;
+            StopCoroutine(nameof(FillingCoroutine));
+            EventsManager.TriggerWithRewardEvent(false);
+            rewardRidePanel.HideThePanel();
         }
 
 

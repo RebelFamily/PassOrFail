@@ -12,7 +12,6 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         public TeachingState TeachingState = new TeachingState();
         public WaitingInClass WaitingInClass = new WaitingInClass();
         public StandingIdleInClass StandingIdleInClass = new StandingIdleInClass();
-        public WaitInStaffRoom WaitInStaffRoom = new WaitInStaffRoom();
         public GoingToStaffRoom GoingToStaffRoom = new GoingToStaffRoom();
         public SleepyState SleepyState = new SleepyState();
         public DrinkCoffeeState DrinkCoffeeState = new DrinkCoffeeState();
@@ -24,7 +23,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
 
         private void OnEnable()
         {
-            ChangeState(WaitingInClass);
+            ChangeState(GoingToTeach);
         }
 
         private void Start()

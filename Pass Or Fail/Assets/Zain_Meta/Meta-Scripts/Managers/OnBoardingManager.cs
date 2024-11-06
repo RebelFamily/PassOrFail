@@ -54,6 +54,8 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 SetItemsBasedOnState(tutorialStates[i]);
             }
 
+            if (curTutState == TutorialState.Complete)
+                TutorialComplete = true;
             if (forceComplete)
             {
                 TutorialComplete = forceComplete;
@@ -67,8 +69,11 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (TutorialComplete)
             {
                 EventsManager.TutCompleteEvent();
-                navigationManager.ReloadThePurchasesData();
+                //navigationManager.ReloadThePurchasesData();
+                navigationManager.LookAtNextUnlock();
                 startingHandTut.SetActive(false);
+                waypointMarker.gameObject.SetActive(false);
+                waypointMarker.arrowPivot.gameObject.SetActive(false);
                 return;
             }
 
@@ -88,20 +93,20 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     break;
                 case TutorialState.GotoReception:
                     waypointMarker.target = receptionTarget;
-                    cameraSwitcher.ZoomToTarget(receptionTarget);
+                    cameraSwitcher.ZoomToTarget(receptionTarget,true);
                     break;
                 case TutorialState.AdmitKids:
                     waypointMarker.target = receptionTarget;
                     break;
                 case TutorialState.PickReceptionCash:
                     waypointMarker.target = receptionCashTarget;
-                    cameraSwitcher.ZoomToTarget(receptionCashTarget);
+                    cameraSwitcher.ZoomToTarget(receptionCashTarget,true);
                     break;
                 case TutorialState.UnlockReceptionist:
                     receptionistUnlocker.SetActive(true);
                     receptionistUnlockerTarget.localScale = Vector3.zero;
                     waypointMarker.target = receptionistUnlockerTarget;
-                    cameraSwitcher.ZoomToTarget(receptionistUnlockerTarget);
+                    cameraSwitcher.ZoomToTarget(receptionistUnlockerTarget,true);
                     receptionistUnlockerTarget.DOScale(1, .5f);
                     StudentsDataManager.Instance.SpawnExtra();
                     break;
@@ -109,17 +114,17 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     classroomUnlocker.SetActive(true);
                     firstClassroomUnlockerTarget.localScale = Vector3.zero;
                     waypointMarker.target = firstClassroomUnlockerTarget;
-                    cameraSwitcher.ZoomToTarget(firstClassroomUnlockerTarget);
+                    cameraSwitcher.ZoomToTarget(firstClassroomUnlockerTarget,true);
                     firstClassroomUnlockerTarget.DOScale(1, .5f);
                     break;
                 case TutorialState.TeachTheClass:
                     waypointMarker.target = teachingClassTrigger;
-                    cameraSwitcher.ZoomToTarget(teachingClassTrigger);
+                    cameraSwitcher.ZoomToTarget(teachingClassTrigger,true);
                     break;
                 case TutorialState.UnlockNextClassroom:
                     secondClassroomUnlocker.SetActive(true);
                     waypointMarker.target = secondClassroomUnlockerTarget;
-                    cameraSwitcher.ZoomToTarget(secondClassroomUnlockerTarget);
+                    cameraSwitcher.ZoomToTarget(secondClassroomUnlockerTarget,true);
                     break;
                 case TutorialState.Complete:
                     waypointMarker.gameObject.SetActive(false);
@@ -181,7 +186,6 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 case TutorialState.AdmitKids:
                     waypointMarker.gameObject.SetActive(true);
                     waypointMarker.arrowPivot.gameObject.SetActive(true);
-                    cameraSwitcher.ZoomToTarget(receptionTarget);
                     break;
                 case TutorialState.UnlockReceptionist:
                     receptionistUnlocker.SetActive(true);

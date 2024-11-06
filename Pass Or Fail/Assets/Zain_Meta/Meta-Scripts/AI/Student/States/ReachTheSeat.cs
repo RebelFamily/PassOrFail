@@ -12,7 +12,7 @@
 
         public void UpdateState(StudentStateManager stateManager)
         {
-            if (!_requirements.CheckForDistance()) return;
+            if (!_requirements.CheckForDistance(.5f)) return;
 
             stateManager.ChangeState(stateManager.SitOnDesk);
         }

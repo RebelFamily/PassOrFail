@@ -38,6 +38,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             EventsManager.OnSnapPlayer += SnapThePlayer;
             Callbacks.OnRewardARide += RewardMeARide;
             EventsManager.OnBackToFoot += ResetTheState;
+            EventsManager.OnInterPopupShown += StopWithDelay;
         }
 
         private void OnDisable()
@@ -47,6 +48,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             EventsManager.OnSnapPlayer -= SnapThePlayer;
             Callbacks.OnRewardARide -= RewardMeARide;
             EventsManager.OnBackToFoot -= ResetTheState;
+            EventsManager.OnInterPopupShown -= StopWithDelay;
         }
 
         private void ResetTheState()
@@ -157,8 +159,6 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                     turnSpeed = playerSpeedData.turnSpeedCycle;
                     break;
             }
-
-            print(curPlayerWalkingState);
             _myCurRide = rideEnabler.GetCurrentRide();
             _curMoveSpeed = moveSpeed;
             _curRotSpeed = turnSpeed;
@@ -231,6 +231,12 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             //controller.enabled = true;
             _curMoveSpeed = moveSpeed;
             _curRotSpeed = turnSpeed;
+        }
+
+        private void StopWithDelay()
+        {
+            StopMovement();
+            DOVirtual.DelayedCall(.25f, ResumeMovement);
         }
     }
 }

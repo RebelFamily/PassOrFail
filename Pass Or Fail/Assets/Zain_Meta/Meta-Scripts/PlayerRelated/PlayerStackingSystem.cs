@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -46,7 +45,6 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
         private void OnEnable()
         {
             EventsManager.OnTriggerTeaching += HideCoffeeStack;
-
         }
 
         private void OnDisable()
@@ -72,7 +70,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
 
         private void LateUpdate()
         {
-            if(_isTeaching) return;
+            if (_isTeaching) return;
             CheckForItemsInStack();
         }
 
@@ -95,9 +93,10 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                     {
                         itemsStacked.Add(lastItemInHandler);
                         lastItemInHandler.transform.parent = stackingPos;
-                        lastItemInHandler.transform.DOLocalMove(new Vector3(0,_curY,0), stackingDelay)
+                        DOTween.Kill(lastItemInHandler);
+                        lastItemInHandler.transform.DOLocalMove(_positioningVector, stackingDelay)
                             .SetEase(easeType);
-                        _curY+= stackOffsetData.yOffset;
+                        _positioningVector.y += stackOffsetData.yOffset;
                         lastItemInHandler.transform.DOLocalRotate(Vector3.zero, 0);
                         lastItemInHandler.transform.DOScale(Vector3.one, 0);
                     }
@@ -118,19 +117,14 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
                         maxLimitText.SetActive(false);
                         if (itemsStacked.Count <= 0)
                         {
+                            _positioningVector.y = 0;
                             break;
                         }
-
-                        // remove item from player stack and give it to handler         
 
                         if (!handler.IsStackFull())
                         {
                             var itemInStack = GetLastItem();
-
                             handler.AddToStack(itemInStack);
-                            _positioningVector.y -= stackOffsetData.yOffset;
-                            if (_positioningVector.y < 0)
-                                _positioningVector.y = 0;
                         }
 
                         yield return _delay;
@@ -152,6 +146,8 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             var lastItem = itemsStacked[itemsStacked.Count - 1];
             itemsStacked.RemoveAt(itemsStacked.Count - 1);
             _positioningVector.y -= stackOffsetData.yOffset;
+            if (_positioningVector.y < 0)
+                _positioningVector.y = 0;
             return lastItem;
         }
     }

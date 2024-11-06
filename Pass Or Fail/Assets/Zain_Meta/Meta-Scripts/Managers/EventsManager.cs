@@ -12,18 +12,20 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static event Action<bool,bool> OnEnteredClassroom;
         public static event Action<bool,Vector3,Vector3,ClassroomProfile> OnTriggerTeaching;
         public static event Action<bool,ClassroomProfile> OnShowBoardText;
-        public static event Action<ClassroomProfile> OnTeacherStartTeaching;
+        public static event Action<ClassroomProfile,bool> OnTeacherStartTeaching;
         public static event Action<IPurchase> OnItemUnlocked;
         public static event Action<Transform> OnTriggeredWithRoom;
         public static event Action<ClassroomUpgradeProfile,bool> OnClassReadyToUpgrade;
         public static event Action OnClassroomUnlocked;
-        public static event Action<StudentStateManager> OnStudentLeftTheClassroom;
+        public static event Action<StudentStateManager,ClassroomProfile> OnStudentLeftTheClassroom;
         public static event Action<ClassroomProfile> OnStudentSatInClass;
         public static event Action<Transform> OnSnapPlayer;
         public static event Action<bool> OnSwitchTheCamera;
+        public static event Action<bool> OnTriggerWithReward;
         public static event Action OnClickedCoffeeButton;
         public static event Action OnBackToFoot;
         public static event Action OnTutComplete;
+        public static event Action OnInterPopupShown;
         public static event Action<bool> OnTeacherEnterSleepyState;
         public static event Action OnStudentStateUpdated;
         public static event Action OnStudentAdmitted;
@@ -46,14 +48,14 @@ namespace Zain_Meta.Meta_Scripts.Managers
             OnStudentSatInClass?.Invoke(classroomProfile);
         }
 
-        public static void TeacherStartTeachingEvent(ClassroomProfile obj)
+        public static void TeacherStartTeachingEvent(ClassroomProfile obj,bool taughtByPlayer)
         {
-            OnTeacherStartTeaching?.Invoke(obj);
+            OnTeacherStartTeaching?.Invoke(obj,taughtByPlayer);
         }
 
-        public static void StudentLeftTheClassroomEvent(StudentStateManager student)
+        public static void StudentLeftTheClassroomEvent(StudentStateManager student,ClassroomProfile classroomProfile)
         {
-             OnStudentLeftTheClassroom?.Invoke(student);
+             OnStudentLeftTheClassroom?.Invoke(student,classroomProfile);
         }
 
         public static void ClassroomUnlockedEvent()
@@ -124,6 +126,16 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static void TriggerWithRoomEvent(Transform obj)
         {
             OnTriggeredWithRoom?.Invoke(obj);
+        }
+
+        public static void TriggerWithRewardEvent(bool obj)
+        {
+            OnTriggerWithReward?.Invoke(obj);
+        }
+
+        public static void InterPopupShown()
+        {
+            OnInterPopupShown?.Invoke();
         }
     }
 }

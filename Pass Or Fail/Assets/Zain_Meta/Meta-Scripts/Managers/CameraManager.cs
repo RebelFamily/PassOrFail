@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Cinemachine;
-using DG.Tweening;
 using UnityEngine;
 using CameraSwitcher = Zain_Meta.Meta_Scripts.Helpers.CameraSwitcher;
 
@@ -37,14 +36,15 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private IEnumerator Switching_CO()
         {
             EventsManager.SwitchTheCameraEvent(true);
-            var oldPriority = playerCamera.m_Priority;
             playerCamera.m_Priority = 1;
             breakRoomCamera.m_Priority = 100;
+            AudioManager.Instance.PlaySound("CameraWoosh");
             yield return new WaitForSeconds(1.25f);
             breakRoomCamera.m_Priority = 1;
             staffRoomCamera.m_Priority = 100;
             yield return new WaitForSeconds(1.25f);
-            playerCamera.m_Priority = oldPriority;
+            playerCamera.m_Priority = 10;
+            AudioManager.Instance.PlaySound("CameraWoosh");
             staffRoomCamera.m_Priority = 1;
             breakRoomCamera.m_Priority = 1;
             EventsManager.SwitchTheCameraEvent(false);

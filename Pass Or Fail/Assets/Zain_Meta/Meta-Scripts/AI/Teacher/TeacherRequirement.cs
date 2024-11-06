@@ -38,8 +38,9 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         }
 
 
-        private void MoveToPodiumPos(ClassroomProfile classroom)
+        private void MoveToPodiumPos(ClassroomProfile classroom, bool taughtByPlayer)
         {
+            if (taughtByPlayer) return;
             if (classroom != myClassToTeach) return;
 
             if (ShouldSitInClass())
@@ -117,7 +118,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
         public void FaceTheTarget()
         {
             if (!curTarget) return;
-            transform.DOMove(curTarget.position, 1f);
+            transform.DOMove(curTarget.position, .1f);
             transform.DORotateQuaternion(curTarget.rotation, .1f);
         }
 
@@ -133,8 +134,7 @@ namespace Zain_Meta.Meta_Scripts.AI.Teacher
 
         public bool IsPlayerTeachingMyClass()
         {
-            return  myClassToTeach.GetTeachingArea().isPlayerTriggering;
-           
+            return myClassToTeach.GetTeachingArea().isPlayerTriggering;
         }
 
         public void StartRestingTimer()

@@ -97,7 +97,10 @@ namespace Zain_Meta.Meta_Scripts.Triggers
             if (_curTimerToServe < .1f)
             {
                 if(_serveByPlayer)
+                {
                     AdjustPlayerPos();
+                    AudioManager.Instance.PlaySound("Serve");
+                }
                 _curTimerToServe = servingDelay;
                 myCashGeneration.AddCash(2, queuePoints[0].transform);
                 var firstInLine = queuePoints[0].GetStudentAtThisPoint();
