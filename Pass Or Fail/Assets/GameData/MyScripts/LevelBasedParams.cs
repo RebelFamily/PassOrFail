@@ -15,7 +15,8 @@ public class LevelBasedParams : MonoBehaviour
         OralQuiz,
         UniformChecking,
         BadgesDistribution,
-        ExerciseActivity
+        ExerciseActivity,
+        PianoLesson
     }
     [SerializeField] private EnvironmentManager.Environment environment;
     [SerializeField] private ActivityType activityType;
@@ -28,6 +29,7 @@ public class LevelBasedParams : MonoBehaviour
     private BadgesDistribution _badgesDistribution;
     private ExerciseActivity _exerciseActivity;
     private AttendanceMarking _attendanceMarking;
+    private PianoLesson _pianoLesson;
     private readonly UnityEvent _onPass = new UnityEvent();
     private readonly UnityEvent _onFail = new UnityEvent();
 
@@ -98,6 +100,12 @@ public class LevelBasedParams : MonoBehaviour
                 SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
                 SharedUI.Instance.gamePlayUIManager.controls.EnableInfinityHandUI(false);
                 SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[7]);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.PianoLesson:
+                if (_pianoLesson == null)
+                    _pianoLesson = GetComponent<PianoLesson>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
             default:
@@ -190,6 +198,8 @@ public class LevelBasedParams : MonoBehaviour
             _exerciseActivity.StartActivity();
         else if(_attendanceMarking)
             _attendanceMarking.StartActivity();
+        else if (_pianoLesson)
+            _pianoLesson.StartActivity();
     }
     public void TeacherGoesBackToNormal(string action)
     {
