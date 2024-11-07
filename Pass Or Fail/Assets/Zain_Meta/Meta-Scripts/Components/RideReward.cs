@@ -201,12 +201,12 @@ namespace Zain_Meta.Meta_Scripts.Components
             EventsManager.OnInterPopupShown -= StopTriggeringWithThis;
         }
 
-        private void StopTriggeringWithThis()
+        private void StopTriggeringWithThis(bool val)
         {
             _isTriggering = false;
             _isShowing = false;
             StopCoroutine(nameof(FillingCoroutine));
-            EventsManager.TriggerWithRewardEvent(false);
+            //EventsManager.TriggerWithRewardEvent(false);
             rewardRidePanel.HideThePanel();
         }
 

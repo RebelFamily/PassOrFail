@@ -25,7 +25,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         public static event Action OnClickedCoffeeButton;
         public static event Action OnBackToFoot;
         public static event Action OnTutComplete;
-        public static event Action OnInterPopupShown;
+        public static event Action<bool> OnInterPopupShown;
         public static event Action<bool> OnTeacherEnterSleepyState;
         public static event Action OnStudentStateUpdated;
         public static event Action OnStudentAdmitted;
@@ -103,9 +103,9 @@ namespace Zain_Meta.Meta_Scripts.Managers
             OnStudentAdmitted?.Invoke();
         }
 
-        public static void ShowBoardTextEvent(bool ToShow,ClassroomProfile classroomProfile)
+        public static void ShowBoardTextEvent(bool toShow,ClassroomProfile classroomProfile)
         {
-            OnShowBoardText?.Invoke(ToShow,classroomProfile);
+            OnShowBoardText?.Invoke(toShow,classroomProfile);
         }
 
         public static void SnapPlayerEvent(Transform obj)
@@ -133,9 +133,9 @@ namespace Zain_Meta.Meta_Scripts.Managers
             OnTriggerWithReward?.Invoke(obj);
         }
 
-        public static void InterPopupShown()
+        public static void InterPopupShown(bool val)
         {
-            OnInterPopupShown?.Invoke();
+            OnInterPopupShown?.Invoke(val);
         }
     }
 }

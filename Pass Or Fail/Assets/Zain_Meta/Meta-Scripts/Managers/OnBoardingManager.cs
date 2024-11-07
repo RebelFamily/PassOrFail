@@ -13,11 +13,13 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private void Awake()
         {
             Instance = this;
+            backToHomeBtn.SetActive(false);
         }
 
         [SerializeField] private bool forceComplete;
         [SerializeField] private WaypointMarker waypointMarker;
         [SerializeField] private TutorialState[] tutorialStates;
+        [SerializeField] private GameObject backToHomeBtn;
         [SerializeField] private TutorialState curTutState;
         [SerializeField] private CameraSwitcher cameraSwitcher;
         [SerializeField] private UnlockNavigationManager navigationManager;
@@ -74,6 +76,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 startingHandTut.SetActive(false);
                 waypointMarker.gameObject.SetActive(false);
                 waypointMarker.arrowPivot.gameObject.SetActive(false);
+                backToHomeBtn.SetActive(true);
                 return;
             }
 
@@ -131,6 +134,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     waypointMarker.arrowPivot.gameObject.SetActive(false);
                     TutorialComplete = true;
                     navigationManager.LookAtNextUnlock();
+                    backToHomeBtn.SetActive(true);
                     EventsManager.TutCompleteEvent();
                     break;
                 case TutorialState.IdleForSometime:

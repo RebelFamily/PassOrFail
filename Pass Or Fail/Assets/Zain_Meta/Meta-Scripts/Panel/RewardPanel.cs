@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
+using Zain_Meta.Meta_Scripts.Managers;
 
 namespace Zain_Meta.Meta_Scripts.Panel
 {
@@ -15,6 +17,7 @@ namespace Zain_Meta.Meta_Scripts.Panel
 
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private Text priceText;
+        
 
         public void PopulateThePanel(int rewardAmount, Transform targetCase, Collider col)
         {

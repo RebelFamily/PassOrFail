@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-
-namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
+﻿namespace Zain_Meta.Meta_Scripts.AI.Teacher.States
 {
     public class SleepyState : ITeacherState
     {

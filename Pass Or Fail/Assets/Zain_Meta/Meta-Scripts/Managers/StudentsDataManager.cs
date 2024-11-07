@@ -51,7 +51,6 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (!students.Contains(student)) return;
             students.Remove(student);
             SaveDataInFile();
-           // SpawnUnAdmittedStudents();
         }
 
         #endregion
@@ -64,12 +63,10 @@ namespace Zain_Meta.Meta_Scripts.Managers
 
         private IEnumerator InitiateSpawning_CO()
         {
-          //  SpawnLoadedStudents();
             var studentsCount = studentsData.classesData.Count;
 
             if (studentsCount > maxStudentsToAdmit)
                 studentsCount = maxStudentsToAdmit;
-            print("Count of Students Is " + studentsCount);
 
             for (var i = 0; i < studentsCount; i++)
             {
@@ -80,12 +77,13 @@ namespace Zain_Meta.Meta_Scripts.Managers
                     PointGenerator.RandomPointInBounds(spawningArea.bounds),
                     Quaternion.identity);
 
-             
+
                 student.GetRequirements().PopulateStates(studentsData.classesData[i].totalRides.ToArray()
-                    ,studentsData.classesData[i].curClassIndex);
+                    , studentsData.classesData[i].curClassIndex);
                 student.AdmitMePleaseForcefully();
                 yield return _delay;
             }
+
             yield return _delay;
             for (var i = 0; i < initialSpawningCount; i++)
             {
@@ -110,11 +108,11 @@ namespace Zain_Meta.Meta_Scripts.Managers
             if (saveDataAlso)
                 SaveDataInFile();
         }
-        
+
         public void SpawnUnAdmittedStudents()
         {
-            if(!OnBoardingManager.Instance.CanSpawnStudents()) return;
-            if(students.Count>=maxStudentsToAdmit) return;
+            if (!OnBoardingManager.Instance.CanSpawnStudents()) return;
+            if (students.Count >= maxStudentsToAdmit) return;
             var gender = Random.Range(0, _gendersArray.Length);
             var index = Random.Range(0, 4);
             var student = Instantiate(Resources.Load<StudentStateManager>
@@ -137,6 +135,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
                 student.ChangeState(student.EnterSchoolState);
             }
         }
+
         private void SaveDataInFile()
         {
             studentsData.ClearAllStateData();
@@ -151,7 +150,7 @@ namespace Zain_Meta.Meta_Scripts.Managers
         private void SaveDataState(StudentRequirements studentRequirements)
         {
             studentsData.AddEachPersonData(
-                studentRequirements.classesIndex.ToArray(),studentRequirements.curClassIndex);
+                studentRequirements.classesIndex.ToArray(), studentRequirements.curClassIndex);
         }
 
         private void LoadData()

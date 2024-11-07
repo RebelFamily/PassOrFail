@@ -9,7 +9,7 @@ namespace Zain_Meta.Meta_Scripts.DataRelated
         private void Awake()
         {
             Application.targetFrameRate = 90;
-            AdsCaller.Instance.ShowBanner();
+//            AdsCaller.Instance.ShowBanner();
         }
 
         private void OnDisable()

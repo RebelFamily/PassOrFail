@@ -9,16 +9,17 @@ namespace Zain_Meta.Meta_Scripts.Managers
     {
         public static AudioManager Instance;
         public Sounds[] sounds;
-        private bool inPark, isMuted;
+        private bool _isMuted;
 
         private void Awake()
         {
             Instance = this;
+          //  _isMuted = !PlayerPrefsHandler.GetSoundControllerBool(PlayerPrefsHandler.Sound);
         }
 
         public void PlaySound(string sound)
         {
-            if (isMuted) return;
+            if (_isMuted) return;
             var s = Array.Find(sounds, item => item.name == sound);
             s.source.loop = s.loop;
             s.source.clip = !s.useRandomClip ? s.clip[0] : s.clip[Random.Range(0, s.clip.Length)];
@@ -26,13 +27,6 @@ namespace Zain_Meta.Meta_Scripts.Managers
             s.source.pitch = s.pitch;
             if (s.source.isPlaying) return;
             s.source.Play();
-        }
-        
-        
-        private bool GetSound(string sound)
-        {
-            var s = Array.Find(sounds, item => item.name == sound);
-            return s.source.isPlaying;
         }
     }
 }

@@ -94,13 +94,14 @@ namespace Zain_Meta.Meta_Scripts.Panel
             {
                 panel.ShowCanvas();
                 _panelShown = true;
-                EventsManager.InterPopupShown();
+                EventsManager.InterPopupShown(true);
             }
         }
 
         public void ShowInter()
         {
             HidePanel();
+            EventsManager.InterPopupShown(false);
             AdsCaller.Instance.ShowInterstitialAd();
         }
 
@@ -108,12 +109,14 @@ namespace Zain_Meta.Meta_Scripts.Panel
         {
             Callbacks.rewardType = Callbacks.RewardType.RewardUniCycle;
             AdsCaller.Instance.ShowRewardedAd();
+            EventsManager.InterPopupShown(false);
         }
 
         public void RewardInvestment()
         {
             Callbacks.rewardType = Callbacks.RewardType.GroundCashInMeta;
             AdsCaller.Instance.ShowRewardedAd();
+            EventsManager.InterPopupShown(false);
         }
     }
 }

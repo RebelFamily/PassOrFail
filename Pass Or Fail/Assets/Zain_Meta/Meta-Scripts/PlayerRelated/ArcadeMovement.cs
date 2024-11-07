@@ -38,7 +38,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             EventsManager.OnSnapPlayer += SnapThePlayer;
             Callbacks.OnRewardARide += RewardMeARide;
             EventsManager.OnBackToFoot += ResetTheState;
-            EventsManager.OnInterPopupShown += StopWithDelay;
+            EventsManager.OnInterPopupShown += AdjustTheMovement;
         }
 
         private void OnDisable()
@@ -48,7 +48,7 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             EventsManager.OnSnapPlayer -= SnapThePlayer;
             Callbacks.OnRewardARide -= RewardMeARide;
             EventsManager.OnBackToFoot -= ResetTheState;
-            EventsManager.OnInterPopupShown -= StopWithDelay;
+            EventsManager.OnInterPopupShown -= AdjustTheMovement;
         }
 
         private void ResetTheState()
@@ -232,11 +232,6 @@ namespace Zain_Meta.Meta_Scripts.PlayerRelated
             _curMoveSpeed = moveSpeed;
             _curRotSpeed = turnSpeed;
         }
-
-        private void StopWithDelay()
-        {
-            StopMovement();
-            DOVirtual.DelayedCall(.25f, ResumeMovement);
-        }
+        
     }
 }

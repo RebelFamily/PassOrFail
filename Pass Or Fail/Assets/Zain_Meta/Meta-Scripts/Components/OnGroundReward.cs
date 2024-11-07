@@ -54,12 +54,11 @@ namespace Zain_Meta.Meta_Scripts.Components
             _isUsed = true;
         }
 
-        private void StopTriggeringWithThis()
+        private void StopTriggeringWithThis(bool val)
         {
             StopCoroutine(nameof(RewardCoroutine));
             _rewardPanel.CloseThePanel(false);
             _hasTriggered = false;
-            EventsManager.TriggerWithRewardEvent(false);
         }
         private void Show()
         {
