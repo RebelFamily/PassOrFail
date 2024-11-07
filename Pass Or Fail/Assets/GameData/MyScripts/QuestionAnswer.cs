@@ -279,8 +279,16 @@ public class QuestionAnswer : MonoBehaviour
     {
         return _isStudentClaiming;  
     }
-    public string GetBreakableObjectName()
+    public string GetMainInstructions()
     {
-        return _saveTheEgg.GetBreakableObjectName();
+        return _saveTheEgg.GetMainInstructions();
+    }
+    public string GetDescription0()
+    {
+        return _saveTheEgg.GetDescription0();
+    }
+    public string GetDescription1()
+    {
+        return _saveTheEgg.GetDescription1();
     }
 }

@@ -1,8 +1,5 @@
-﻿using System;
-using GameAnalyticsSDK;
+﻿using GameAnalyticsSDK;
 using UnityEngine;
-using Zain_Meta.Meta_Scripts.PlayerRelated;
-
 public class Callbacks : MonoBehaviour {
     public delegate void RewardCoins250();
     public static event RewardCoins250 OnRewardCoins250;
@@ -25,13 +22,18 @@ public class Callbacks : MonoBehaviour {
     public delegate void RewardSchoolBuilding();
     public static event RewardSchoolBuilding OnRewardSchoolBuilding;
     public delegate void RewardMistakeCorrection();
+    public static event RewardMistakeCorrection OnRewardMistakeCorrection;
+    public delegate void BuyInAppProduct(InAppProduct.InAppProductType productType);
+    public static event BuyInAppProduct OnInAppProductPurchased;
+    
     public delegate void RewardClassroomUpgrade();
     public delegate void RewardGroundCash();
     public delegate void RewardRide(RewardType rideType);
-    public static event RewardMistakeCorrection OnRewardMistakeCorrection;
     public static event RewardClassroomUpgrade OnRewardClassroomUpgrade;
     public static event RewardRide OnRewardARide;
     public static event RewardGroundCash OnRewardGroundCashInMeta;
+    
+    
     private const string SdkName = "MaxAdmob";
     public static RewardType rewardType;
     private void Start () 
@@ -118,8 +120,6 @@ public class Callbacks : MonoBehaviour {
                 GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
                 FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
     public enum RewardType
@@ -139,5 +139,9 @@ public class Callbacks : MonoBehaviour {
         RewardUniCycle,
         RewardSkateboard,
         GroundCashInMeta
+    }
+    public static void OnInAppProductPurchasing(InAppProduct.InAppProductType productType)
+    {
+        OnInAppProductPurchased?.Invoke(productType);
     }
 }

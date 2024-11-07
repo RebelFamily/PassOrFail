@@ -20,13 +20,13 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string Reward = "Reward";
     public const string CurrencyCounter = "CurrencyCounter";
     public const string CharactersCustomization = "CharactersCustomization";
+    public const string RemoveAds = "RemoveAds";
     #endregion
     
     #region Buttons
     public const string Play = "Play";
     public const string Teachers = "Teachers";
     public const string Students = "Students";
-    public const string ClassRoom = "ClassRoom";
     public const string NextComplete = "NextComplete";
     public const string Home = "Home";
     public const string Replay = "Replay";
@@ -36,6 +36,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string HideSubMenu = "HideSubMenu";
     public const string AdToCorrectMistake = "AdToCorrectMistake";
     public const string PayToCorrectMistake = "PayToCorrectMistake";
+    public const string CloseRemoveAds = "CloseRemoveAds";
     #endregion
     
     #region Settings
@@ -60,7 +61,7 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string TutorialStep2String = "TutorialStep2";
     #endregion
 
-    public const int TotalLevels = 28, TotalActivities = 6;
+    public const int TotalLevels = 28, TotalActivities = 9, TotalMiniGames = 6;
     private const string CurrentLevelString = "currentLevel";
     private const string LevelCounterString = "levelCounter";
     private const string CurrentActivityString = "currentActivity";
@@ -77,19 +78,21 @@ public class PlayerPrefsHandler : MonoBehaviour
     private const string SchoolPlayGroundRank = "SchoolPlayGroundRank";
     private const string SchoolArenaRank = "SchoolArenaRank";
     
-    
     private const string MetaString = "MetaString";
     private const string School = "School";
     private const string SchoolNo = "SchoolNo";
     private const string SchoolBuildingFiller = "SchoolBuildingFiller";
     private const string SchoolBuildingCost = "SchoolBuildingPrice";
 
-    public static readonly string[] ActivitiesNames = {"Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Uniform Checking", "Badges Distribution"};
+    public static readonly string[] ActivitiesNames = {"Attendance Marking", "Uniform Checking", "Library Drill", "Recess Round", "School Dance", "Oral Quiz", "Badges Distribution", "Exercise Activity", "Piano Lesson"};
     private static readonly int[] LevelNumbersForActivities = {3, 6, 9, 12, 15, 18, 21, 24};
     private static readonly int[] LevelNumbersForMiniGames = {2, 5, 7, 10, 13, 16, 19, 22, 25};
+    
+    public static int ClassDecorationsIndex = 0;
 
-    public static bool IsFreeSpinAvailable = true;
+    public static bool IsFreeSpinAvailable = true, IsGameLaunch = true;
     public const string FirstAd = "FirstAd";
+    public const string RateUsString = "RateUs", RemoveAdsFirstShownString = "RemoveAdsFirstShown";
 
     #region Firebase
     public enum AdType
@@ -98,11 +101,11 @@ public class PlayerPrefsHandler : MonoBehaviour
         Timer
     }
     public static string FirstAdType = AdType.Simple.ToString(), InterAdType = AdType.Simple.ToString();
-    public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoToShowMetaString = "LevelNoToShowMeta",
-        ShowMiniGameString = "ShowMiniGame", LevelNoForRatingString = "LevelNoForRating", InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType";
+    public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoForRatingString = "LevelNoForRating", 
+        InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType", ShowAdOnMiniGameString = "ShowAdOnMiniGame";
     public static float FirstAdInterval = 30, InterAdInterval = 30;
-    public static int LevelNoToShowMeta = 1, LevelNoForRating = 3;
-    public static bool ShowMiniGame = false;
+    public static int LevelNoToShowMeta = 15, LevelNoForRating = 20;
+    public static bool ShowAdOnMiniGame = false;
     public static bool IsTimerFirstAd()
     {
         return FirstAdType == AdType.Timer.ToString();

@@ -11,6 +11,7 @@ public class MiniGame : MonoBehaviour
         _iMiniGame = miniGame.GetComponent<IMiniGame>();
         _miniGameInput = miniGame.GetComponent<IMiniGameInput>();
         _iMiniGame.StartMiniGame();
+        SharedUI.Instance.HideAll();
     }
     public EnvironmentManager.Environment GetEnvironment()
     {
@@ -35,7 +36,10 @@ public class MiniGame : MonoBehaviour
         PinBoardSorting = 2,
         GeometrySorting = 3,
         BooksSorting = 4,
-        BookStickers = 5
+        BookStickers = 5,
+        PenFilling = 6,
+        SecurityCheck = 7,
+        BreakTheFight = 8
     }
 }
 public interface IMiniGame
@@ -47,8 +51,4 @@ public interface IMiniGameInput
 {
     void MiniGameMouseDown ();
     void MiniGameMouseUp();
-}
-public interface IMiniGameUI
-{
-    void EnableCanvas(bool flag);
 }

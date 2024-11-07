@@ -59,13 +59,6 @@ public class CharactersCustomization : MonoBehaviour
                 subCategoriesButtons1.SetActive(false);
                 SelectCategory(Inventory.CustomizationType.Students);
                 break;
-            case "ClassRoom":
-                customizationArea.SetActive(false);
-                classRoom.SetActive(true);
-                subCategoriesButtons0.SetActive(false);
-                subCategoriesButtons1.SetActive(true);
-                SelectCategory(Inventory.CustomizationType.ClassRoom, Inventory.ItemType.Decorate);
-                break;
         }
     }
     private void SelectCategory(Inventory.CustomizationType category, Inventory.ItemType itemType = Inventory.ItemType.Common)
@@ -92,10 +85,6 @@ public class CharactersCustomization : MonoBehaviour
                 students.gameObject.SetActive(true);
                 studentsCamera.position = studentsCameraPositions.GetChild(0).position;
                 SetupCharacter();
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                currentItemType = itemType;
-                nameBar.SetActive(false);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -195,9 +184,6 @@ public class CharactersCustomization : MonoBehaviour
                         break;
                     currentStudent.ApplyProp(GetItemToSelect(index));
                     break;
-                case Inventory.CustomizationType.ClassRoom:
-                    //SelectItem(PlayerPrefsHandler.currentClassProp);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -221,9 +207,6 @@ public class CharactersCustomization : MonoBehaviour
                     buttonIndex = index;
                     Invoke(nameof(SetTexts), 0.05f);
                 }
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                classRoomCustomization.ApplyProp(GetItemToSelect(id));
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -303,15 +286,13 @@ public class CharactersCustomization : MonoBehaviour
                 return PlayerPrefsHandler.IsTeacherLocked(items[index].itemId);
             case Inventory.CustomizationType.Students:
                 return PlayerPrefsHandler.IsStudentPropLocked(characterIndex, items[index].itemId);
-            case Inventory.CustomizationType.ClassRoom:
-                return PlayerPrefsHandler.IsClassPropLocked(items[index].itemId);
             default:
                 return false;
         }
     }
     private Inventory.Item GetItemToSelect(int id)
     {
-        Debug.Log("GetItemToSelect: " + id + " : " + items.Count);
+        //Debug.Log("GetItemToSelect: " + id + " : " + items.Count);
         foreach (var t in items)
         {
             if (t.itemId == id)
@@ -413,8 +394,6 @@ public class CharactersCustomization : MonoBehaviour
                     }
                 }
                 break;
-            case Inventory.CustomizationType.ClassRoom:
-                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -482,9 +461,6 @@ public class CharactersCustomization : MonoBehaviour
                 PlayerPrefsHandler.UnlockStudentProp(characterIndex, itemIndexToUnlock);
                 PlayerPrefsHandler.SetStudentCurrentProp(characterIndex, itemIndexToUnlock);
                 Invoke(nameof(SetTexts), 0.05f);
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                PlayerPrefsHandler.UnlockClassProp(itemIndexToUnlock);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -610,9 +586,6 @@ public class CharactersCustomization : MonoBehaviour
                     itemIndexToUnlock = 0;
                     currentStudent.ApplyProp(null);
                 }
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(characterIndex);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

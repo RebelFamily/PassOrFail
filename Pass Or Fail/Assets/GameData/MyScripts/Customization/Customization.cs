@@ -7,36 +7,45 @@ using UnityEngine.UI;
 public class Customization : MonoBehaviour
 {
     [SerializeField] private Inventory inventory;
-    private readonly List<GameObject> itemButtons = new List<GameObject>();
+    private readonly List<GameObject> _itemButtons = new List<GameObject>();
     [SerializeField] private ScrollRect scrollView;
     [SerializeField] private GameObject confirmationPopup;
-    private Inventory.CustomizationType currentCustomizationType;
-    private Inventory.ItemType currentItemType;
-    private Inventory.Item currentItem, lastItem;
-    private List<Inventory.Item> items = new List<Inventory.Item>();
-    private int characterIndex = 0;
-    [SerializeField] private GameObject customizationArea, classRoom, subCategoriesButtons0, subCategoriesButtons1;
+    private Inventory.CustomizationType _currentCustomizationType;
+    private Inventory.ItemType _currentItemType;
+    private Inventory.Item _currentItem, _lastItem;
+    private List<Inventory.Item> _items = new List<Inventory.Item>();
+    private int _characterIndex = 0;
+    [SerializeField] private GameObject customizationArea, subCategoriesButtons0, subCategoriesButtons1;
     [SerializeField] private Transform teachers, students, studentsCamera, studentsCameraPositions, classRoomCamera;
     [SerializeField] private Button nextCharacterBtn, previousCharacterBtn;
     [SerializeField] private GameObject nameBar;
     private static readonly string[] StudentsNames = new[] {"Robin", "Tommy", "Nami", "Lucky", "Mano", "Rocky", "Kate", "Jack"};
     private int itemIndexToUnlock = 0, itemPrice = 0, buttonIndex = 0;
     [SerializeField] private StudentCustomization currentStudent;
-    [SerializeField] private ClassRoomCustomization classRoomCustomization;
     [SerializeField] private Color[] subCategoriesColors;
-    private Text nameText;
-    private Canvas canvas;
+    private Text _nameText;
+    private Canvas _canvas;
+    private const string NameTextString = "NameText", 
+        SelectedTextString = "SelectedText",
+        EquippedTextString = "EquippedText",
+        SelectTextString = "SelectText",
+        PriceTextString = "PriceText",
+        CashIconString = "CashIcon",
+        AdIconString = "AdIcon",
+        BuyString = "Buy",
+        PriceTextPath = "CashIcon/PriceText",
+        RenderString = "Render";
     private void OnEnable()
     {
-        if (!canvas)
-            canvas = GetComponentInParent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        if (!_canvas)
+            _canvas = GetComponentInParent<Canvas>();
+        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         Callbacks.OnRewardItem += RewardItem;
         SharedUI.Instance.metaUIManager.EnableSchools(false);
     }
     private void OnDisable()
     {
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        _canvas.renderMode = RenderMode.ScreenSpaceCamera;
         Callbacks.OnRewardItem -= RewardItem;
     }
     public Inventory GetInventory()
@@ -49,35 +58,26 @@ public class Customization : MonoBehaviour
         {
             case "Teachers":
                 customizationArea.SetActive(true);
-                classRoom.SetActive(false);
                 subCategoriesButtons0.SetActive(false);
                 subCategoriesButtons1.SetActive(false);
                 SelectCategory(Inventory.CustomizationType.Teachers);
                 break;
             case "Students":
                 customizationArea.SetActive(true);
-                classRoom.SetActive(false);
                 subCategoriesButtons0.SetActive(true);
                 subCategoriesButtons1.SetActive(false);
                 SelectCategory(Inventory.CustomizationType.Students);
-                break;
-            case "ClassRoom":
-                customizationArea.SetActive(false);
-                classRoom.SetActive(true);
-                subCategoriesButtons0.SetActive(false);
-                subCategoriesButtons1.SetActive(true);
-                SelectCategory(Inventory.CustomizationType.ClassRoom, Inventory.ItemType.Decorate);
                 break;
         }
     }
     private void SelectCategory(Inventory.CustomizationType category, Inventory.ItemType itemType = Inventory.ItemType.Common)
     {
-        currentCustomizationType = category;
+        _currentCustomizationType = category;
         switch (category)
         {
             case Inventory.CustomizationType.Teachers:
                 nameBar.SetActive(false);
-                characterIndex = PlayerPrefsHandler.currentTeacher;
+                _characterIndex = PlayerPrefsHandler.currentTeacher;
                 teachers.gameObject.SetActive(true);
                 students.gameObject.SetActive(false);
                 studentsCamera.position = studentsCameraPositions.GetChild(0).position;
@@ -86,20 +86,16 @@ public class Customization : MonoBehaviour
                 Invoke(nameof(SetTeachersUI), 0.1f);
                 break;
             case Inventory.CustomizationType.Students:
-                currentItemType = itemType;
+                _currentItemType = itemType;
                 nameBar.SetActive(true);
-                characterIndex = 0;
-                if(!nameText)
-                    nameText = nameBar.transform.Find("NameText").GetComponent<Text>();
-                nameText.text = StudentsNames[characterIndex];
+                _characterIndex = 0;
+                if(!_nameText)
+                    _nameText = nameBar.transform.Find(NameTextString).GetComponent<Text>();
+                _nameText.text = StudentsNames[_characterIndex];
                 teachers.gameObject.SetActive(false);
                 students.gameObject.SetActive(true);
                 studentsCamera.position = studentsCameraPositions.GetChild(0).position;
                 Invoke(nameof(InvokeSetupCharacter), 0.1f);
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                currentItemType = itemType;
-                nameBar.SetActive(false);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -110,34 +106,34 @@ public class Customization : MonoBehaviour
     private void SetUI()
     {
         var prefab = inventory.GetButtonPrefab();
-        items.Clear();
-        items = inventory.GetItems(currentCustomizationType, currentItemType).ToList();
-        for (var i = 0; i < items.Count; i++)
+        _items.Clear();
+        _items = inventory.GetItems(_currentCustomizationType, _currentItemType).ToList();
+        for (var i = 0; i < _items.Count; i++)
         {
-            var item = items[i];
+            var item = _items[i];
             GameObject btn;
-            if (itemButtons.Count - 1 >= i)
+            if (_itemButtons.Count - 1 >= i)
             {
-                btn = itemButtons[i];
+                btn = _itemButtons[i];
             }
             else
             {
                 btn = Instantiate(prefab, scrollView.content);
-                itemButtons.Add(btn);
+                _itemButtons.Add(btn);
             }
-            btn.transform.Find("SelectedText").gameObject.SetActive(false);
-            btn.transform.Find("EquippedText").gameObject.SetActive(false);
-            btn.transform.Find("SelectText").gameObject.SetActive(false);
+            btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+            btn.transform.Find(EquippedTextString).gameObject.SetActive(false);
+            btn.transform.Find(SelectTextString).gameObject.SetActive(false);
             var btnComponent = btn.GetComponent<Button>();
             btnComponent.onClick.RemoveAllListeners();
-            btn.transform.Find("Render").GetComponent<Image>().sprite = item.itemIcon;
+            btn.transform.Find(RenderString).GetComponent<Image>().sprite = item.itemIcon;
             //Debug.Log("item: " + item.itemName + " : " + IsItemLocked(item));
             if (IsItemLocked(item))
             {
                 if (item.canUnlockByAd)
                 {
                     btn.GetComponent<Image>().sprite = inventory.GetAdBtnSprite();
-                    var txt = btn.transform.Find("PriceText");
+                    var txt = btn.transform.Find(PriceTextString);
                     txt.gameObject.SetActive(false);
                     btnComponent.onClick.AddListener(() =>
                     {
@@ -147,7 +143,7 @@ public class Customization : MonoBehaviour
                 else
                 {
                     btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                    var txt = btn.transform.Find("PriceText");
+                    var txt = btn.transform.Find(PriceTextString);
                     txt.GetComponent<Text>().text = item.itemPrice.ToString();
                     txt.gameObject.SetActive(true);
                     var i1 = i;
@@ -160,226 +156,175 @@ public class Customization : MonoBehaviour
             else
             {
                 btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                if (currentCustomizationType != Inventory.CustomizationType.ClassRoom)
-                {
-                    btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                    btn.transform.Find("SelectText").gameObject.SetActive(true);
-                    btn.transform.Find("EquippedText").gameObject.SetActive(false);
-                }
-                else
-                {
-                    btn.transform.Find("EquippedText").gameObject.SetActive(true);
-                    btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                    btn.transform.Find("SelectText").gameObject.SetActive(false);
-                }
-                btn.transform.Find("PriceText").gameObject.SetActive(false);
+                btn.transform.Find(EquippedTextString).gameObject.SetActive(true);
+                btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                btn.transform.Find(SelectTextString).gameObject.SetActive(false);
+                btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                 btnComponent.onClick.AddListener(() =>
                 {
                     SelectItem(item);
                 });
             }
-            itemButtons[i].SetActive(true);
+            _itemButtons[i].SetActive(true);
         }
-        if (itemButtons.Count > items.Count)
+        if (_itemButtons.Count > _items.Count)
         {
-            for (var i = items.Count; i < itemButtons.Count; i++)
+            for (var i = _items.Count; i < _itemButtons.Count; i++)
             {
-                itemButtons[i].gameObject.SetActive(false);
+                _itemButtons[i].gameObject.SetActive(false);
             }   
         }
     }
     private void SetTeachersUI()
     {
-        var btn = itemButtons[PlayerPrefsHandler.currentTeacher].transform;
-        btn.transform.Find("SelectedText").gameObject.SetActive(true);
-        btn.transform.Find("SelectText").gameObject.SetActive(false);
+        var btn = _itemButtons[PlayerPrefsHandler.currentTeacher].transform;
+        btn.transform.Find(SelectedTextString).gameObject.SetActive(true);
+        btn.transform.Find(SelectTextString).gameObject.SetActive(false);
     }
     private void SelectItem(Inventory.Item newItem, bool calledByUnlockItem = false)
     {
         //Debug.Log("SelectItem: " + newItem.itemName);
-        currentItem = newItem;
-        switch (currentCustomizationType)
+        _currentItem = newItem;
+        switch (_currentCustomizationType)
         {
             case Inventory.CustomizationType.Teachers:
-                characterIndex = newItem.itemId;
+                _characterIndex = newItem.itemId;
                 EnableATeacher();
-                for (var i = 0; i < items.Count; i++)
+                for (var i = 0; i < _items.Count; i++)
                 {
-                    var btn = itemButtons[i].GetComponent<Button>();
-                    btn.transform.Find("EquippedText").gameObject.SetActive(false);
-                    if (IsItemLocked(items[i]))
+                    var btn = _itemButtons[i].GetComponent<Button>();
+                    btn.transform.Find(EquippedTextString).gameObject.SetActive(false);
+                    if (IsItemLocked(_items[i]))
                     {
-                        btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                        btn.transform.Find("SelectText").gameObject.SetActive(false);
+                        btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                        btn.transform.Find(SelectTextString).gameObject.SetActive(false);
                         if (calledByUnlockItem)
                         {
                             btn.onClick.RemoveAllListeners();
                             btn.GetComponent<Image>().sprite = inventory.GetAdBtnSprite();
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
+                            btn.transform.Find(PriceTextPath).gameObject.SetActive(false);
                             var i1 = i;
-                            btn.onClick.AddListener(() => UnlockingConfirmation(items[i1]));
+                            btn.onClick.AddListener(() => UnlockingConfirmation(_items[i1]));
                         }
                     }
                     else
                     {
-                        btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                        btn.transform.Find("SelectText").gameObject.SetActive(true);
+                        btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                        btn.transform.Find(SelectTextString).gameObject.SetActive(true);
                         if (calledByUnlockItem)
                         {
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
+                            btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                             btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
                             btn.onClick.RemoveAllListeners();
                             var i1 = i;
-                            btn.onClick.AddListener(() => SelectItem(items[i1]));
+                            btn.onClick.AddListener(() => SelectItem(_items[i1]));
                         }
                     }
                 }
-                if (!IsItemLocked(currentItem))
+                if (!IsItemLocked(_currentItem))
                 {
-                    var btn = itemButtons[items.IndexOf(currentItem)].GetComponent<Button>();
-                    btn.transform.Find("SelectedText").gameObject.SetActive(true);
-                    btn.transform.Find("SelectText").gameObject.SetActive(false);
-                    btn.transform.Find("PriceText").gameObject.SetActive(false);
+                    var btn = _itemButtons[_items.IndexOf(_currentItem)].GetComponent<Button>();
+                    btn.transform.Find(SelectedTextString).gameObject.SetActive(true);
+                    btn.transform.Find(SelectTextString).gameObject.SetActive(false);
+                    btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                     btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                    PlayerPrefsHandler.currentTeacher = currentItem.itemId;
+                    PlayerPrefsHandler.currentTeacher = _currentItem.itemId;
                 }
                 break;
             case Inventory.CustomizationType.Students:
-                currentStudent.ApplyProp(currentItem);
-                for (var i = 0; i < items.Count; i++)
+                currentStudent.ApplyProp(_currentItem);
+                for (var i = 0; i < _items.Count; i++)
                 {
-                    var btn = itemButtons[i].GetComponent<Button>();
-                    btn.transform.Find("EquippedText").gameObject.SetActive(false);
-                    if (IsItemLocked(items[i]))
+                    var btn = _itemButtons[i].GetComponent<Button>();
+                    btn.transform.Find(EquippedTextString).gameObject.SetActive(false);
+                    if (IsItemLocked(_items[i]))
                     {
-                        btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                        btn.transform.Find("SelectText").gameObject.SetActive(false);
+                        btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                        btn.transform.Find(SelectTextString).gameObject.SetActive(false);
                         if (calledByUnlockItem)
                         {
                             btn.onClick.RemoveAllListeners();
-                            if (items[i].canUnlockByAd)
+                            if (_items[i].canUnlockByAd)
                             {
                                 btn.GetComponent<Image>().sprite = inventory.GetAdBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(false);
+                                btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                                 var i1 = i;
-                                btn.onClick.AddListener(() => UnlockingConfirmation(items[i1]));
+                                btn.onClick.AddListener(() => UnlockingConfirmation(_items[i1]));
                             }
                             else
                             {
                                 btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(true);
+                                btn.transform.Find(PriceTextString).gameObject.SetActive(true);
                                 var i1 = i;
-                                btn.onClick.AddListener(() => BuyingConfirmation(items[i1]));
+                                btn.onClick.AddListener(() => BuyingConfirmation(_items[i1]));
                             }
                         }
                     }
                     else
                     {
-                        btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                        btn.transform.Find("SelectText").gameObject.SetActive(true);
+                        btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                        btn.transform.Find(SelectTextString).gameObject.SetActive(true);
                         if (calledByUnlockItem)
                         {
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
+                            btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                             btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
                             btn.onClick.RemoveAllListeners();
                             var i1 = i;
-                            btn.onClick.AddListener(() => SelectItem(items[i1]));
+                            btn.onClick.AddListener(() => SelectItem(_items[i1]));
                         }
                     }
                 }
 
-                if (currentItem != null)
+                if (_currentItem != null)
                 {
-                    if (!IsItemLocked(currentItem))
+                    if (!IsItemLocked(_currentItem))
                     {
-                        var index = items.IndexOf(currentItem);
+                        var index = _items.IndexOf(_currentItem);
                         //Debug.Log("index: " + index);
                         if (index == -1)
                         {
                             return;
                         }
 
-                        var btn = itemButtons[items.IndexOf(currentItem)].GetComponent<Button>();
-                        btn.transform.Find("SelectedText").gameObject.SetActive(true);
-                        btn.transform.Find("SelectText").gameObject.SetActive(false);
-                        btn.transform.Find("PriceText").gameObject.SetActive(false);
+                        var btn = _itemButtons[_items.IndexOf(_currentItem)].GetComponent<Button>();
+                        btn.transform.Find(SelectedTextString).gameObject.SetActive(true);
+                        btn.transform.Find(SelectTextString).gameObject.SetActive(false);
+                        btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                         btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                        lastItem = currentItem;
-                        PlayerPrefsHandler.SetStudentCurrentProp(characterIndex, currentItem.itemId);
+                        _lastItem = _currentItem;
+                        PlayerPrefsHandler.SetStudentCurrentProp(_characterIndex, _currentItem.itemId);
                     }
                 }
                 else
                     Debug.Log("Current Item is Null");
                 break;
-            case Inventory.CustomizationType.ClassRoom:
-                classRoomCustomization.ApplyProp(currentItem);
-                for (var i = 0; i < items.Count; i++)
-                {
-                    var btn = itemButtons[i].GetComponent<Button>();
-                    btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                    btn.transform.Find("SelectText").gameObject.SetActive(false);
-                    if (IsItemLocked(items[i]))
-                    {
-                        btn.transform.Find("EquippedText").gameObject.SetActive(false);
-                        if (calledByUnlockItem)
-                        {
-                            btn.onClick.RemoveAllListeners();
-                            if (items[i].canUnlockByAd)
-                            {
-                                btn.GetComponent<Image>().sprite = inventory.GetAdBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(false);
-                                var i1 = i;
-                                btn.onClick.AddListener(() => UnlockingConfirmation(items[i1]));
-                            }
-                            else
-                            {
-                                btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(true);
-                                var i1 = i;
-                                btn.onClick.AddListener(() => BuyingConfirmation(items[i1]));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        btn.transform.Find("EquippedText").gameObject.SetActive(true);
-                        if (calledByUnlockItem)
-                        {
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
-                            btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                            btn.onClick.RemoveAllListeners();
-                        }
-                    }
-                }
-                break;
+            
         }
     }
     private bool IsItemLocked(Inventory.Item item)
     {
-        switch (currentCustomizationType)
+        switch (_currentCustomizationType)
         {
             case Inventory.CustomizationType.Teachers:
                 return PlayerPrefsHandler.IsTeacherLocked(item.itemId);
             case Inventory.CustomizationType.Students:
-                return PlayerPrefsHandler.IsStudentPropLocked(characterIndex, item.itemId);
-            case Inventory.CustomizationType.ClassRoom:
-                return PlayerPrefsHandler.IsClassPropLocked(item.itemId);
+                return PlayerPrefsHandler.IsStudentPropLocked(_characterIndex, item.itemId);
             default:
                 return false;
         }
     }
     private void UnlockingConfirmation(Inventory.Item newItem)
     {
-        Debug.Log(newItem.itemId + " :UnlockingConfirmation: ");
+        //Debug.Log(newItem.itemId + " :UnlockingConfirmation: ");
         SoundController.Instance.PlayBtnClickSound();
-        currentItem = newItem;
-        confirmationPopup.transform.Find("CashIcon").gameObject.SetActive(false);
-        confirmationPopup.transform.Find("AdIcon").gameObject.SetActive(true);
-        var btn = confirmationPopup.transform.Find("Buy").GetComponent<Button>();
+        _currentItem = newItem;
+        confirmationPopup.transform.Find(CashIconString).gameObject.SetActive(false);
+        confirmationPopup.transform.Find(AdIconString).gameObject.SetActive(true);
+        var btn = confirmationPopup.transform.Find(BuyString).GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(WatchRewardedAdToUnlockItem);
         confirmationPopup.SetActive(true);
-        if(currentCustomizationType == Inventory.CustomizationType.Students)
+        if(_currentCustomizationType == Inventory.CustomizationType.Students)
             nameBar.SetActive(false);
         scrollView.gameObject.SetActive(false);
         SelectItem(newItem);
@@ -393,54 +338,50 @@ public class Customization : MonoBehaviour
     }
     private void BuyingConfirmation(Inventory.Item newItem)
     {
-        Debug.Log(newItem.itemId + " :BuyingConfirmation : ");
+        //Debug.Log(newItem.itemId + " :BuyingConfirmation : ");
         SoundController.Instance.PlayBtnClickSound();
-        currentItem = newItem;
-        confirmationPopup.transform.Find("CashIcon").gameObject.SetActive(true);
-        confirmationPopup.transform.Find("AdIcon").gameObject.SetActive(false);
-        confirmationPopup.transform.Find("CashIcon/PriceText").GetComponent<Text>().text = currentItem.itemPrice.ToString();
-        var btn = confirmationPopup.transform.Find("Buy").GetComponent<Button>();
+        _currentItem = newItem;
+        confirmationPopup.transform.Find(CashIconString).gameObject.SetActive(true);
+        confirmationPopup.transform.Find(AdIconString).gameObject.SetActive(false);
+        confirmationPopup.transform.Find(PriceTextPath).GetComponent<Text>().text = _currentItem.itemPrice.ToString();
+        var btn = confirmationPopup.transform.Find(BuyString).GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(BuyItem);
         confirmationPopup.SetActive(true);
-        if(currentCustomizationType == Inventory.CustomizationType.Students)
+        if(_currentCustomizationType == Inventory.CustomizationType.Students)
             nameBar.SetActive(false);
         scrollView.gameObject.SetActive(false);
         SelectItem(newItem);
     }
     private void BuyItem()
     {
-        Debug.Log("BuyItem");
-        if (currentItem.itemPrice <= PlayerPrefsHandler.currency)
+        //Debug.Log("BuyItem");
+        if (_currentItem.itemPrice <= PlayerPrefsHandler.currency)
         {
-            CurrencyCounter.Instance.DeductCurrency(currentItem.itemPrice, itemButtons[buttonIndex].transform);
+            CurrencyCounter.Instance.DeductCurrency(_currentItem.itemPrice, _itemButtons[buttonIndex].transform);
             UnlockItem();
         }
     }
     private void UnlockItem()
     {
-        Debug.Log(itemIndexToUnlock + " : " + currentCustomizationType + " : " + currentItemType);
-        lastItem = currentItem;
-        switch (currentCustomizationType)
+        //Debug.Log(itemIndexToUnlock + " : " + _currentCustomizationType + " : " + _currentItemType);
+        _lastItem = _currentItem;
+        switch (_currentCustomizationType)
         {
             case Inventory.CustomizationType.Teachers:
-                PlayerPrefsHandler.UnlockTeacher(currentItem.itemId);
-                SelectItem(currentItem, true);
+                PlayerPrefsHandler.UnlockTeacher(_currentItem.itemId);
+                SelectItem(_currentItem, true);
                 break;
             case Inventory.CustomizationType.Students:
-                PlayerPrefsHandler.UnlockStudentProp(characterIndex, currentItem.itemId);
-                PlayerPrefsHandler.SetStudentCurrentProp(characterIndex, currentItem.itemId);
-                SelectItem(currentItem, true);
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                PlayerPrefsHandler.UnlockClassProp(currentItem.itemId);
-                SelectItem(currentItem, true);
+                PlayerPrefsHandler.UnlockStudentProp(_characterIndex, _currentItem.itemId);
+                PlayerPrefsHandler.SetStudentCurrentProp(_characterIndex, _currentItem.itemId);
+                SelectItem(_currentItem, true);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
         confirmationPopup.SetActive(false);
-        if(currentCustomizationType == Inventory.CustomizationType.Students)
+        if(_currentCustomizationType == Inventory.CustomizationType.Students)
             nameBar.SetActive(true);
         scrollView.gameObject.SetActive(true);
         SoundController.Instance.PlayBuySound();
@@ -456,56 +397,56 @@ public class Customization : MonoBehaviour
         SoundController.Instance.PlayBtnClickSound();
         if (subCategory == Inventory.ItemType.Common.ToString())
         {
-            if (currentItemType != Inventory.ItemType.Common)
+            if (_currentItemType != Inventory.ItemType.Common)
             {
-                items.Clear();
-                items = inventory.GetItems(currentCustomizationType, Inventory.ItemType.Common).ToList();
+                _items.Clear();
+                _items = inventory.GetItems(_currentCustomizationType, Inventory.ItemType.Common).ToList();
                 scrollView.GetComponent<Image>().color = subCategoriesColors[0];
             }
-            currentItemType = Inventory.ItemType.Common;
+            _currentItemType = Inventory.ItemType.Common;
         }
         else if (subCategory == Inventory.ItemType.Rare.ToString())
         {
-            if (currentItemType != Inventory.ItemType.Rare)
+            if (_currentItemType != Inventory.ItemType.Rare)
             {
-                items.Clear();
-                items = inventory.GetItems(currentCustomizationType, Inventory.ItemType.Rare).ToList();
+                _items.Clear();
+                _items = inventory.GetItems(_currentCustomizationType, Inventory.ItemType.Rare).ToList();
                 scrollView.GetComponent<Image>().color = subCategoriesColors[1];
             }
-            currentItemType = Inventory.ItemType.Rare;
+            _currentItemType = Inventory.ItemType.Rare;
         }
         else if (subCategory == Inventory.ItemType.Epic.ToString())
         {
-            if (currentItemType != Inventory.ItemType.Epic)
+            if (_currentItemType != Inventory.ItemType.Epic)
             {
-                items.Clear();
-                items = inventory.GetItems(currentCustomizationType, Inventory.ItemType.Epic).ToList();
+                _items.Clear();
+                _items = inventory.GetItems(_currentCustomizationType, Inventory.ItemType.Epic).ToList();
                 scrollView.GetComponent<Image>().color = subCategoriesColors[2];
             }
-            currentItemType = Inventory.ItemType.Epic;
+            _currentItemType = Inventory.ItemType.Epic;
         }
         else if (subCategory == Inventory.ItemType.Decorate.ToString())
         {
-            if (currentItemType != Inventory.ItemType.Decorate)
+            if (_currentItemType != Inventory.ItemType.Decorate)
             {
-                items.Clear();
-                items = inventory.GetItems(currentCustomizationType, Inventory.ItemType.Decorate).ToList();
+                _items.Clear();
+                _items = inventory.GetItems(_currentCustomizationType, Inventory.ItemType.Decorate).ToList();
                 scrollView.GetComponent<Image>().color = subCategoriesColors[0];
             }
-            currentItemType = Inventory.ItemType.Decorate;
+            _currentItemType = Inventory.ItemType.Decorate;
         }
         else
         {
-            if (currentItemType != Inventory.ItemType.Upgrade)
+            if (_currentItemType != Inventory.ItemType.Upgrade)
             {
-                items.Clear();
-                items = inventory.GetItems(currentCustomizationType, Inventory.ItemType.Upgrade).ToList();
+                _items.Clear();
+                _items = inventory.GetItems(_currentCustomizationType, Inventory.ItemType.Upgrade).ToList();
                 scrollView.GetComponent<Image>().color = subCategoriesColors[1];
             }
-            currentItemType = Inventory.ItemType.Upgrade;
+            _currentItemType = Inventory.ItemType.Upgrade;
         }
         SetUI();
-        SelectItem(lastItem);
+        SelectItem(_lastItem);
     }
     private void EnableATeacher()
     {
@@ -513,7 +454,7 @@ public class Customization : MonoBehaviour
         {
             teachers.GetChild(i).gameObject.SetActive(false);
         }
-        teachers.GetChild(characterIndex).gameObject.SetActive(true);
+        teachers.GetChild(_characterIndex).gameObject.SetActive(true);
     }
     private void InvokeSetupCharacter()
     {
@@ -521,85 +462,83 @@ public class Customization : MonoBehaviour
     }
     private void SetupCharacter(bool newCharacter = false)
     {
-        var currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(characterIndex);
-        switch (currentCustomizationType)
+        var currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(_characterIndex);
+        switch (_currentCustomizationType)
         {
             case Inventory.CustomizationType.Teachers:
                 break;
             case Inventory.CustomizationType.Students:
-                currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(characterIndex);
+                currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(_characterIndex);
                 if (currentPropNo != -1)
                 {
-                    lastItem = inventory.GetLastStudentProp(currentPropNo);
+                    _lastItem = inventory.GetLastStudentProp(currentPropNo);
                     //Debug.Log("LastItem: " + lastItem.itemName);
-                    SelectItem(lastItem);
+                    SelectItem(_lastItem);
                 }
                 else
                 {
-                    lastItem = null;
+                    _lastItem = null;
                 }
                 if (newCharacter)
                 {
                     //Debug.Log( characterIndex + " :currentPropNo: " + currentPropNo);
-                    for (var i = 0; i < items.Count; i++)
+                    for (var i = 0; i < _items.Count; i++)
                     {
-                        var btn = itemButtons[i].GetComponent<Button>();
-                        if (IsItemLocked(items[i]))
+                        var btn = _itemButtons[i].GetComponent<Button>();
+                        if (IsItemLocked(_items[i]))
                         {
-                            btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                            btn.transform.Find("SelectText").gameObject.SetActive(false);
+                            btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                            btn.transform.Find(SelectTextString).gameObject.SetActive(false);
                             btn.onClick.RemoveAllListeners();
-                            if (items[i].canUnlockByAd)
+                            if (_items[i].canUnlockByAd)
                             {
                                 btn.GetComponent<Image>().sprite = inventory.GetAdBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(false);
+                                btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                                 var i1 = i;
-                                btn.onClick.AddListener(() => UnlockingConfirmation(items[i1]));
+                                btn.onClick.AddListener(() => UnlockingConfirmation(_items[i1]));
                             }
                             else
                             {
                                 btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
-                                btn.transform.Find("PriceText").gameObject.SetActive(true);
+                                btn.transform.Find(PriceTextString).gameObject.SetActive(true);
                                 var i1 = i;
-                                btn.onClick.AddListener(() => BuyingConfirmation(items[i1]));
+                                btn.onClick.AddListener(() => BuyingConfirmation(_items[i1]));
                             }
                             
                         }
                         else
                         {
-                            btn.transform.Find("SelectedText").gameObject.SetActive(false);
-                            btn.transform.Find("SelectText").gameObject.SetActive(true);
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
+                            btn.transform.Find(SelectedTextString).gameObject.SetActive(false);
+                            btn.transform.Find(SelectTextString).gameObject.SetActive(true);
+                            btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                             btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
                             btn.onClick.RemoveAllListeners();
                             var i1 = i;
-                            btn.onClick.AddListener(() => SelectItem(items[i1]));
+                            btn.onClick.AddListener(() => SelectItem(_items[i1]));
                         }
                     }
 
-                    if (currentItem != null)
+                    if (_currentItem != null)
                     {
-                        if (!IsItemLocked(currentItem))
+                        if (!IsItemLocked(_currentItem))
                         {
-                            var index = items.IndexOf(currentItem);
-                            Debug.Log("index: " + index);
+                            var index = _items.IndexOf(_currentItem);
+                            //Debug.Log("index: " + index);
                             if (index == -1)
                             {
                                 return;
                             }
 
-                            var btn = itemButtons[items.IndexOf(currentItem)].GetComponent<Button>();
-                            btn.transform.Find("SelectedText").gameObject.SetActive(true);
-                            btn.transform.Find("SelectText").gameObject.SetActive(false);
-                            btn.transform.Find("PriceText").gameObject.SetActive(false);
+                            var btn = _itemButtons[_items.IndexOf(_currentItem)].GetComponent<Button>();
+                            btn.transform.Find(SelectedTextString).gameObject.SetActive(true);
+                            btn.transform.Find(SelectTextString).gameObject.SetActive(false);
+                            btn.transform.Find(PriceTextString).gameObject.SetActive(false);
                             btn.GetComponent<Image>().sprite = inventory.GetSimpleBtnSprite();
                         }
                     }
                     else
                         Debug.Log("Current Item is null");
                 }
-                break;
-            case Inventory.CustomizationType.ClassRoom:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -608,18 +547,18 @@ public class Customization : MonoBehaviour
     public void NextCharacter()
     {
         SoundController.Instance.PlayBtnClickSound();
-        if (characterIndex < studentsCameraPositions.childCount - 1)
+        if (_characterIndex < studentsCameraPositions.childCount - 1)
         {
-            characterIndex++;
+            _characterIndex++;
             nextCharacterBtn.interactable = false;
             previousCharacterBtn.interactable = false;
-            currentStudent = students.GetChild(characterIndex).GetComponent<StudentCustomization>();
+            currentStudent = students.GetChild(_characterIndex).GetComponent<StudentCustomization>();
         }
         else
             return;
-        studentsCamera.DOMove(studentsCameraPositions.GetChild(characterIndex).position, 0.5f).OnComplete(() =>
+        studentsCamera.DOMove(studentsCameraPositions.GetChild(_characterIndex).position, 0.5f).OnComplete(() =>
         {
-            nameText.text = StudentsNames[characterIndex];
+            _nameText.text = StudentsNames[_characterIndex];
             nextCharacterBtn.interactable = true;
             previousCharacterBtn.interactable = true;
         });
@@ -628,18 +567,18 @@ public class Customization : MonoBehaviour
     public void PreviousCharacter()
     {
         SoundController.Instance.PlayBtnClickSound();
-        if (characterIndex > 0)
+        if (_characterIndex > 0)
         {
-            characterIndex--;
+            _characterIndex--;
             nextCharacterBtn.interactable = false;
             previousCharacterBtn.interactable = false;
-            currentStudent = students.GetChild(characterIndex).GetComponent<StudentCustomization>();
+            currentStudent = students.GetChild(_characterIndex).GetComponent<StudentCustomization>();
         }
         else
             return;
-        studentsCamera.DOMove(studentsCameraPositions.GetChild(characterIndex).position, 0.5f).OnComplete(() =>
+        studentsCamera.DOMove(studentsCameraPositions.GetChild(_characterIndex).position, 0.5f).OnComplete(() =>
         {
-            nameText.text = StudentsNames[characterIndex];
+            _nameText.text = StudentsNames[_characterIndex];
             nextCharacterBtn.interactable = true;
             previousCharacterBtn.interactable = true;
         });
@@ -650,32 +589,29 @@ public class Customization : MonoBehaviour
         SoundController.Instance.PlayBtnClickSound();
         scrollView.gameObject.SetActive(true);
         confirmationPopup.SetActive(false);
-        if(currentCustomizationType == Inventory.CustomizationType.Students)
+        if(_currentCustomizationType == Inventory.CustomizationType.Students)
             nameBar.SetActive(true);
-        var currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(characterIndex);
-        switch (currentCustomizationType)
+        var currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(_characterIndex);
+        switch (_currentCustomizationType)
         {
             case Inventory.CustomizationType.Teachers:
                 SetTeachersUI();
                 break;
             case Inventory.CustomizationType.Students:
-                currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(characterIndex);
+                currentPropNo = PlayerPrefsHandler.GetStudentCurrentProp(_characterIndex);
                 if (currentPropNo != -1)
                 {
-                    if (lastItem == null)
+                    if (_lastItem == null)
                     {
-                        lastItem = inventory.GetLastStudentProp(currentPropNo);
+                        _lastItem = inventory.GetLastStudentProp(currentPropNo);
                     }
-                    SelectItem(lastItem);
+                    SelectItem(_lastItem);
                 }
                 else
                 {
-                    currentItem = null;
+                    _currentItem = null;
                     currentStudent.ApplyProp(null);
                 }
-                break;
-            case Inventory.CustomizationType.ClassRoom:
-                classRoomCustomization.HideProp(currentItem);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -693,6 +629,5 @@ public class Customization : MonoBehaviour
         SharedUI.Instance.metaUIManager.EnableSchools(true);
         SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.MainMenu);
         customizationArea.SetActive(false);
-        classRoom.SetActive(false);
     }
 }

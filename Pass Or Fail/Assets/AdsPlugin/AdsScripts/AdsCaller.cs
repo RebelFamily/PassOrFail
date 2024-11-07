@@ -72,6 +72,7 @@ public class AdsCaller : MonoBehaviour
     }
     public void ShowInterstitialAd()
     {
+        if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
         if(GameManager.Instance.IsTesting()) return;
         CheckMemoryState.Instance.CheckMemory();
         if (AdsManager.Instance.IsInterstitialReady())

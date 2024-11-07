@@ -36,6 +36,7 @@ public class GamePlayManager : MonoBehaviour
     private void Start()
     {
         SoundController.Instance.PlayGamePlayBackgroundMusic();
+        ShowRemoveAds();
         CurrentLevelSettings();
     }
     public bool IsGameReadyToPlay()
@@ -72,30 +73,48 @@ public class GamePlayManager : MonoBehaviour
                 break;
         }
     }
+    private void ShowRemoveAds()
+    {
+        if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
+        if (PlayerPrefsHandler.LevelCounter > 2)
+        {
+            if (PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAdsFirstShownString))
+            {
+                if (PlayerPrefsHandler.IsGameLaunch)
+                {
+                    PlayerPrefsHandler.IsGameLaunch = false;
+                    SharedUI.Instance.SubMenu(PlayerPrefsHandler.RemoveAds);
+                }
+            }
+            else
+            {
+                PlayerPrefsHandler.IsGameLaunch = false;
+                PlayerPrefsHandler.SetBool(PlayerPrefsHandler.RemoveAdsFirstShownString, true);
+                SharedUI.Instance.SubMenu(PlayerPrefsHandler.RemoveAds);
+            }
+        }
+    }
     private void CurrentLevelSettings()
     {
         var path = LevelsPath + PlayerPrefsHandler.CurrentLevelNo;
         //Debug.Log(GameManager.Instance.ActivityFlag+ " CurrentLevelSettings " + GameManager.Instance.CurrentActivity);
-        if (PlayerPrefsHandler.ShowMiniGame)
+        if (!GameManager.Instance.MiniGameFlag)
         {
-            if (!GameManager.Instance.MiniGameFlag)
+            if (PlayerPrefsHandler.IsMiniGameTime())
             {
-                if (PlayerPrefsHandler.IsMiniGameTime())
-                {
-                    GameManager.Instance.MiniGameFlag = true;
-                    _gamePlayState = GamePlayState.MiniGame;
-                    path = MiniGamesPath + PlayerPrefsHandler.CurrentMiniGameNo;
-                    var mini = Instantiate((GameObject) Resources.Load(path));
-                    currenMiniGame = mini.GetComponent<MiniGame>();
-                    environmentManager.SetEnvironment(currenMiniGame.GetEnvironment());
-                    currenMiniGame.StartMiniGame();
-                    mainCamera.SetActive(false);
-                    Invoke(nameof(LevelStart), 0.1f);
-                    return;
-                }
+                GameManager.Instance.MiniGameFlag = true;
+                _gamePlayState = GamePlayState.MiniGame;
+                path = MiniGamesPath + PlayerPrefsHandler.CurrentMiniGameNo;
+                var mini = Instantiate((GameObject) Resources.Load(path));
+                currenMiniGame = mini.GetComponent<MiniGame>();
+                environmentManager.SetEnvironment(currenMiniGame.GetEnvironment());
+                currenMiniGame.StartMiniGame();
+                mainCamera.SetActive(false);
+                Invoke(nameof(LevelStart), 0.1f);
+                return;
             }
-            GameManager.Instance.MiniGameFlag = false;
         }
+        GameManager.Instance.MiniGameFlag = false;
         if (!GameManager.Instance.ActivityFlag)
         {
             if (PlayerPrefsHandler.IsActivityTime())
@@ -129,6 +148,9 @@ public class GamePlayManager : MonoBehaviour
         SendAppMetricaProgressionEvent(GAProgressionStatus.Complete);
         if (_gamePlayState == GamePlayState.MiniGame)
         {
+            SetNextMiniGame();
+            if(PlayerPrefsHandler.ShowAdOnMiniGame)
+                ShowLevelCompleteAd();
             SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
             return;
         }
@@ -178,6 +200,12 @@ public class GamePlayManager : MonoBehaviour
             if (PlayerPrefsHandler.CurrentLevelNo >= PlayerPrefsHandler.TotalLevels)
                 PlayerPrefsHandler.CurrentLevelNo = 0;
         }
+    }
+    private void SetNextMiniGame()
+    {
+        PlayerPrefsHandler.CurrentMiniGameNo++;
+        if (PlayerPrefsHandler.CurrentMiniGameNo >= PlayerPrefsHandler.TotalMiniGames)
+            PlayerPrefsHandler.CurrentMiniGameNo = 0;
     }
     public static void ShowLevelCompleteAd()
     {

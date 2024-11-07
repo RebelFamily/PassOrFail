@@ -7,12 +7,15 @@ public class EnvironmentManager : MonoBehaviour
         ClassRoomWithTable,
         ClassRoomWithoutTable,
         Corridor,
-        SportsArea
+        SportsArea,
+        None
     }
     [SerializeField] private Inventory inventory;
     [SerializeField] private GameObject classRoom, corridor, lecturerTable, sportsArea;
+    [SerializeField] private GameObject[] classRoomDecorations;
     public void SetEnvironment(Environment environmentType)
     {
+        Debug.Log("environmentType: " + environmentType);
         switch (environmentType)
         {
             case Environment.ClassRoomWithTable:
@@ -20,12 +23,14 @@ public class EnvironmentManager : MonoBehaviour
                 classRoom.SetActive(true);
                 corridor.SetActive(false);
                 sportsArea.SetActive(false);
+                ShowClassRoomDecorations();
                 break;
             case Environment.ClassRoomWithoutTable:
                 lecturerTable.SetActive(false);
                 classRoom.SetActive(true);
                 corridor.SetActive(false);
                 sportsArea.SetActive(false);
+                ShowClassRoomDecorations();
                 break;
             case Environment.Corridor:
                 classRoom.SetActive(false);
@@ -38,11 +43,27 @@ public class EnvironmentManager : MonoBehaviour
                 sportsArea.SetActive(true);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(environmentType), environmentType, null);
+                lecturerTable.SetActive(false);
+                classRoom.SetActive(false);
+                corridor.SetActive(false);
+                sportsArea.SetActive(false);
+                break;
         }
     }
     public Inventory GetInventory()
     {
         return inventory;
+    }
+    private void ShowClassRoomDecorations()
+    {
+        var totalDecorations = classRoomDecorations.Length;
+        for (var i = 0; i < totalDecorations; i++)
+        {
+            classRoomDecorations[i].SetActive(false);
+        }
+        classRoomDecorations[PlayerPrefsHandler.ClassDecorationsIndex].SetActive(true);
+        PlayerPrefsHandler.ClassDecorationsIndex++;
+        if (PlayerPrefsHandler.ClassDecorationsIndex >= totalDecorations)
+            PlayerPrefsHandler.ClassDecorationsIndex = 0;
     }
 }

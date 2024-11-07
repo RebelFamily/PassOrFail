@@ -3,20 +3,20 @@ using UnityEngine;
 using UnityEngine.Events;
 public class LevelBasedParams : MonoBehaviour
 {
-    private bool inProgressFlag = false;
-    private int counter = 0;
+    private bool _inProgressFlag = false;
+    private int _counter = 0;
     public enum ActivityType
     {
         QuestionAnswer,
         AttendanceMarking,
-        CheckingCloths,
-        GeneralKnowledge,
         LibraryDrill,
         RecessRound,
         SchoolDance,
         OralQuiz,
         UniformChecking,
-        BadgesDistribution
+        BadgesDistribution,
+        ExerciseActivity,
+        PianoLesson
     }
     [SerializeField] private EnvironmentManager.Environment environment;
     [SerializeField] private ActivityType activityType;
@@ -27,6 +27,9 @@ public class LevelBasedParams : MonoBehaviour
     private OralQuiz _oralQuiz;
     private UniformChecking _uniformChecking;
     private BadgesDistribution _badgesDistribution;
+    private ExerciseActivity _exerciseActivity;
+    private AttendanceMarking _attendanceMarking;
+    private PianoLesson _pianoLesson;
     private readonly UnityEvent _onPass = new UnityEvent();
     private readonly UnityEvent _onFail = new UnityEvent();
 
@@ -36,21 +39,22 @@ public class LevelBasedParams : MonoBehaviour
         switch (activityType)
         {
             case ActivityType.QuestionAnswer:
-                inProgressFlag = true;
+                _inProgressFlag = true;
                 SharedUI.Instance.gamePlayUIManager.controls.EnableQuestionAnswerUI(true);
                 SetQuestionAnswer();
                 if (_questionAnswer.IsSaveTheEgg())
                 {
-                    SharedUI.Instance.gamePlayUIManager.controls.SetProtectionText(_questionAnswer.GetBreakableObjectName());
+                    SharedUI.Instance.gamePlayUIManager.controls.SetProtectionText(_questionAnswer.GetMainInstructions(), _questionAnswer.GetDescription0(), 
+                        _questionAnswer.GetDescription1());
                     SharedUI.Instance.gamePlayUIManager.controls.EnableProtectTheEggUI();
                 }
                 _questionAnswer.SetCameraView();
                 break;
             case ActivityType.AttendanceMarking:
-                break;
-            case ActivityType.CheckingCloths:
-                break;
-            case ActivityType.GeneralKnowledge:
+                if (_attendanceMarking == null)
+                    _attendanceMarking = GetComponent<AttendanceMarking>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
             case ActivityType.LibraryDrill:
                 if (_libraryDiscipline == null)
@@ -87,6 +91,20 @@ public class LevelBasedParams : MonoBehaviour
             case ActivityType.BadgesDistribution:
                 if (_badgesDistribution == null)
                     _badgesDistribution = GetComponent<BadgesDistribution>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.ExerciseActivity:
+                if (_exerciseActivity == null)
+                    _exerciseActivity = GetComponent<ExerciseActivity>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
+                SharedUI.Instance.gamePlayUIManager.controls.EnableInfinityHandUI(false);
+                SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[7]);
+                GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                break;
+            case ActivityType.PianoLesson:
+                if (_pianoLesson == null)
+                    _pianoLesson = GetComponent<PianoLesson>();
                 SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
                 break;
@@ -130,36 +148,36 @@ public class LevelBasedParams : MonoBehaviour
     }
     public void Pass()
     {
-        if(inProgressFlag) return;
-        inProgressFlag = true;
+        if(_inProgressFlag) return;
+        _inProgressFlag = true;
         //Debug.Log("Pass has been called");
-        counter++;
+        _counter++;
         SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
         _onPass?.Invoke();
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         if(!_questionAnswer.IsStudentClaiming()) 
             Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void Fail()
     {
-        if(inProgressFlag) return;
-        inProgressFlag = true;
+        if(_inProgressFlag) return;
+        _inProgressFlag = true;
         //Debug.Log("Fail has been called");
-        counter++;
+        _counter++;
         SharedUI.Instance.gamePlayUIManager.controls.SetProgress();
         _onFail?.Invoke();
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         if(!_questionAnswer.IsStudentClaiming()) 
             Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void AskQuestionAfterClaim()
     {
-        if (counter >= 3) return;
+        if (_counter >= 3) return;
         Invoke(nameof(SetQuestionAnswer), 2f);
     }
     public void DeactivateInProgressFlag()
     {
-        inProgressFlag = false;
+        _inProgressFlag = false;
         SetupTutorial();
     }
     public void StartActivity()
@@ -176,6 +194,12 @@ public class LevelBasedParams : MonoBehaviour
             _uniformChecking.StartActivity();
         else if(_badgesDistribution)
             _badgesDistribution.StartActivity();
+        else if(_exerciseActivity)
+            _exerciseActivity.StartActivity();
+        else if(_attendanceMarking)
+            _attendanceMarking.StartActivity();
+        else if (_pianoLesson)
+            _pianoLesson.StartActivity();
     }
     public void TeacherGoesBackToNormal(string action)
     {
