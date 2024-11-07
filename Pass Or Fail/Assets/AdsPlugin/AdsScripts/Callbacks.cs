@@ -25,6 +25,15 @@ public class Callbacks : MonoBehaviour {
     public static event RewardMistakeCorrection OnRewardMistakeCorrection;
     public delegate void BuyInAppProduct(InAppProduct.InAppProductType productType);
     public static event BuyInAppProduct OnInAppProductPurchased;
+    
+    public delegate void RewardClassroomUpgrade();
+    public delegate void RewardGroundCash();
+    public delegate void RewardRide(RewardType rideType);
+    public static event RewardClassroomUpgrade OnRewardClassroomUpgrade;
+    public static event RewardRide OnRewardARide;
+    public static event RewardGroundCash OnRewardGroundCashInMeta;
+    
+    
     private const string SdkName = "MaxAdmob";
     public static RewardType rewardType;
     private void Start () 
@@ -91,6 +100,26 @@ public class Callbacks : MonoBehaviour {
                 GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
                 FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
                 break;
+            case RewardType.RewardClassroomUpgradeInMeta:
+                OnRewardClassroomUpgrade?.Invoke();
+                GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
+                FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
+                break;
+            case RewardType.RewardUniCycle:
+                OnRewardARide?.Invoke(rewardType);
+                GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
+                FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
+                break;
+            case RewardType.RewardSkateboard:
+                OnRewardARide?.Invoke(rewardType);
+                GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
+                FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
+                break;
+            case RewardType.GroundCashInMeta:
+                OnRewardGroundCashInMeta?.Invoke();
+                GameAnalytics.NewAdEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, SdkName, rewardType.ToString());
+                FirebaseManager.Instance.ReportEvent(GAAdAction.RewardReceived + "_" + rewardType);
+                break;
         }
     }
     public enum RewardType
@@ -105,7 +134,11 @@ public class Callbacks : MonoBehaviour {
         RewardStreak,
         RewardSpray,
         RewardSchoolBuilding,
-        MistakeCorrection
+        MistakeCorrection,
+        RewardClassroomUpgradeInMeta,
+        RewardUniCycle,
+        RewardSkateboard,
+        GroundCashInMeta
     }
     public static void OnInAppProductPurchasing(InAppProduct.InAppProductType productType)
     {
