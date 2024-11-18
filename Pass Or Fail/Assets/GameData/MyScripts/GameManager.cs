@@ -1,7 +1,9 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool isTesting = true;
+    [ShowIf("isTesting")]
     [SerializeField, Range(0, PlayerPrefsHandler.TotalLevels - 1)] private int levelNo;
     public bool ActivityFlag { get; set; } = false;
     public bool MiniGameFlag { get; set; } = false;

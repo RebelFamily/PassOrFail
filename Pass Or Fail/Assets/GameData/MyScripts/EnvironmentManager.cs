@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 public class EnvironmentManager : MonoBehaviour
 {
@@ -10,12 +11,14 @@ public class EnvironmentManager : MonoBehaviour
         SportsArea,
         None
     }
-    [SerializeField] private Inventory inventory;
+    //[SerializeField] private Inventory inventory;
+    [TabGroup("MainEnvironments")]
     [SerializeField] private GameObject classRoom, corridor, lecturerTable, sportsArea;
+    [TabGroup("Decorations")]
     [SerializeField] private GameObject[] classRoomDecorations;
     public void SetEnvironment(Environment environmentType)
     {
-        Debug.Log("environmentType: " + environmentType);
+        //Debug.Log("environmentType: " + environmentType);
         switch (environmentType)
         {
             case Environment.ClassRoomWithTable:
@@ -50,10 +53,10 @@ public class EnvironmentManager : MonoBehaviour
                 break;
         }
     }
-    public Inventory GetInventory()
+    /*public Inventory GetInventory()
     {
         return inventory;
-    }
+    }*/
     private void ShowClassRoomDecorations()
     {
         var totalDecorations = classRoomDecorations.Length;

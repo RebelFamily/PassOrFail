@@ -1,6 +1,9 @@
+using System;
 using DG.Tweening;
 using PassOrFail.MiniGames;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 public class Student : MonoBehaviour
 {
     [SerializeField] private RuntimeAnimatorController animatorController;
@@ -13,20 +16,48 @@ public class Student : MonoBehaviour
     private float _movementDuration = 1f;
     private Gender _gender;
     private Sprite _render;
-    [SerializeField] private bool instantiateCharacters = true, setAnimationEvents = true;
+    private int _index = 0;
+    [SerializeField] private bool instantiateCharacters = true, setAnimationEvents = true, instantiatedByHandler = true;
     private static readonly int Happy = Animator.StringToHash("Happy");
     private static readonly int MotivationLevel = Animator.StringToHash("MotivationLevel");
     private static readonly int Claim = Animator.StringToHash("Claim");
+    private const string PathString = "Characters/Default/";
+
     private void Start()
+    {
+        if(instantiatedByHandler) return;
+        if (instantiateCharacters)
+        {
+            var genderNo = Random.Range(0, 2);
+            _gender = genderNo > 0 ? Gender.MaleStudent : Gender.FemaleStudent;
+            _index = Random.Range(0, 4);
+            var path = PathString + _gender + _index;
+            //var character = Instantiate((GameObject)Resources.Load(path), transform);
+            var character = Instantiate(Resources.Load<GameObject>(path), transform);
+            //var character = studentsHandler.GetCharacter(gender, index);
+            animator = character.GetComponent<Animator>();
+            animator.runtimeAnimatorController = animatorController;
+            expressions = animator.GetComponent<Expressions>();
+        }
+        if (setAnimationEvents)
+        {
+            animator.gameObject.AddComponent<UnityAnimationEventTrigger>();
+            animator.GetComponent<UnityAnimationEventTrigger>().RegisterAnimationEvent(0);
+        }
+        animator.gameObject.SetActive(true);
+        expressions.ShowRandomExpression();
+    }
+
+    public void SetStudent(Gender gender, int characterIndex)
     {
         if (instantiateCharacters)
         {
-            var index = 0;
-            _gender = Gender.FemaleStudent;
-            var genderNo = Random.Range(0, 2);
-            _gender = genderNo > 0 ? Gender.MaleStudent : Gender.FemaleStudent;
-            index = Random.Range(0, 4);
-            var path = "Characters/Default/" + _gender + index;
+            _gender = gender;
+            _index = characterIndex;
+            //var genderNo = Random.Range(0, 2);
+            //_gender = genderNo > 0 ? Gender.MaleStudent : Gender.FemaleStudent;
+            //_index = Random.Range(0, 4);
+            var path = PathString + _gender + _index;
             //var character = Instantiate((GameObject)Resources.Load(path), transform);
             var character = Instantiate(Resources.Load<GameObject>(path), transform);
             //var character = studentsHandler.GetCharacter(gender, index);

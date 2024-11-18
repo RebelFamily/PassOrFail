@@ -2,10 +2,14 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Sirenix.OdinInspector;
 [System.Serializable]
 public class AllMenus
 {
+    [Required]
     public string name;
+    [Space]
+    [SceneObjectsOnly, Required]
     public GameObject menu;
 }
 public class SharedUI : MonoBehaviour
@@ -17,7 +21,7 @@ public class SharedUI : MonoBehaviour
     [SerializeField] private AllMenus[] allMenus;
     [SerializeField] private AllMenus[] subMenus;
     [SerializeField] private AllMenus[] specialMenus;
-    private int sceneIndexToOpen = 1;
+    private int _sceneIndexToOpen = 1;
     [Header("Links")]
     public string privacyPolicyLink = "https://worldofanimal1234.blogspot.com/2022/02/world-of-animals.html";
     public string moreGamesLink = "https://play.google.com/store/apps/dev?id=6407456443209899378";
@@ -217,26 +221,26 @@ public class SharedUI : MonoBehaviour
     }
     public void SetNextSceneIndex(int sceneIndex)
     {
-        sceneIndexToOpen = sceneIndex;
+        _sceneIndexToOpen = sceneIndex;
     }
     public void SetNextSceneIndex(string sceneName)
     {
         switch (sceneName)
         {
             case PlayerPrefsHandler.Splash:
-                sceneIndexToOpen = 0;
+                _sceneIndexToOpen = 0;
                 break;
             case PlayerPrefsHandler.GamePlay:
-                sceneIndexToOpen = 1;
+                _sceneIndexToOpen = 1;
                 break;
             case PlayerPrefsHandler.Meta:
-                sceneIndexToOpen = 2;
+                _sceneIndexToOpen = 2;
                 break;
         }
     }
     private int GetNextSceneIndex()
     {
-        return sceneIndexToOpen;
+        return _sceneIndexToOpen;
     }
     public void SwitchScene()
     {

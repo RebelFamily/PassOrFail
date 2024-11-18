@@ -1,8 +1,12 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 public class MiniGame : MonoBehaviour
 {
+    [EnumPaging]
     [SerializeField] private EnvironmentManager.Environment environment;
+    [EnumPaging]
     [SerializeField] private MiniGameNames miniGameName;
+    [Required]
     [SerializeField] private GameObject miniGame;
     private IMiniGame _iMiniGame;
     private IMiniGameInput _miniGameInput;

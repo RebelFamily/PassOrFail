@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 public class QuestionAnswer : MonoBehaviour
@@ -14,12 +15,19 @@ public class QuestionAnswer : MonoBehaviour
         SaveTheEggs
     }
     [SerializeField] private StudentsHandler studentsHandler;
+    [EnumPaging]
     [SerializeField] private QuestionsType questionsType;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private SpriteRenderer questionSpriteRenderer;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private ParticleSystem questionParticles;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private Questions simpleQuestions;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private Animator teacherIkAnimator;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private SpriteRenderer statusSpriteRenderer;
+    [ShowIf("questionsType", QuestionsType.SimpleQuestions)]
     [SerializeField] private Sprite passStatusSprite, failStatusSprite;
     [SerializeField] private Transform cameraPosition;
     private readonly bool[] _resultFlags = {false, false, false};

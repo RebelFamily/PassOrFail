@@ -24,11 +24,11 @@ public class ClassRoomCustomization : MonoBehaviour
         Walls,
         Floor
     }
-    private void Start()
+    /*private void Start()
     {
         _inventory = GamePlayManager.Instance ? GamePlayManager.Instance.environmentManager.GetInventory() : SharedUI.Instance.metaUIManager.
             GetMenu(PlayerPrefsHandler.CharactersCustomization).GetComponent<Customization>().GetInventory();
-    }
+    }*/
     public void ApplyProp(Inventory.Item prop)
     {
         if(prop == null) return;

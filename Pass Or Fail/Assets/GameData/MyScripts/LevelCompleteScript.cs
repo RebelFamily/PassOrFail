@@ -1,16 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
 public class LevelCompleteScript : MonoBehaviour
 {
+    [BoxGroup("Simple GameObjects")]
     [SerializeField] private GameObject container0, container1;
+    [BoxGroup("Simple GameObjects")]
+    [SerializeField] private GameObject metaBtnLock;
+    [BoxGroup("UI References")]
     [SerializeField] private Image gradingStatusImage;
+    [BoxGroup("UI References")]
     [SerializeField] private Text levelPaymentText;
+    [BoxGroup("UI References")]
     [SerializeField] private Image[] studentsImages;
+    [BoxGroup("Sprites")]
     [SerializeField] private Sprite tick, cross, aPlusGrade, bGrade, cGrade, fGrade;
     private const string Status = "Status";
     private void Start()
     {
+        IsMetaUnlocked();
         var gradingValue = GamePlayManager.Instance.currentLevel.GetGradingValue();
         gradingStatusImage.sprite = GetGradingStatus(gradingValue);
         levelPaymentText.text = GamePlayManager.Instance.LevelEndRewardValue.ToString();
@@ -66,5 +75,9 @@ public class LevelCompleteScript : MonoBehaviour
             studentsImages[i].sprite = renders[i];
             studentsImages[i].transform.Find(Status).GetComponent<Image>().sprite = results[i] ? tick : cross;
         }
+    }
+    private void IsMetaUnlocked()
+    {
+        metaBtnLock.SetActive(PlayerPrefsHandler.LevelCounter < PlayerPrefsHandler.LevelNoToShowMeta);
     }
 }

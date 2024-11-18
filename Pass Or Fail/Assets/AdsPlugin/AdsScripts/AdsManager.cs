@@ -31,7 +31,7 @@ public class AdsManager : MonoBehaviour
             RegisterPaidAdEvent();
             InitializeInterstitialAd();
             InitializeRewardedAds();
-            //InitializeBannerAds();
+            InitializeBannerAds();
             InitializeMRecAds();
         };
         MaxSdk.SetSdkKey(maxSdkKey);
@@ -199,26 +199,12 @@ public class AdsManager : MonoBehaviour
 
     #region Banner Ad Methods
 
-    public void InitializeBannerAds()
+    private void InitializeBannerAds()
     {
         //Debug.Log("InitializeSimpleBannerAds Max");
         MaxSdk.CreateBanner(bannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
         MaxSdk.SetBannerBackgroundColor(bannerAdUnitId, new Color(0, 0, 0, 1));
-        
-        if(_isBannerInitialized) return;
-        _isBannerInitialized = true;
-        
-        MaxSdkCallbacks.Banner.OnAdLoadedEvent      += OnBannerAdLoadedEvent;
-        MaxSdkCallbacks.Banner.OnAdLoadFailedEvent  += OnBannerAdLoadFailedEvent;
-        MaxSdkCallbacks.Banner.OnAdClickedEvent     += OnBannerAdClickedEvent;
-        MaxSdkCallbacks.Banner.OnAdExpandedEvent    += OnBannerAdExpandedEvent;
-        MaxSdkCallbacks.Banner.OnAdCollapsedEvent   += OnBannerAdCollapsedEvent;
     }
-    /*public void LoadBanner()
-    {
-        Debug.Log("Loading Max Simple Banner...");
-        MaxSdk.LoadBanner(simpleBannerAdUnitId);
-    }*/
     public void ShowBanner()
     {
         MaxSdk.ShowBanner(bannerAdUnitId);
@@ -231,27 +217,6 @@ public class AdsManager : MonoBehaviour
     {
         _isBannerReady = false;
         MaxSdk.DestroyBanner(bannerAdUnitId);
-    }
-    public bool IsBannerAdAvailable()
-    {
-        return _isBannerReady;
-    }
-    private void OnBannerAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-    {
-        Debug.Log("Max simple banner is loaded");
-        _isBannerReady = true;
-    }
-    private void OnBannerAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
-    {
-        Debug.Log("Max simple banner is failed");
-        _isBannerReady = false;
-    }
-    private void OnBannerAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) {}
-    private void OnBannerAdExpandedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)  {}
-    private void OnBannerAdCollapsedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-    {
-        Debug.Log("Max simple banner is collapsed");
-        _isBannerReady = false;
     }
     #endregion
 

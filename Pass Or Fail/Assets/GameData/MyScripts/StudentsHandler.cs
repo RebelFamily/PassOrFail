@@ -1,13 +1,21 @@
-using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 public class StudentsHandler : MonoBehaviour
 {
     [SerializeField] private List<Student> students;
     [SerializeField] private Transform[] studentPositions;
     [SerializeField] private Transform exitPosition;
-    [SerializeField] private Character[] femaleCharacters, maleCharacters;
-    private readonly List<Sprite> _studentsRenders = new List<Sprite>();
+    [ShowInInspector] private List<int> _selectedStudentsIndex = new ();
+    [ShowInInspector] private List<Gender> _selectedStudentsGender = new ();
+    private readonly List<Sprite> _studentsRenders = new ();
+    private void Start()
+    {
+        for (var i = 0; i < students.Count; i++)
+        {
+            SelectStudents(students[i]);
+        }
+    }
     public void ExitStudent(Expressions.ExpressionType emotion)
     {
         if(students.Count == 0) return;
@@ -40,17 +48,23 @@ public class StudentsHandler : MonoBehaviour
     {
         return _studentsRenders.ToArray();
     }
-    public Character GetCharacter(Gender gender, int index)
-    {
-        return gender == Gender.MaleStudent ? maleCharacters[index] : femaleCharacters[index];
-    }
     public Student[] GetStudents()
     {
         return students.ToArray();
     }
-    [Serializable] public class Character
+    private void SelectStudents(Student student)
     {
-        public GameObject characterObject;
-        public Sprite characterRender;
+        var genderNo = Random.Range(0, 2);
+        var index = Random.Range(0, 4);
+        var gender = genderNo == 0 ? Gender.FemaleStudent : Gender.MaleStudent;
+        while (_selectedStudentsIndex.Contains(index) && _selectedStudentsGender.Contains(gender))
+        {
+            genderNo = Random.Range(0, 2);
+            index = Random.Range(0, 4);
+            gender = genderNo == 0 ? Gender.FemaleStudent : Gender.MaleStudent;
+        }
+        _selectedStudentsIndex.Add(index);
+        _selectedStudentsGender.Add(gender);
+        student.SetStudent(gender, index);
     }
 }

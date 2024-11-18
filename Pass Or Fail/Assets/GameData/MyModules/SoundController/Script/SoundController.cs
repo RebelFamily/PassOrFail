@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Sirenix.OdinInspector;
 public class SoundController : MonoBehaviour
 {
     [HideInInspector] public VibrationManager vibrationManager;
@@ -11,8 +12,13 @@ public class SoundController : MonoBehaviour
         DontDestroyOnLoad (gameObject);
         vibrationManager = GetComponent<VibrationManager>();
     }
+    [TabGroup("AudioClips")]
+    [AssetsOnly]
+    [InlineEditor(InlineEditorModes.SmallPreview)]
     [SerializeField] private AudioClip btnClickSound, metaBackgroundMusic, gamePlayBackgroundMusic, buySound,
         gameCompleteSound, winSound, correctGradingSound, wrongGradingSound, danceMusic, fillingSound;
+    [TabGroup("AudioSources"), Required]
+    [SceneObjectsOnly]
     [SerializeField] private AudioSource soundAudioSource, bgAudioSource, specialBgAudioSource;
     public void PlayMetaBackgroundMusic()
     {

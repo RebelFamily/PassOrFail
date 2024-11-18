@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 public class LevelBasedParams : MonoBehaviour
@@ -18,7 +19,9 @@ public class LevelBasedParams : MonoBehaviour
         ExerciseActivity,
         PianoLesson
     }
+    [EnumPaging]
     [SerializeField] private EnvironmentManager.Environment environment;
+    [EnumPaging]
     [SerializeField] private ActivityType activityType;
     private QuestionAnswer _questionAnswer;
     private LibraryDiscipline _libraryDiscipline;

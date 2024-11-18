@@ -1,11 +1,19 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 public class Controls : MonoBehaviour
 {
-    [SerializeField] private GameObject gradingButtons, streakCounter, mistakeUI, crossHair, tapToPlay;
-    [SerializeField] private GameObject activityUI, touchPad, reportCard, progressBar, answerImage, timeBar;
-    [SerializeField] private GameObject blinkAlert, perfects, warnings, shouts, protectTheEgg;
+    [BoxGroup("Intractable UI"), Required]
+    [SerializeField] private GameObject gradingButtons, touchPad, mistakeUI, crossHair, tapToPlay, reportCard;
+    [BoxGroup("Non Interactable UI"), Required]
+    [SerializeField] private GameObject answerImage, timeBar, streakCounter, protectTheEgg;
+    [BoxGroup("Mix UI"), Required]
+    [SerializeField] private GameObject activityUI, progressBar;
+    [BoxGroup("Effects UI"), Required]
+    [SerializeField] private GameObject blinkAlert, perfects, warnings, shouts;
+    [BoxGroup("Non Interactable UI"), Required]
     [SerializeField] private RectTransform tutorialHand;
+    [BoxGroup("Sprites")]
     [SerializeField] private Sprite schoolDanceInstructions, libraryInstructions, gymClassInstructions;
     private const string Filler = "Filler", ActivityContainer = "Container", StreakText = "StreakText", AdButton = "AdButton", PassAlert = "PassAlert",
         FailAlert = "FailAlert", EggProtectionText = "ProtectionText", InfinityHandPath = "Container/InfinityIconBg",

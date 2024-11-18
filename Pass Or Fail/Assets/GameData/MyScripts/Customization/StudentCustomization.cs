@@ -4,21 +4,20 @@ public class StudentCustomization : MonoBehaviour
 {
     [SerializeField] private int studentId = 0;
     [SerializeField] private Transform propParent;
-    private GameObject currentProp;
+    private GameObject _currentProp;
     [SerializeField] private PropPosition[] propPositions;
     [SerializeField] private bool inCustomization = false;
-    private Inventory inventory;
-    private Animator animator;
+    private Inventory _inventory;
+    private Animator _animator;
     private static readonly int Apply = Animator.StringToHash("Apply");
-
-    private void Start()
+    /*private void Start()
     {
         if (!GamePlayManager.Instance) return;
-        inventory = GamePlayManager.Instance.environmentManager.GetInventory();
+        _inventory = GamePlayManager.Instance.environmentManager.GetInventory();
         var propNo = PlayerPrefsHandler.GetStudentCurrentProp(studentId);
         if(propNo == -1) return;
-        ApplyProp(inventory.GetLastStudentProp(propNo));
-    }
+        ApplyProp(_inventory.GetLastStudentProp(propNo));
+    }*/
     private GameObject GetPropIfExists(Inventory.Item prop)
     {
         if (propParent.childCount == 0) return null;
@@ -34,29 +33,29 @@ public class StudentCustomization : MonoBehaviour
     {
         if (prop == null)
         {
-            if(currentProp) currentProp.SetActive(false);
-            currentProp = null;
+            if(_currentProp) _currentProp.SetActive(false);
+            _currentProp = null;
             return;
         }
-        if(currentProp) currentProp.SetActive(false);
+        if(_currentProp) _currentProp.SetActive(false);
         var tempProp = GetPropIfExists(prop);
         if (tempProp)
         {
-            currentProp = tempProp;
-            currentProp.SetActive(true);
+            _currentProp = tempProp;
+            _currentProp.SetActive(true);
         }
         else
         {
-            currentProp = Instantiate(prop.itemPrefab, propParent);
+            _currentProp = Instantiate(prop.itemPrefab, propParent);
         }
         var propPosition = propPositions[prop.itemId];
-        currentProp.transform.localPosition = propPosition.pos;
-        currentProp.transform.localScale = propPosition.size;
+        _currentProp.transform.localPosition = propPosition.pos;
+        _currentProp.transform.localScale = propPosition.size;
         if (inCustomization)
         {
             SoundController.Instance.PlayBtnClickSound();
-            if (!animator) animator = GetComponent<Animator>();
-            animator.SetTrigger(Apply);
+            if (!_animator) _animator = GetComponent<Animator>();
+            _animator.SetTrigger(Apply);
         }
     }
     [Serializable]

@@ -34,12 +34,12 @@ public class UnityAnimationEventTrigger : MonoBehaviour
         var newEvent = new UnityEvent();
         animationEvents.Add(newEvent);
         //Debug.Log("RegisterAnimationEvent: " + index);
-        var addedEvent = animationEvents[animationEvents.Count - 1];
+        var addedEvent = animationEvents[^1];
         addedEvent.AddListener(Callback);
     }
     private void Callback()
     {
-        Debug.Log("Callback");
+        //Debug.Log("Callback");
         transform.parent.GetComponent<Student>().MoveStudent(true);
     }
 }

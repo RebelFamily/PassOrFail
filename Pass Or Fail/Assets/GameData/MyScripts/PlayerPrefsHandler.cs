@@ -102,7 +102,8 @@ public class PlayerPrefsHandler : MonoBehaviour
     }
     public static string FirstAdType = AdType.Simple.ToString(), InterAdType = AdType.Simple.ToString();
     public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoForRatingString = "LevelNoForRating", 
-        InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType", ShowAdOnMiniGameString = "ShowAdOnMiniGame";
+        LevelNoToShowMetaString = "LevelNoToShowMeta", InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType", 
+        ShowAdOnMiniGameString = "ShowAdOnMiniGame";
     public static float FirstAdInterval = 30, InterAdInterval = 30;
     public static int LevelNoToShowMeta = 15, LevelNoForRating = 20;
     public static bool ShowAdOnMiniGame = false;

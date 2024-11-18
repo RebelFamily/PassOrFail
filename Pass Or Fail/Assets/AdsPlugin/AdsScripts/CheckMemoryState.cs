@@ -11,11 +11,11 @@ public class CheckMemoryState : MonoBehaviour
             Instance = this;
     }
    public void CheckMemory() {
-        _memorystate = memoryAdvisor.GetMemoryState(true);
-        //Debug.Log(memorystate + " CurrentMemoryState");
+        //_memorystate = memoryAdvisor.GetMemoryState(true);
     }
    public bool IsEnoughMemory()
    {
-       return _memorystate != MemoryAdvisor.MemoryState.Critical;
+       return true;
+       //return _memorystate != MemoryAdvisor.MemoryState.Critical;
    }
 }

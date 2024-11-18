@@ -103,10 +103,7 @@ public class AdsCaller : MonoBehaviour
     }
     public void ShowBanner()
     {
-        if(AdsManager.Instance.IsBannerAdAvailable())
-            AdsManager.Instance.ShowBanner();
-        else
-            AdsManager.Instance.InitializeBannerAds();
+        AdsManager.Instance.ShowBanner();
     }
     public void HideBanner()
     {

@@ -36,9 +36,10 @@ public class Stack : MonoBehaviour
     {
         book.MoveToStack(transform);
         BookSorting.Instance.CheckIfActivityFinished();
+        BookSorting.Instance.EndTutorial();
     }
     // Method to get the last added book in the stack
-    public Book GetLastAddedBook()
+    private Book GetLastAddedBook()
     {
         if (transform.childCount > 0)
         {

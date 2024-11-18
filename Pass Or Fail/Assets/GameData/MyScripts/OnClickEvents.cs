@@ -28,6 +28,7 @@ public class OnClickEvents : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
 				break;
 			case PlayerPrefsHandler.Home:
+				if (PlayerPrefsHandler.LevelCounter < PlayerPrefsHandler.LevelNoToShowMeta) return;
 				GamePlayManager.Instance.SendProgressionEvent();
 				SharedUI.Instance.SetNextSceneIndex(PlayerPrefsHandler.Meta);
 				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
@@ -71,6 +72,10 @@ public class OnClickEvents : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 				break;
 			case PlayerPrefsHandler.CloseRemoveAds:
 				SharedUI.Instance.CloseSubMenu();
+				break;
+			case PlayerPrefsHandler.GamePlay:
+				SharedUI.Instance.SetNextSceneIndex(PlayerPrefsHandler.GamePlay);
+				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
 				break;
 		}
 	}

@@ -133,8 +133,10 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: dd50f1eb08b785a4f9d472a6ef4329d8, type: 2}
   animator: {fileID: 0}
   expressions: {fileID: 0}
+  isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 0
+  instantiatedByHandler: 0
 --- !u!1 &5115251883575865504
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,8 +216,10 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: f170b7127036aac40a616654fe982b17, type: 2}
   animator: {fileID: 0}
   expressions: {fileID: 0}
+  isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 0
+  instantiatedByHandler: 0
 --- !u!1 &5115251883699645630
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,8 +621,10 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: 419f88f2bd8876e47aa0b3a9755b6a66, type: 2}
   animator: {fileID: 0}
   expressions: {fileID: 0}
+  isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 0
+  instantiatedByHandler: 0
 --- !u!1 &5115251884962015355
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,8 +672,10 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: 43666bbfbab515c4694d8790cb8d2e58, type: 2}
   animator: {fileID: 0}
   expressions: {fileID: 0}
+  isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 0
+  instantiatedByHandler: 0
 --- !u!1 &5115251885003250031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,8 +1617,10 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: 3016e566189c5f441817fa88541a7398, type: 2}
   animator: {fileID: 0}
   expressions: {fileID: 0}
+  isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 0
+  instantiatedByHandler: 0
 --- !u!1 &9136614145602591144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,6 +1631,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1685470873383503669}
   - component: {fileID: 8003163109904910561}
+  - component: {fileID: 451153266736598972}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1705,6 +1716,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &451153266736598972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9136614145602591144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1001 &1336287152099901514
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -36,26 +36,7 @@ public class MemoryAdvisor : MonoBehaviour
     {
         onMemoryStateChanged -= callback;
     }
-
-    /*public static MemoryAdvisor Instance
-    {
-        get
-        {
-            if (sInstance == null)
-            {
-                sInstance = GameObject.FindObjectOfType<MemoryAdvisor>();
-                if (sInstance == null)
-                {
-                    sInstance = new GameObject(MemoryAdvisorString).AddComponent<MemoryAdvisor>();
-                }
-                sInstance.Awake();
-            }
-            return sInstance;
-        }
-    }*/
-
-    private bool isAwakeDone;
-
+    private bool _isAwakeDone;
     private void Awake()
     {
         if (sInstance && sInstance != this)
@@ -63,32 +44,21 @@ public class MemoryAdvisor : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
-        //long maxRam = 3619;
-        //long avlRam = 500;//132;
-        //long usedRamInBytes = maxRam - avlRam;
-        //double availableRamInPercentage = 1d - (double)usedRamInBytes / (double)maxRam;
-        ////Debug.LogError("aaa avl ram= " + availableRamInPercentage);
-
-        if (!isAwakeDone)
+        if (!_isAwakeDone)
         {
             sInstance = this;
-            isAwakeDone = true;
+            _isAwakeDone = true;
             DontDestroyOnLoad(this.gameObject);
         }
-
     }
-
     private void Start()
     {
         CalculateMemoryState();
     }
-
     private void OnRemoteConfigLoad()
     {
         CalculateMemoryState();
     }
-
     private void CalculateMemoryState()
     {
 #if UNITY_EDITOR
@@ -97,10 +67,8 @@ public class MemoryAdvisor : MonoBehaviour
     calculateForAndroid();
 #endif
     }
-
     private AndroidJavaClass clsRuntime;
     private AndroidJavaObject objRuntime;
-
     private AndroidJavaClass unityPlayerClass;
     private AndroidJavaObject currentActivity, systemService, memoryInfo;
     private int _sdkVer = -1;
@@ -108,13 +76,10 @@ public class MemoryAdvisor : MonoBehaviour
     private long _totalMemory;
     private long _freeMemory;
     private long _usedMemory;
-
     private double _availableHeapPercentage;
-
     //------------------- Ram
     private long _maxRam;
     private long _avlRam;
-
     private long _avlRamMb;
     private long _usedRamInBytes;
     //long usedRamInPercentage = usedRamInBytes * 100 / maxRam;
@@ -125,7 +90,6 @@ public class MemoryAdvisor : MonoBehaviour
         FreeMemory = "freeMemory", TotalMem = "totalMem", AvailMem = "availMem";
     private void calculateForAndroid()
     {
-
         if (memoryInfo == null)
         {
             AndroidJavaClass objVersion = new AndroidJavaClass(Str1);
@@ -142,7 +106,6 @@ public class MemoryAdvisor : MonoBehaviour
                 memoryInfo = new AndroidJavaObject(Str4);
             }
         }
-
         if (isSDKMatched(_sdkVer))
         {
             systemService.Call(GetMemoryInfo, memoryInfo);

@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using GameAnalyticsSDK;
+using Sirenix.OdinInspector;
 using UnityEngine;
 public class GamePlayManager : MonoBehaviour
 {
@@ -8,14 +8,15 @@ public class GamePlayManager : MonoBehaviour
     public bool gameStartFlag = false, gamePauseFlag = false, gameOverFlag = false, gameCompleteFlag = false, gameContinueFlag = false;
     [ReadOnly] public EnvironmentManager environmentManager;
     [ReadOnly] public LevelBasedParams currentLevel;
-    [ReadOnly] public MiniGame currenMiniGame;
+    [ReadOnly] public MiniGame currentMiniGame;
+    [Required]
     public GameObject mainCamera;
     public bool AskFixedQuestions { get; set; } = true;
     public int LevelEndRewardValue { get; set; } = 100;
     public int LastStreakValue { get; set; } = 0;
     public bool MiniGameFlag { get; set; } = false;
     private GamePlayState _gamePlayState;
-    public string CurrentActivity { get; private set; } = PlayerPrefsHandler.ActivitiesNames[0];
+    private string CurrentActivity { get; set; } = PlayerPrefsHandler.ActivitiesNames[0];
     private const string LevelsPath = "Levels/Level", ActivitiesPath = "Activities/", BeforeAdString = "BeforeAd", AfterAdString = "AfterAd",
         LevelString = "Level", UnderScoreString = "_", MiniGamesPath = "MiniGames/MiniGame", MiniGameString = "MiniGame";
     private enum GamePlayState
@@ -36,6 +37,7 @@ public class GamePlayManager : MonoBehaviour
     private void Start()
     {
         SoundController.Instance.PlayGamePlayBackgroundMusic();
+        SharedUI.Instance.OpenSpecialMenu(PlayerPrefsHandler.CurrencyCounter);
         ShowRemoveAds();
         CurrentLevelSettings();
     }
@@ -106,9 +108,9 @@ public class GamePlayManager : MonoBehaviour
                 _gamePlayState = GamePlayState.MiniGame;
                 path = MiniGamesPath + PlayerPrefsHandler.CurrentMiniGameNo;
                 var mini = Instantiate((GameObject) Resources.Load(path));
-                currenMiniGame = mini.GetComponent<MiniGame>();
-                environmentManager.SetEnvironment(currenMiniGame.GetEnvironment());
-                currenMiniGame.StartMiniGame();
+                currentMiniGame = mini.GetComponent<MiniGame>();
+                environmentManager.SetEnvironment(currentMiniGame.GetEnvironment());
+                currentMiniGame.StartMiniGame();
                 mainCamera.SetActive(false);
                 Invoke(nameof(LevelStart), 0.1f);
                 return;

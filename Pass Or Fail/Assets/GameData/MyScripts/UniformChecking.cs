@@ -80,9 +80,13 @@ public class UniformChecking : MonoBehaviour
     private void IsActivityEnds()
     {
         _uniformIndex++;
-        canvas.SetActive(true);
+        Invoke(nameof(EnableCanvas), 0.5f);
         if(_uniformIndex >= 3)
-            EndActivity();
+            Invoke(nameof(EndActivity), 0.5f);
+    }
+    private void EnableCanvas()
+    {
+        canvas.SetActive(true);
     }
     private void ShowGoodEffect()
     {
