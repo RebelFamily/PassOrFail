@@ -5,8 +5,6 @@
 
 #import "MAUnityAdManager.h"
 
-#define VERSION @"6.5.2"
-
 #define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
 #define IS_VERTICAL_BANNER_POSITION(_POS) ( [@"center_left" isEqual: adViewPosition] || [@"center_right" isEqual: adViewPosition] )
@@ -16,6 +14,8 @@
 extern "C" {
 #endif
     
+    extern bool max_unity_should_disable_all_logs(void);  // Forward declaration
+
     // UnityAppController.mm
     UIViewController* UnityGetGLViewController(void);
     UIWindow* UnityGetMainWindow(void);
@@ -193,29 +193,19 @@ static ALUnityBackgroundCallback backgroundCallback;
     return shared;
 }
 
-#pragma mark - Plugin Initialization
-
-- (ALSdk *)initializeSdkWithSettings:(ALSdkSettings *)settings
-                  backgroundCallback:(ALUnityBackgroundCallback)unityBackgroundCallback
-                andCompletionHandler:(ALSdkInitializationCompletionHandler)completionHandler
++ (void)setUnityBackgroundCallback:(ALUnityBackgroundCallback)unityBackgroundCallback
 {
     backgroundCallback = unityBackgroundCallback;
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *sdkKey = infoDict[@"AppLovinSdkKey"];
-    if ( [sdkKey al_isValidString] )
-    {
-        self.sdk = [ALSdk sharedWithKey: sdkKey settings: settings];
-    }
-    else
-    {
-        self.sdk = [ALSdk sharedWithSettings: settings];
-    }
-    
-    [self.sdk setPluginVersion: [@"Max-Unity-" stringByAppendingString: VERSION]];
-    self.sdk.mediationProvider = @"max";
-    [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration)
-     {
+}
+
+#pragma mark - Plugin Initialization
+
+- (void)initializeSdkWithConfiguration:(ALSdkInitializationConfiguration *)initConfig andCompletionHandler:(ALSdkInitializationCompletionHandler)completionHandler;
+{
+    self.sdk = [ALSdk shared];
+    [self.sdk initializeWithConfiguration: initConfig completionHandler:^(ALSdkConfiguration *configuration) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
             // Note: internal state should be updated first
             completionHandler( configuration );
             
@@ -231,8 +221,6 @@ static ALUnityBackgroundCallback backgroundCallback;
                                                @"isTestModeEnabled" : @([configuration isTestModeEnabled])}];
         });
     }];
-    
-    return self.sdk;
 }
 
 #pragma mark - Banners
@@ -1029,16 +1017,6 @@ static ALUnityBackgroundCallback backgroundCallback;
     });
 }
 
-- (void)didStartRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
-}
-
-- (void)didCompleteRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
-}
-
 - (void)didRewardUserForAd:(MAAd *)ad withReward:(MAReward *)reward
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -1568,6 +1546,8 @@ static ALUnityBackgroundCallback backgroundCallback;
 
 - (void)log:(NSString *)format, ...
 {
+    if (max_unity_should_disable_all_logs()) return;
+    
     va_list valist;
     va_start(valist, format);
     NSString *message = [[NSString alloc] initWithFormat: format arguments: valist];
@@ -1578,6 +1558,8 @@ static ALUnityBackgroundCallback backgroundCallback;
 
 + (void)log:(NSString *)format, ...
 {
+    if (max_unity_should_disable_all_logs()) return;
+
     va_list valist;
     va_start(valist, format);
     NSString *message = [[NSString alloc] initWithFormat: format arguments: valist];

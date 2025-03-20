@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Controls : MonoBehaviour
 {
     [BoxGroup("Intractable UI"), Required]
-    [SerializeField] private GameObject gradingButtons, touchPad, mistakeUI, crossHair, tapToPlay, reportCard;
+    [SerializeField] private GameObject gradingButtons, touchPad, mistakeUI, crossHair, tapToPlay, settingsBtn, reportCard;
     [BoxGroup("Non Interactable UI"), Required]
     [SerializeField] private GameObject answerImage, timeBar, streakCounter, protectTheEgg;
     [BoxGroup("Mix UI"), Required]
@@ -79,6 +79,10 @@ public class Controls : MonoBehaviour
     public void EnableTapToPlay(bool flag)
     {
         tapToPlay.SetActive(flag);
+    }
+    public void EnableSettingsBtn(bool flag)
+    {
+        settingsBtn.SetActive(flag);
     }
     public void EnableActivityUI(bool flag)
     {

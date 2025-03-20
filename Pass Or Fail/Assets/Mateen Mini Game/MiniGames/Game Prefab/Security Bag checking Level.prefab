@@ -60,7 +60,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!114 &1618699559188518665
 MonoBehaviour:
@@ -489,8 +489,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8494222503249558547}
-        m_TargetAssemblyTypeName: SecurityCheckHandler, Assembly-CSharp
+      - m_Target: {fileID: 5629459514238385220}
+        m_TargetAssemblyTypeName: PassOrFail.MiniGames.SecurityCheckHandler, Assembly-CSharp
         m_MethodName: DontAllowToPass
         m_Mode: 1
         m_Arguments:
@@ -722,74 +722,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!1 &3513946102955359874
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 575798655813195994}
-  - component: {fileID: 3849163509512024144}
-  - component: {fileID: 1758040914104072571}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &575798655813195994
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3513946102955359874}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1646132018021074398}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3849163509512024144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3513946102955359874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!114 &1758040914104072571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3513946102955359874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!1 &3625064191513056177
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,8 +842,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8494222503249558547}
-        m_TargetAssemblyTypeName: SecurityCheckHandler, Assembly-CSharp
+      - m_Target: {fileID: 5629459514238385220}
+        m_TargetAssemblyTypeName: PassOrFail.MiniGames.SecurityCheckHandler, Assembly-CSharp
         m_MethodName: AllowToPass
         m_Mode: 1
         m_Arguments:
@@ -1089,6 +1021,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 1
   instantiateCharacters: 0
   setAnimationEvents: 1
+  instantiatedByHandler: 0
 --- !u!114 &449107892578695809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1575,6 +1508,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 1
   instantiateCharacters: 0
   setAnimationEvents: 1
+  instantiatedByHandler: 0
 --- !u!114 &8526808955527494437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6629,6 +6563,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 1
   instantiateCharacters: 0
   setAnimationEvents: 1
+  instantiatedByHandler: 0
 --- !u!114 &2579993181924603284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6657,7 +6592,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1646132018021074398}
-  - component: {fileID: 7166874006433830336}
+  - component: {fileID: 5629459514238385220}
   m_Layer: 0
   m_Name: Security Bag checking Level
   m_TagString: Untagged
@@ -6683,10 +6618,9 @@ Transform:
   - {fileID: 4667269071551723285}
   - {fileID: 4066483190575382614}
   - {fileID: 901842102913209029}
-  - {fileID: 575798655813195994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7166874006433830336
+--- !u!114 &5629459514238385220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6695,9 +6629,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7820672015500908952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a421727782c193642858ad54272ad876, type: 3}
+  m_Script: {fileID: 11500000, guid: 3711c75e9f1b63140a906d430dc41ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  studentsHandler: {fileID: 6243633059808858907}
+  bags:
+  - {fileID: 2579993181924603284}
+  - {fileID: 8526808955527494437}
+  - {fileID: 449107892578695809}
+  canvas: {fileID: 671105103823297521}
 --- !u!1 &8394722438863749171
 GameObject:
   m_ObjectHideFlags: 0
@@ -6742,7 +6682,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 901842102913209029}
-  - component: {fileID: 8494222503249558547}
   - component: {fileID: 6243633059808858907}
   m_Layer: 0
   m_Name: Security Checking
@@ -6769,24 +6708,6 @@ Transform:
   - {fileID: 3930107672470581028}
   m_Father: {fileID: 1646132018021074398}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &8494222503249558547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8491929078184702043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3711c75e9f1b63140a906d430dc41ef4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  studentsHandler: {fileID: 6243633059808858907}
-  bags:
-  - {fileID: 2579993181924603284}
-  - {fileID: 8526808955527494437}
-  - {fileID: 449107892578695809}
-  canvas: {fileID: 671105103823297521}
 --- !u!114 &6243633059808858907
 MonoBehaviour:
   m_ObjectHideFlags: 0

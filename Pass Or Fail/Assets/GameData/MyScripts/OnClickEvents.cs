@@ -77,6 +77,9 @@ public class OnClickEvents : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 				SharedUI.Instance.SetNextSceneIndex(PlayerPrefsHandler.GamePlay);
 				SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.Loading);
 				break;
+			case PlayerPrefsHandler.PrivacyPolicy:
+				Application.OpenURL(PlayerPrefsHandler.PrivacyPolicyLink);
+				break;
 		}
 	}
 	public void OnPointerDown(PointerEventData eventData)

@@ -3,6 +3,7 @@ using UnityEngine;
 public class SettingsScript : MonoBehaviour
 {
     [SerializeField] private RectTransform[] buttons;
+    private const string Off = "off", On = "on", Cross = "Cross", Tick = "Tick";
     private void OnEnable()
     {
         RefreshSoundSettings();
@@ -55,46 +56,46 @@ public class SettingsScript : MonoBehaviour
     {
         if (PlayerPrefsHandler.GetSoundControllerBool(PlayerPrefsHandler.Sound))
         {
-            SetButtonsEffect(1, "on");
+            SetButtonsEffect(1, On);
         }
         else
         {
-            SetButtonsEffect(1, "off");
+            SetButtonsEffect(1, Off);
         }
     }
     private void RefreshMusicSettings()
     {
         if (PlayerPrefsHandler.GetSoundControllerBool(PlayerPrefsHandler.Music))
         {
-            SetButtonsEffect(0, "on");
+            SetButtonsEffect(0, On);
         }
         else
         {
-            SetButtonsEffect(0, "off");
+            SetButtonsEffect(0, Off);
         }
     }
     private void RefreshVibrationSettings()
     {
         if (PlayerPrefsHandler.GetSoundControllerBool(PlayerPrefsHandler.Vibration))
         {
-            SetButtonsEffect(2, "on");
+            SetButtonsEffect(2, On);
         }
         else
         {
-            SetButtonsEffect(2, "off");
+            SetButtonsEffect(2, Off);
         }
     }
-    private void SetButtonsEffect(int index, string action = "on")
+    private void SetButtonsEffect(int index, string action = On)
     {
-        if (action == "on")
+        if (action == On)
         {
-            buttons[index].Find("Cross").gameObject.SetActive(false);
-            buttons[index].Find("Tick").gameObject.SetActive(true);
+            buttons[index].Find(Cross).gameObject.SetActive(false);
+            buttons[index].Find(Tick).gameObject.SetActive(true);
         }
         else
         {
-            buttons[index].Find("Cross").gameObject.SetActive(true);
-            buttons[index].Find("Tick").gameObject.SetActive(false);
+            buttons[index].Find(Cross).gameObject.SetActive(true);
+            buttons[index].Find(Tick).gameObject.SetActive(false);
         }
     }
 }

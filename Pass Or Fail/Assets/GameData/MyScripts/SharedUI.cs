@@ -22,9 +22,6 @@ public class SharedUI : MonoBehaviour
     [SerializeField] private AllMenus[] subMenus;
     [SerializeField] private AllMenus[] specialMenus;
     private int _sceneIndexToOpen = 1;
-    [Header("Links")]
-    public string privacyPolicyLink = "https://worldofanimal1234.blogspot.com/2022/02/world-of-animals.html";
-    public string moreGamesLink = "https://play.google.com/store/apps/dev?id=6407456443209899378";
     #endregion
     public static SharedUI Instance;
     private void Awake()

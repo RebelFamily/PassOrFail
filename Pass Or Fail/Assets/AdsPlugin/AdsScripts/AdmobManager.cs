@@ -17,6 +17,7 @@ public class AdmobManager : MonoBehaviour
 
     [SerializeField] public string bannerID, rectBannerID, interstitialID_All, rewardedAdID;
     [SerializeField] private AppOpenAdCaller appOpenAdCaller;
+    [SerializeField] private NativeAdsController nativeAdsController;
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -27,6 +28,11 @@ public class AdmobManager : MonoBehaviour
             //Debug.Log("Admob Initialize Successfully");
             isAdmobInitialized = true;
             LoadAds();
+            // Initialize the Google Mobile Ads Immersive In-game Ads Plugin.
+            ImmersiveInGameDisplayAd.Initialize(() =>
+            {
+                //nativeAdsController.RequestImmersiveInGameDisplayAd();
+            });
         });
     }
     private void LoadAds()
@@ -474,9 +480,7 @@ public class AdmobManager : MonoBehaviour
 
     private AdRequest CreateAdRequest()
     {
-        return new AdRequest.Builder()
-            .AddKeyword("unity-admob-sample")
-            .Build();
+        return new AdRequest();
     }
     private static void SendPaidEvent(AdValue adValue, AppmetricaAnalytics.AdFormat adFormat, string adUnit, string placementName = null)
     {

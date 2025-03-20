@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 public class EnvironmentManager : MonoBehaviour
@@ -11,11 +10,12 @@ public class EnvironmentManager : MonoBehaviour
         SportsArea,
         None
     }
-    //[SerializeField] private Inventory inventory;
     [TabGroup("MainEnvironments")]
     [SerializeField] private GameObject classRoom, corridor, lecturerTable, sportsArea;
     [TabGroup("Decorations")]
     [SerializeField] private GameObject[] classRoomDecorations;
+    [SerializeField] private GameObject nativeAdInClassRoom, danceAd;
+    [SerializeField] private GameObject[] badgesDistributionAds, exerciseAds, uniformAds;
     public void SetEnvironment(Environment environmentType)
     {
         //Debug.Log("environmentType: " + environmentType);
@@ -53,10 +53,6 @@ public class EnvironmentManager : MonoBehaviour
                 break;
         }
     }
-    /*public Inventory GetInventory()
-    {
-        return inventory;
-    }*/
     private void ShowClassRoomDecorations()
     {
         var totalDecorations = classRoomDecorations.Length;
@@ -68,5 +64,34 @@ public class EnvironmentManager : MonoBehaviour
         PlayerPrefsHandler.ClassDecorationsIndex++;
         if (PlayerPrefsHandler.ClassDecorationsIndex >= totalDecorations)
             PlayerPrefsHandler.ClassDecorationsIndex = 0;
+    }
+    public void DisableNativeAdOfClass()
+    {
+        nativeAdInClassRoom.SetActive(false);
+    }
+    public void EnableDanceNativeAd()
+    {
+        danceAd.SetActive(true);
+    }
+    public void EnableBadgesNativeAd()
+    {
+        foreach (var t in badgesDistributionAds)
+        {
+            t.SetActive(true);
+        }
+    }
+    public void EnableExerciseNativeAd()
+    {
+        foreach (var t in exerciseAds)
+        {
+            t.SetActive(true);
+        }
+    }
+    public void EnableUniformNativeAd()
+    {
+        foreach (var t in uniformAds)
+        {
+            t.SetActive(true);
+        }
     }
 }

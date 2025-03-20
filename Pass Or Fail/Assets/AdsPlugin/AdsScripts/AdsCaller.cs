@@ -72,6 +72,8 @@ public class AdsCaller : MonoBehaviour
     }
     public void ShowInterstitialAd()
     {
+        if(PlayerPrefsHandler.HideAllAds || PlayerPrefsHandler.HideForcedAds)
+            return;
         if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
         if(GameManager.Instance.IsTesting()) return;
         CheckMemoryState.Instance.CheckMemory();
@@ -103,6 +105,11 @@ public class AdsCaller : MonoBehaviour
     }
     public void ShowBanner()
     {
+        if (PlayerPrefsHandler.HideAllAds)
+        {
+            HideBanner();
+            return;
+        }
         AdsManager.Instance.ShowBanner();
     }
     public void HideBanner()
@@ -112,6 +119,11 @@ public class AdsCaller : MonoBehaviour
     }
     public void ShowRectBanner()
     {
+        if (PlayerPrefsHandler.HideAllAds)
+        {
+            HideRectBanner();
+            return;
+        }
         AdsManager.Instance.ShowMREC();
     }
     public void HideRectBanner()

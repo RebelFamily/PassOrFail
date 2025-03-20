@@ -31,7 +31,8 @@ public class MetaUIManager : MonoBehaviour
     {
         AdsCaller.Instance.ShowBanner();
         AdsCaller.Instance.HideRectBanner();
-        GadsmeInit.Instance.DisableAds();
+        if(GadsmeInit.Instance)
+            GadsmeInit.Instance.DisableAds();
         CurrencyCounter.Instance.ShowCashImage(true);
         SharedUI.Instance.HideAll();
         SharedUI.Instance.MetaUIActivated(this);

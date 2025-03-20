@@ -37,6 +37,11 @@ public class PlayerPrefsHandler : MonoBehaviour
     public const string AdToCorrectMistake = "AdToCorrectMistake";
     public const string PayToCorrectMistake = "PayToCorrectMistake";
     public const string CloseRemoveAds = "CloseRemoveAds";
+    public const string PrivacyPolicy = "PrivacyPolicy";
+    #endregion
+    
+    #region Links
+    public const string PrivacyPolicyLink = "https://thegoodtoseeyou.com/privacy-policy/";
     #endregion
     
     #region Settings
@@ -92,7 +97,7 @@ public class PlayerPrefsHandler : MonoBehaviour
 
     public static bool IsFreeSpinAvailable = true, IsGameLaunch = true;
     public const string FirstAd = "FirstAd";
-    public const string RateUsString = "RateUs", RemoveAdsFirstShownString = "RemoveAdsFirstShown";
+    public const string RateUsString = "RateUs", RemoveAdsFirstShownString = "RemoveAdsFirstShown", FirstAppOpenString = "FirstAppOpen";
 
     #region Firebase
     public enum AdType
@@ -103,10 +108,10 @@ public class PlayerPrefsHandler : MonoBehaviour
     public static string FirstAdType = AdType.Simple.ToString(), InterAdType = AdType.Simple.ToString();
     public const string FirstAdIntervalString = "FirstAdInterval", FirstAdTypeString = "FirstAdType", LevelNoForRatingString = "LevelNoForRating", 
         LevelNoToShowMetaString = "LevelNoToShowMeta", InterAdIntervalString = "InterAdInterval", InterAdTypeString = "InterAdType", 
-        ShowAdOnMiniGameString = "ShowAdOnMiniGame";
+        ShowAdOnMiniGameString = "ShowAdOnMiniGame", HideAllAdsString = "HideAllAds", HideForcedAdsString = "HideForcedAds", HideAppOpenString = "HideAppOpen";
     public static float FirstAdInterval = 30, InterAdInterval = 30;
-    public static int LevelNoToShowMeta = 15, LevelNoForRating = 20;
-    public static bool ShowAdOnMiniGame = false;
+    public static int LevelNoToShowMeta = 5, LevelNoForRating = 20;
+    public static bool ShowAdOnMiniGame = false, HideAllAds = false, HideForcedAds = false, HideAppOpen = false;
     public static bool IsTimerFirstAd()
     {
         return FirstAdType == AdType.Timer.ToString();

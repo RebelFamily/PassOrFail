@@ -58,8 +58,11 @@ public class FirebaseManager : MonoBehaviour
             {PlayerPrefsHandler.InterAdIntervalString, 30},
             {PlayerPrefsHandler.InterAdTypeString, PlayerPrefsHandler.AdType.Simple.ToString()},
             {PlayerPrefsHandler.LevelNoForRatingString, 20},
-            {PlayerPrefsHandler.LevelNoToShowMetaString, 15},
-            {PlayerPrefsHandler.ShowAdOnMiniGameString, false}
+            {PlayerPrefsHandler.LevelNoToShowMetaString, 5},
+            {PlayerPrefsHandler.ShowAdOnMiniGameString, false},
+            {PlayerPrefsHandler.HideAllAdsString, false},
+            {PlayerPrefsHandler.HideForcedAdsString, false},
+            {PlayerPrefsHandler.HideAppOpenString, false}
         };
         Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults)
             .ContinueWithOnMainThread(task =>
@@ -158,6 +161,12 @@ public class FirebaseManager : MonoBehaviour
             PlayerPrefsHandler.LevelNoToShowMetaString).LongValue;
         PlayerPrefsHandler.ShowAdOnMiniGame = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
             PlayerPrefsHandler.ShowAdOnMiniGameString).BooleanValue;
+        PlayerPrefsHandler.HideAllAds = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
+            PlayerPrefsHandler.HideAllAdsString).BooleanValue;
+        PlayerPrefsHandler.HideForcedAds = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
+            PlayerPrefsHandler.HideForcedAdsString).BooleanValue;
+        PlayerPrefsHandler.HideAppOpen = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(
+            PlayerPrefsHandler.HideAppOpenString).BooleanValue;
     }
     #endregion
 }

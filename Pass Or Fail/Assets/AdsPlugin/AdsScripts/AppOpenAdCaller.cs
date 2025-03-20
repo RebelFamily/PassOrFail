@@ -62,7 +62,7 @@ public class AppOpenAdCaller : MonoBehaviour
         }
 
         // Create a new app open ad instance.
-        AppOpenAd.Load(adUnitId, orientation, CreateAdRequest(),
+        AppOpenAd.Load(adUnitId, CreateAdRequest(),
             (AppOpenAd ad, LoadAdError loadError) =>
             {
                 if (loadError != null)
@@ -115,6 +115,13 @@ public class AppOpenAdCaller : MonoBehaviour
 
     public void ShowAppOpenAd()
     {
+        if(PlayerPrefsHandler.HideAllAds || PlayerPrefsHandler.HideForcedAds || PlayerPrefsHandler.HideAppOpen)
+            return;
+        if (!PlayerPrefsHandler.GetBool(PlayerPrefsHandler.FirstAppOpenString))
+        {
+            PlayerPrefsHandler.SetBool(PlayerPrefsHandler.FirstAppOpenString, true);
+            return;
+        }
         if(PlayerPrefsHandler.GetBool(PlayerPrefsHandler.RemoveAds)) return;
         if (!IsAppOpenAdAvailable)
         {
@@ -147,9 +154,7 @@ public class AppOpenAdCaller : MonoBehaviour
 
     private AdRequest CreateAdRequest()
     {
-        return new AdRequest.Builder()
-            .AddKeyword("unity-admob-sample")
-            .Build();
+        return new AdRequest();
     }
 
     #endregion

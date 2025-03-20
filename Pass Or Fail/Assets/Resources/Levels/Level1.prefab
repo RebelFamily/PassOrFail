@@ -135,6 +135,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 1
+  instantiatedByHandler: 1
 --- !u!1 &1170436323391527461
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +465,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 1
+  instantiatedByHandler: 1
 --- !u!1 &4005367881505223556
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +597,7 @@ MonoBehaviour:
   isToNotUseStudentRenders: 0
   instantiateCharacters: 1
   setAnimationEvents: 1
+  instantiatedByHandler: 1
 --- !u!1 &5164995594362539315
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,7 +614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2938624318306325622
 Transform:
   m_ObjectHideFlags: 0
@@ -638,8 +641,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.98823535, b: 0.9294118, a: 1}
+  m_Intensity: 1.8
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1188,8 +1191,6 @@ MonoBehaviour:
   - {fileID: 5750689761221666619}
   - {fileID: 2089870959595926580}
   exitPosition: {fileID: 4292633058105213783}
-  femaleCharacters: []
-  maleCharacters: []
 --- !u!1001 &5864248426375509753
 PrefabInstance:
   m_ObjectHideFlags: 0

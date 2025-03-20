@@ -44,7 +44,9 @@ public class QuestionAnswer : MonoBehaviour
     {
         Callbacks.OnRewardStreak += RewardStreak;
         Callbacks.OnRewardMistakeCorrection += CorrectMistake;
-        if(questionsType == QuestionsType.SaveTheEggs)
+        if(questionsType == QuestionsType.EarthGlobeQuestions)
+            GamePlayManager.Instance.environmentManager.DisableNativeAdOfClass();
+        else if(questionsType == QuestionsType.SaveTheEggs)
             Invoke(nameof(DisableGadsmeAds), 0.25f);
     }
     private void OnDisable()
@@ -54,7 +56,8 @@ public class QuestionAnswer : MonoBehaviour
     }
     private void DisableGadsmeAds()
     {
-        GadsmeInit.Instance.DisableAds();
+        if(GadsmeInit.Instance)
+            GadsmeInit.Instance.DisableAds();
     }
     public void SetQuestion()
     {

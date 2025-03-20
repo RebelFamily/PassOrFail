@@ -58,6 +58,7 @@ public class LevelBasedParams : MonoBehaviour
                     _attendanceMarking = GetComponent<AttendanceMarking>();
                 SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                GamePlayManager.Instance.environmentManager.DisableNativeAdOfClass();
                 break;
             case ActivityType.LibraryDrill:
                 if (_libraryDiscipline == null)
@@ -75,9 +76,11 @@ public class LevelBasedParams : MonoBehaviour
             case ActivityType.SchoolDance:
                 if (_danceActivity == null)
                     _danceActivity = GetComponent<DanceActivity>();
+                SharedUI.Instance.gamePlayUIManager.controls.EnableSettingsBtn(false);
                 SharedUI.Instance.gamePlayUIManager.controls.EnableActivityUI(true);
                 SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[2]);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                GamePlayManager.Instance.environmentManager.EnableDanceNativeAd();
             break;
             case ActivityType.OralQuiz:
                 if (_oralQuiz == null)
@@ -90,12 +93,14 @@ public class LevelBasedParams : MonoBehaviour
                     _uniformChecking = GetComponent<UniformChecking>();
                 SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                GamePlayManager.Instance.environmentManager.EnableUniformNativeAd();
                 break;
             case ActivityType.BadgesDistribution:
                 if (_badgesDistribution == null)
                     _badgesDistribution = GetComponent<BadgesDistribution>();
                 SharedUI.Instance.gamePlayUIManager.controls.EnableTapToPlay(true);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                GamePlayManager.Instance.environmentManager.EnableBadgesNativeAd();
                 break;
             case ActivityType.ExerciseActivity:
                 if (_exerciseActivity == null)
@@ -104,6 +109,7 @@ public class LevelBasedParams : MonoBehaviour
                 SharedUI.Instance.gamePlayUIManager.controls.EnableInfinityHandUI(false);
                 SharedUI.Instance.gamePlayUIManager.controls.SetActivityInstructionsSprite(PlayerPrefsHandler.ActivitiesNames[7]);
                 GamePlayManager.Instance.mainCamera.gameObject.SetActive(false);
+                GamePlayManager.Instance.environmentManager.EnableExerciseNativeAd();
                 break;
             case ActivityType.PianoLesson:
                 if (_pianoLesson == null)

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 public class GamePlayUIManager : MonoBehaviour
@@ -17,6 +15,8 @@ public class GamePlayUIManager : MonoBehaviour
         SharedUI.Instance.HideAll();
         SharedUI.Instance.GameplayUIActivated(this);
         controls = GetMenu(PlayerPrefsHandler.HUD).GetComponent<Controls>();
+        //gameObject.SetActive(false);
+        //SharedUI.Instance.gameObject.SetActive(false);
     }
     public bool GetActiveMenu(string menuName)
     {

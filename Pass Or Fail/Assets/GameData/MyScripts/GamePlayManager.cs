@@ -162,7 +162,8 @@ public class GamePlayManager : MonoBehaviour
     {
         SetNextLevel();
         yield return new WaitForSeconds(delay);
-        GadsmeInit.Instance.DisableAds();
+        if(GadsmeInit.Instance)
+            GadsmeInit.Instance.DisableAds();
         SoundController.Instance.PlayGameCompleteSound();
         SharedUI.Instance.SwitchMenu(PlayerPrefsHandler.LevelComplete);
     }
@@ -255,6 +256,7 @@ public class GamePlayManager : MonoBehaviour
     }
     private void SetGadsmeAds()
     {
+        if(!GadsmeInit.Instance) return;
         switch (_gamePlayState)
         {
             case GamePlayState.Level:

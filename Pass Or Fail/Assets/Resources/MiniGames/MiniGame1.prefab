@@ -59,7 +59,6 @@ GameObject:
   m_Component:
   - component: {fileID: 61455130495706704}
   - component: {fileID: 1891819130590894237}
-  - component: {fileID: 578796632778038223}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -144,29 +143,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &578796632778038223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6069449938994294153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1001 &2235315746407702745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -175,6 +151,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1913450970203149160}
     m_Modifications:
+    - target: {fileID: 836353055406367619, guid: 3b8460527efea214fa655eafc9891682, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 1015
+      objectReference: {fileID: 0}
     - target: {fileID: 1388549802947909017, guid: 3b8460527efea214fa655eafc9891682, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -231,6 +211,10 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 3924183643905565013, guid: 3b8460527efea214fa655eafc9891682, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6307450003367508208, guid: 3b8460527efea214fa655eafc9891682, type: 3}
       propertyPath: camera
       value: 
@@ -251,8 +235,14 @@ PrefabInstance:
       propertyPath: objectiveCompletedEvent.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: PassOrFail.MiniGames.BlackBordCleanCanvas, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 8866870737572902448, guid: 3b8460527efea214fa655eafc9891682, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4456044865227054336, guid: 3b8460527efea214fa655eafc9891682, type: 3}
+    - {fileID: 3801513111801482016, guid: 3b8460527efea214fa655eafc9891682, type: 3}
+    - {fileID: 6689659397404387679, guid: 3b8460527efea214fa655eafc9891682, type: 3}
     m_RemovedGameObjects:
     - {fileID: 390416587234652844, guid: 3b8460527efea214fa655eafc9891682, type: 3}
     m_AddedGameObjects:
